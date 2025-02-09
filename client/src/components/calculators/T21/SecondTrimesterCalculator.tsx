@@ -22,7 +22,6 @@ export default function SecondTrimesterCalculator() {
     defaultValues: {
       hasFirstTrimesterScreening: false,
       baselineRisk: undefined,
-      previousT21: false,
       nasalBone: 'normal',
       cardiacFocus: 'ausente',
       ventriculomegaly: 'ausente',
@@ -35,7 +34,6 @@ export default function SecondTrimesterCalculator() {
   });
 
   const onSubmit = async (data: any) => {
-    // TODO: Implementar el cálculo de riesgo real
     let risk = 1/parseFloat(data.baselineRisk);
 
     // Ajustar riesgo basado en los marcadores
@@ -57,10 +55,6 @@ export default function SecondTrimesterCalculator() {
         if (multiplier) risk *= multiplier;
       }
     });
-
-    if (data.previousT21) {
-      risk *= 2.5;
-    }
 
     const resultado = {
       risk,
@@ -126,23 +120,6 @@ export default function SecondTrimesterCalculator() {
                     placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
                     {...field}
                   />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="previousT21"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <Checkbox
-                    id="previousT21"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                  <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
-                    Antecedente de hijo con Trisomía 21
-                  </FormLabel>
                 </FormItem>
               )}
             />
