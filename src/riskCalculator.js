@@ -1,49 +1,25 @@
 export function calculateRisk(formData) {
-  const riskFactors = {
-    previousPretermBirth: 2.5,
-    cervixLength: {
-      lessThan15mm: 13.4,
-      between15and20mm: 4.3,
-      between20and25mm: 2.8,
-      between25and30mm: 1.9,
-      moreThan30mm: 1.0
-    },
-    gestationalAge: {
-      lessThan24weeks: 3.2,
-      between24and28weeks: 2.4,
-      between28and32weeks: 1.8,
-      moreThan32weeks: 1.0
-    }
-  };
+    const risk = calculateBaseRisk(formData.cervicalLength);
 
-  let riskScore = 1.0;
+    const riskMultipliers = {
+        multipleGestation: formData.fetusCount > 1 ? 1.5 : 1,
+        contractions: formData.hasContractions ? 1.2 : 1,
+        previousPreterm: formData.hasPreviousPretermBirth ? 1.3 : 1,
+        membraneRupture: formData.hasMembraneRupture ? 1.4 : 1,
+        cervicalSurgery: formData.hasCervicalSurgery ? 1.1 : 1
+    };
 
-  // Parto prematuro previo
-  if (formData.previousPreterm === 'yes') {
-    riskScore *= riskFactors.previousPretermBirth;
-  }
+    const totalRisk = risk * Object.values(riskMultipliers).reduce((a, b) => a * b, 1);
+    return Math.min(totalRisk, 0.99);
+}
 
-  // Longitud cervical
-  const cervixLength = parseFloat(formData.cervixLength);
-  if (cervixLength < 15) {
-    riskScore *= riskFactors.cervixLength.lessThan15mm;
-  } else if (cervixLength >= 15 && cervixLength < 20) {
-    riskScore *= riskFactors.cervixLength.between15and20mm;
-  } else if (cervixLength >= 20 && cervixLength < 25) {
-    riskScore *= riskFactors.cervixLength.between20and25mm;
-  } else if (cervixLength >= 25 && cervixLength < 30) {
-    riskScore *= riskFactors.cervixLength.between25and30mm;
-  }
+function calculateBaseRisk(cervicalLength) {
+    const maxRisk = 0.80;
+    const minRisk = 0.007;
+    const decayRate = 0.08;
 
-  // Edad gestacional
-  const gestationalAge = parseInt(formData.gestationalAge);
-  if (gestationalAge < 24) {
-    riskScore *= riskFactors.gestationalAge.lessThan24weeks;
-  } else if (gestationalAge >= 24 && gestationalAge < 28) {
-    riskScore *= riskFactors.gestationalAge.between24and28weeks;
-  } else if (gestationalAge >= 28 && gestationalAge < 32) {
-    riskScore *= riskFactors.gestationalAge.between28and32weeks;
-  }
+    if (cervicalLength <= 5) return maxRisk;
+    if (cervicalLength >= 50) return minRisk;
 
-  return riskScore;
+    return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));
 }
