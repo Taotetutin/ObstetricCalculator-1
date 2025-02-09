@@ -45,14 +45,18 @@ export function calculateLiquidoAmniotico(input: CalculatorInput<"liquidoAmnioti
 }
 
 export function calculatePesoFetal(input: CalculatorInput<"pesoFetal">) {
-  const { dbp, cc, ca, lf } = input;
+  // Convertir medidas de milímetros a centímetros
+  const cc = input.cc / 10;
+  const ca = input.ca / 10;
+  const lf = input.lf / 10;
 
-  // Fórmula de Hadlock más precisa para estimación de peso fetal
-  const logPeso = 1.326 - 
-                 0.00326 * ca * lf + 
-                 0.0107 * cc + 
-                 0.0438 * ca + 
-                 0.158 * lf;
+  // Fórmula de Hadlock para estimación de peso fetal
+  const logPeso = 1.5662 - 
+                 0.0108 * cc + 
+                 0.0468 * ca + 
+                 0.171 * lf + 
+                 0.00034 * Math.pow(cc, 2) - 
+                 0.003685 * ca * lf;
 
   const peso = Math.pow(10, logPeso);
 
