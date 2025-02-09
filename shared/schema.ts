@@ -33,13 +33,32 @@ export const calculatorTypes = {
     pesoFetal: z.number().min(100).max(5000),
   }),
   preeclampsia: z.object({
+    // Factores maternos
     age: z.number().min(12).max(60),
-    gestationalAge: z.number().min(20).max(42),
-    bmi: z.number().min(15).max(60),
-    nulliparous: z.boolean(),
-    previousPreeclampsia: z.boolean(),
+    weight: z.number().min(35).max(200),
+    height: z.number().min(1.0).max(2.5),
+    ethnicity: z.enum(['caucasica', 'afro', 'sudasiatica', 'asiaticooriental', 'mixta']),
+
+    // Historia médica
     chronicHypertension: z.boolean(),
     diabetes: z.boolean(),
+    lupusAPS: z.boolean(),
+
+    // Historia obstétrica
+    nulliparous: z.boolean(),
+    previousPreeclampsia: z.boolean(),
+
+    // Marcadores biofísicos
+    systolicBP: z.number().min(70).max(200),
+    diastolicBP: z.number().min(40).max(120),
+    uterinePI: z.number().min(0).max(5).optional(),
+
+    // Marcadores bioquímicos (opcionales)
+    pappA: z.number().min(0).max(10).optional(),
+    plgf: z.number().min(0).max(2000).optional(),
+
+    // Embarazo actual
+    gestationalAge: z.number().min(11).max(14),
     multiplePregnancy: z.boolean(),
   }),
 } as const;

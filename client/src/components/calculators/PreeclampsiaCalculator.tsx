@@ -9,30 +9,71 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { InfoIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+
+const ethnicityOptions = [
+  { value: 'caucasica', label: 'Caucásica' },
+  { value: 'afro', label: 'Afro-caribeña' },
+  { value: 'sudasiatica', label: 'Sud-asiática' },
+  { value: 'asiaticooriental', label: 'Asiático-oriental' },
+  { value: 'mixta', label: 'Mixta' },
+];
+
+type PreeclampsiaInput = {
+  age: number;
+  weight: number;
+  height: number;
+  ethnicity: "caucasica" | "afro" | "sudasiatica" | "asiaticooriental" | "mixta";
+  gestationalAge: number;
+  systolicBP: number;
+  diastolicBP: number;
+  nulliparous: boolean;
+  previousPreeclampsia: boolean;
+  chronicHypertension: boolean;
+  diabetes: boolean;
+  lupusAPS: boolean;
+  multiplePregnancy: boolean;
+  uterinePI?: number;
+  pappA?: number;
+  plgf?: number;
+};
 
 export default function PreeclampsiaCalculator() {
   const [result, setResult] = useState<{
-    score: number;
+    riskPercentage: number;
     category: string;
     recommendation: string;
+    map: number;
   } | null>(null);
 
-  const form = useForm({
+  const form = useForm<PreeclampsiaInput>({
     resolver: zodResolver(calculatorTypes.preeclampsia),
     defaultValues: {
-      age: 25,
-      gestationalAge: 20,
-      bmi: 25,
+      age: 30,
+      weight: 60,
+      height: 1.65,
+      ethnicity: 'caucasica',
+      gestationalAge: 12,
+      systolicBP: 120,
+      diastolicBP: 80,
       nulliparous: false,
       previousPreeclampsia: false,
       chronicHypertension: false,
       diabetes: false,
+      lupusAPS: false,
       multiplePregnancy: false,
     },
   });
 
-  const onSubmit = async (data: Parameters<typeof calculatePreeclampsiaRisk>[0]) => {
+  const onSubmit = async (data: PreeclampsiaInput) => {
     const resultado = calculatePreeclampsiaRisk(data);
     setResult(resultado);
 
@@ -54,147 +95,243 @@ export default function PreeclampsiaCalculator() {
   return (
     <div className="space-y-6">
       <Alert>
-        <AlertCircle className="h-4 w-4" />
+        <InfoIcon className="h-4 w-4" />
         <AlertDescription>
-          Esta calculadora evalúa el riesgo de preeclampsia basado en factores
-          maternos y características del embarazo actual.
+          Esta calculadora utiliza el modelo de la Fetal Medicine Foundation para evaluar
+          el riesgo de preeclampsia en el primer trimestre.
         </AlertDescription>
       </Alert>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="age"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Edad Materna</FormLabel>
-                <Input
-                  type="number"
-                  min="12"
-                  max="60"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Datos Maternos</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="age"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Edad</FormLabel>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="gestationalAge"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Edad Gestacional (semanas)</FormLabel>
-                <Input
-                  type="number"
-                  min="20"
-                  max="42"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="weight"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Peso (kg)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="bmi"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>IMC</FormLabel>
-                <Input
-                  type="number"
-                  step="0.1"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="height"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Altura (m)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="nulliparous"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Primer embarazo</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="ethnicity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Etnia</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione etnia" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ethnicityOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <FormField
-            control={form.control}
-            name="previousPreeclampsia"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Preeclampsia en embarazo anterior</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+            <Separator />
 
-          <FormField
-            control={form.control}
-            name="chronicHypertension"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+            <h3 className="text-lg font-medium">Historia Médica</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { name: 'nulliparous', label: 'Primer embarazo' },
+                { name: 'previousPreeclampsia', label: 'Preeclampsia previa' },
+                { name: 'chronicHypertension', label: 'Hipertensión crónica' },
+                { name: 'diabetes', label: 'Diabetes' },
+                { name: 'lupusAPS', label: 'Lupus/SAF' },
+                { name: 'multiplePregnancy', label: 'Embarazo múltiple' },
+              ].map((field) => (
+                <FormField
+                  key={field.name}
+                  control={form.control}
+                  name={field.name as keyof PreeclampsiaInput}
+                  render={({ field: { value, onChange } }) => (
+                    <FormItem className="flex items-center space-x-2">
+                      <Checkbox 
+                        checked={value} 
+                        onCheckedChange={onChange}
+                      />
+                      <FormLabel className="font-normal">{field.label}</FormLabel>
+                    </FormItem>
+                  )}
                 />
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Hipertensión crónica</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+              ))}
+            </div>
 
-          <FormField
-            control={form.control}
-            name="diabetes"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Diabetes pregestacional</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+            <Separator />
 
-          <FormField
-            control={form.control}
-            name="multiplePregnancy"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Embarazo múltiple</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+            <h3 className="text-lg font-medium">Datos del Embarazo Actual</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="gestationalAge"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Edad Gestacional (semanas)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="systolicBP"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Presión Sistólica (mmHg)</FormLabel>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="diastolicBP"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Presión Diastólica (mmHg)</FormLabel>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Separator />
+
+            <h3 className="text-lg font-medium">Marcadores Biofísicos y Bioquímicos (Opcional)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="uterinePI"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>IP medio arterias uterinas</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                        field.onChange(value);
+                      }}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pappA"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>PAPP-A (MoM)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                        field.onChange(value);
+                      }}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="plgf"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>PlGF (pg/mL)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                        field.onChange(value);
+                      }}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
 
           <Button type="submit" className="w-full">
             Calcular Riesgo
@@ -205,18 +342,25 @@ export default function PreeclampsiaCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
-            <p className="mb-2">
-              Puntaje de Riesgo: <span className="font-medium">{result.score}</span>
-            </p>
-            <p className="mb-2">
-              Categoría de Riesgo:{" "}
-              <span className="font-medium">{result.category}</span>
-            </p>
-            <p>
-              Recomendación:{" "}
-              <span className="font-medium">{result.recommendation}</span>
-            </p>
+            <h3 className="text-lg font-semibold mb-4">Resultado:</h3>
+            <div className="space-y-2">
+              <p>
+                Riesgo de Preeclampsia:{" "}
+                <span className="font-medium">{result.riskPercentage}%</span>
+              </p>
+              <p>
+                Presión Arterial Media:{" "}
+                <span className="font-medium">{Math.round(result.map)} mmHg</span>
+              </p>
+              <p>
+                Categoría de Riesgo:{" "}
+                <span className="font-medium">{result.category}</span>
+              </p>
+              <p>
+                Recomendación:{" "}
+                <span className="font-medium">{result.recommendation}</span>
+              </p>
+            </div>
           </CardContent>
         </Card>
       )}

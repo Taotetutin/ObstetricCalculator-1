@@ -104,39 +104,82 @@ export function calcularPercentilOMS(semanas: number, peso: number) {
 }
 
 export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">) {
-  let riskScore = 0;
+  // Calcular IMC
+  const bmi = input.weight / (input.height * input.height);
 
-  // Base risk factors
-  if (input.age > 35) riskScore += 1;
-  if (input.age > 40) riskScore += 1;
-  if (input.bmi > 30) riskScore += 1;
-  if (input.bmi > 35) riskScore += 1;
+  // Factores de riesgo base (basado en FMF)
+  let baselineRisk = 0.01; // Riesgo base 1%
 
-  // Major risk factors
-  if (input.nulliparous) riskScore += 2;
-  if (input.previousPreeclampsia) riskScore += 3;
-  if (input.chronicHypertension) riskScore += 3;
-  if (input.diabetes) riskScore += 2;
-  if (input.multiplePregnancy) riskScore += 2;
+  // Ajustes por edad materna (OR aproximados del modelo FMF)
+  const ageRisk = Math.exp(0.0288 * (input.age - 30));
 
-  // Calculate risk category
-  let riskCategory: string;
+  // Ajustes por IMC (OR aproximados del modelo FMF)
+  const bmiRisk = Math.exp(0.0908 * (bmi - 24));
+
+  // Factores de riesgo médico (OR aproximados del modelo FMF)
+  const medicalFactorsRisk = (
+    (input.chronicHypertension ? 4.2 : 1) *
+    (input.diabetes ? 3.6 : 1) *
+    (input.lupusAPS ? 4.8 : 1)
+  );
+
+  // Historia obstétrica (OR aproximados del modelo FMF)
+  const obstetricFactorsRisk = (
+    (input.nulliparous ? 2.1 : 1) *
+    (input.previousPreeclampsia ? 4.2 : 1)
+  );
+
+  // Ajuste por etnia (OR aproximados del modelo FMF)
+  const ethnicityRisk = {
+    'caucasica': 1,
+    'afro': 1.8,
+    'sudasiatica': 1.6,
+    'asiaticooriental': 0.8,
+    'mixta': 1.4
+  }[input.ethnicity];
+
+  // Cálculo de PAM
+  const map = ((2 * input.diastolicBP) + input.systolicBP) / 3;
+  const mapRisk = Math.exp(0.0974 * (map - 88));
+
+  // Factores biofísicos y bioquímicos si están disponibles
+  let biomarkerRisk = 1;
+  if (input.uterinePI) {
+    biomarkerRisk *= Math.exp(0.4570 * (input.uterinePI - 1.5));
+  }
+  if (input.pappA) {
+    biomarkerRisk *= Math.exp(-0.3920 * (input.pappA - 1));
+  }
+  if (input.plgf) {
+    biomarkerRisk *= Math.exp(-0.2820 * (input.plgf - 1));
+  }
+
+  // Cálculo del riesgo final
+  const finalRisk = baselineRisk * ageRisk * bmiRisk * medicalFactorsRisk * 
+                   obstetricFactorsRisk * ethnicityRisk * mapRisk * biomarkerRisk;
+
+  // Convertir a porcentaje y redondear a 2 decimales
+  const riskPercentage = Math.round(finalRisk * 10000) / 100;
+
+  // Determinar categoría y recomendaciones
+  let category: string;
   let recommendation: string;
 
-  if (riskScore <= 2) {
-    riskCategory = "Bajo";
+  if (riskPercentage < 1) {
+    category = "Bajo";
     recommendation = "Control prenatal de rutina";
-  } else if (riskScore <= 5) {
-    riskCategory = "Moderado";
-    recommendation = "Seguimiento más frecuente y considerar aspirina en dosis bajas";
+  } else if (riskPercentage < 5) {
+    category = "Intermedio";
+    recommendation = "Considerar aspirina 150mg/día antes de las 16 semanas si hay factores de riesgo adicionales";
   } else {
-    riskCategory = "Alto";
-    recommendation = "Referir a especialista y considerar medidas preventivas incluyendo aspirina en dosis bajas";
+    category = "Alto";
+    recommendation = "Iniciar aspirina 150mg/día antes de las 16 semanas. Seguimiento estrecho.";
   }
 
   return {
-    score: riskScore,
-    category: riskCategory,
-    recommendation
+    riskPercentage,
+    category,
+    recommendation,
+    map
   };
 }
