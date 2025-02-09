@@ -9,14 +9,14 @@
 }
 
 body {
-    background: linear-gradient(to bottom, #ffffff, #f0f4f8);
+    background: linear-gradient(to bottom, #ffffff, #e6f3ff);
     min-height: 100vh;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 30px;
-    color: #2c5282;
+    color: #0072bc;
 }
 
 .form-row {
@@ -40,15 +40,15 @@ h1 {
 select {
     width: 100%;
     padding: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #b3d4fc;
     border-radius: 4px;
     transition: all 0.2s;
 }
 
 .custom-roller input:focus,
 select:focus {
-    border-color: #4299e1;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    border-color: #0072bc;
+    box-shadow: 0 0 0 3px rgba(0, 114, 188, 0.2);
     outline: none;
 }
 
@@ -78,7 +78,7 @@ select:focus {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #cbd5e0;
+    background-color: #b3d4fc;
     transition: .4s;
     border-radius: 34px;
 }
@@ -113,7 +113,7 @@ select:focus {
 }
 
 input:checked + .slider {
-    background-color: #4299e1;
+    background-color: #0072bc;
 }
 
 input:checked + .slider:before {
@@ -131,7 +131,7 @@ input:checked + .slider .slider-text.left {
 button {
     width: 100%;
     padding: 12px;
-    background-color: #4299e1;
+    background-color: #0072bc;
     color: white;
     border: none;
     border-radius: 4px;
@@ -141,16 +141,16 @@ button {
 }
 
 button:hover {
-    background-color: #3182ce;
+    background-color: #005a99;
 }
 
 #result {
     margin-top: 30px;
     padding: 20px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #b3d4fc;
     border-radius: 4px;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 114, 188, 0.1);
     display: none;
 }
 
