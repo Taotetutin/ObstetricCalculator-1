@@ -64,7 +64,7 @@ export function calculatePesoFetal(input: CalculatorInput<"pesoFetal">) {
 }
 
 // Datos de percentiles de la OMS para peso fetal por semana gestacional (gramos)
-const WHO_GROWTH_DATA = {
+export const WHO_GROWTH_DATA = {
   20: { p3: 249, p10: 275, p50: 320, p90: 378, p97: 402 },
   21: { p3: 280, p10: 312, p50: 373, p90: 447, p97: 478 },
   22: { p3: 330, p10: 370, p50: 452, p90: 544, p97: 583 },
