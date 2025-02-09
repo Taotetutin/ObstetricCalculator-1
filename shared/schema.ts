@@ -16,6 +16,12 @@ export const calculatorTypes = {
     ultrasoundDate: z.date().optional(),
     crownRumpLength: z.number().optional(),
   }),
+  liquidoAmniotico: z.object({
+    q1: z.number().min(0).max(25),
+    q2: z.number().min(0).max(25),
+    q3: z.number().min(0).max(25),
+    q4: z.number().min(0).max(25),
+  })
 } as const;
 
 // Type helpers

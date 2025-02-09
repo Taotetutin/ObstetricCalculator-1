@@ -1,8 +1,9 @@
 import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar } from "lucide-react";
-import { calculateFPP, calculateIMC, calculateGestationalAge } from "@/lib/calculator-utils";
+import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
+import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 
 export const calculators = [
   {
@@ -31,7 +32,7 @@ export const calculators = [
     name: "Líquido Amniótico",
     description: "Evalúa el índice de líquido amniótico",
     icon: Droplet,
-    component: () => null
+    component: LiquidoAmnioticoCalculator
   },
   {
     id: "peso-fetal",
