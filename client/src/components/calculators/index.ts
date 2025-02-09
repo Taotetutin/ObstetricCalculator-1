@@ -1,4 +1,4 @@
-import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar } from "lucide-react";
+import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar, Dna } from "lucide-react";
 import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico, calculatePesoFetal } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -10,6 +10,7 @@ import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
 import BishopCalculator from "./BishopCalculator";
 import DopplerCalculator from "./DopplerCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
+import T21Calculator from "./T21Calculator";
 
 export const calculators = [
   {
@@ -81,5 +82,12 @@ export const calculators = [
     description: "Control de ganancia de peso en embarazo",
     icon: TrendingUp,
     component: WeightGainCalculator
+  },
+  {
+    id: "t21",
+    name: "Riesgo de T21",
+    description: "Calcula el riesgo de trisomía 21",
+    icon: Dna,
+    component: T21Calculator
   }
 ];
