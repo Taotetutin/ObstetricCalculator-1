@@ -10,7 +10,10 @@ if (!rootElement) {
   throw new Error("Failed to find the root element");
 }
 
-createRoot(rootElement).render(
+const root = createRoot(rootElement);
+console.log("Root element found, rendering app...");
+
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

@@ -8,6 +8,7 @@ import Calculator from "@/pages/Calculator";
 import Sidebar from "@/components/Sidebar";
 
 function Router() {
+  console.log("Router rendering..."); // Debug log
   return (
     <div className="min-h-screen bg-background">
       <div className="flex min-h-screen">
@@ -28,6 +29,7 @@ function Router() {
 }
 
 function App() {
+  console.log("App component rendering..."); // Debug log
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
