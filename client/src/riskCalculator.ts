@@ -1,4 +1,4 @@
-export function calculateRisk(formData: {
+interface FormData {
     gestationalWeeks: number;
     gestationalDays: number;
     cervicalLength: number;
@@ -7,9 +7,13 @@ export function calculateRisk(formData: {
     hasPreviousPretermBirth: boolean;
     hasMembraneRupture: boolean;
     hasCervicalSurgery: boolean;
-}) {
-    const risk = calculateBaseRisk(formData.cervicalLength);
-    
+}
+
+export function calculateRisk(formData: FormData): number {
+    // Asegurarse de que cervicalLength sea un número válido
+    const cervicalLength = Number(formData.cervicalLength) || 0;
+    const risk = calculateBaseRisk(cervicalLength);
+
     const riskMultipliers = {
         multipleGestation: formData.fetusCount > 1 ? 1.5 : 1,
         contractions: formData.hasContractions ? 1.2 : 1,
@@ -26,9 +30,9 @@ function calculateBaseRisk(cervicalLength: number): number {
     const maxRisk = 0.80;
     const minRisk = 0.007;
     const decayRate = 0.08;
-    
+
     if (cervicalLength <= 5) return maxRisk;
     if (cervicalLength >= 50) return minRisk;
-    
+
     return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));
 }
