@@ -1,161 +1,108 @@
-import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { InfoIcon } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function PRCalculator() {
-  const [formData, setFormData] = useState({
-    semanasGestacion: '',
-    diasGestacion: '',
-    prInterval: '',
-    avInterval: '',
-    ductusVenosus: '',
+  const [edad, setEdad] = useState({
+    semanas: '',
+    dias: ''
   });
+  const [intervaloPR, setIntervaloPR] = useState('');
+  const [resultado, setResultado] = useState(null);
 
-  const [result, setResult] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const gestationalAge = Number(formData.semanasGestacion) + (Number(formData.diasGestacion) / 7);
-      // TODO: Implement the actual calculation logic
-      const resultado = {
-        percentile: "50",
-        isAbnormal: false,
-        recommendation: "Dentro de rangos normales",
-      };
-      setResult(resultado);
+    const semanas = parseInt(edad.semanas, 10);
+    const dias = parseInt(edad.dias, 10);
+    const pr = parseFloat(intervaloPR);
 
-      await fetch("/api/calculations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          calculatorType: "pr",
-          input: JSON.stringify(formData),
-          result: JSON.stringify(resultado),
-        }),
-      });
-    } catch (error) {
-      console.error("Error:", error);
+    // Basic validation.  More robust validation could be added.
+    if (isNaN(semanas) || isNaN(dias) || isNaN(pr) || semanas < 16 || semanas > 38 || dias < 0 || dias > 6 || pr <=0){
+        setResultado({percentil: "Error", interpretacion: "Por favor, introduce datos válidos."});
+        return;
     }
+
+    // Cálculo de percentiles basado en la gráfica (Placeholder - needs actual logic)
+    let percentil = "50"; // Replace with actual calculation based on semanas, dias, and pr
+    let interpretacion = "Normal"; // Replace with actual interpretation based on percentil
+
+    setResultado({ percentil, interpretacion });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-blue-700 mb-2">
-          Evaluación del Intervalo PR Fetal
-        </h2>
-        <p className="text-gray-600">
-          Sistema de evaluación cardíaca fetal
-        </p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">
+        Calculadora PR Fetal
+      </h1>
+
+      <div className="mb-8">
+        <img 
+          src="/pr-graph.jpg" 
+          alt="Gráfico de percentiles PR"
+          className="mx-auto max-w-full h-auto"
+        />
+        <div className="text-center text-sm mt-2">
+          <span className="text-yellow-600">—— Percentil 50</span>
+          <span className="ml-4 text-cyan-600">—— Percentil 95</span>
+          <span className="ml-4 text-purple-600">—— Percentil 99</span>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Semanas</label>
-            <Input
-              type="number"
-              name="semanasGestacion"
-              value={formData.semanasGestacion}
-              onChange={handleChange}
-              className="mt-1"
-            />
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
+        <div>
+          <label className="block text-gray-700 mb-2">Edad Gestacional:</label>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-600">Semanas</label>
+              <Input
+                type="number"
+                value={edad.semanas}
+                onChange={(e) => setEdad(prev => ({ ...prev, semanas: e.target.value }))}
+                className="mt-1"
+                placeholder="Semanas"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600">Días</label>
+              <Input
+                type="number"
+                value={edad.dias}
+                onChange={(e) => setEdad(prev => ({ ...prev, dias: e.target.value }))}
+                className="mt-1"
+                placeholder="Días"
+              />
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Días</label>
-            <Input
-              type="number"
-              name="diasGestacion"
-              value={formData.diasGestacion}
-              onChange={handleChange}
-              min="0"
-              max="6"
-              className="mt-1"
-            />
-          </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Intervalo PR (ms)
+          <label className="block text-gray-700 mb-2">
+            Intervalo PR Medido (ms):
           </label>
           <Input
             type="number"
-            name="prInterval"
-            value={formData.prInterval}
-            onChange={handleChange}
-            className="mt-1"
+            value={intervaloPR}
+            onChange={(e) => setIntervaloPR(e.target.value)}
+            className="w-full"
+            placeholder="Intervalo PR en milisegundos"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            AV Interval (ms)
-          </label>
-          <Input
-            type="number"
-            name="avInterval"
-            value={formData.avInterval}
-            onChange={handleChange}
-            className="mt-1"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Ductus Venosus (ms)
-          </label>
-          <Input
-            type="number"
-            name="ductusVenosus"
-            value={formData.ductusVenosus}
-            onChange={handleChange}
-            className="mt-1"
-          />
-        </div>
-
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-          Calcular
+        <Button 
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+        >
+          Calcular Percentiles
         </Button>
       </form>
 
-      {result && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Resultados:</h3>
-              <p>
-                Percentil: <span className="font-medium">{result.percentile}</span>
-              </p>
-              <p>
-                Estado: <span className="font-medium">{result.isAbnormal ? "Anormal" : "Normal"}</span>
-              </p>
-              <p>
-                Recomendación: <span className="font-medium">{result.recommendation}</span>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      {resultado && (
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg max-w-md mx-auto">
+          <h3 className="font-semibold mb-2">Resultado:</h3>
+          <p>Percentil: {resultado.percentil}</p>
+          <p>Interpretación: {resultado.interpretacion}</p>
+        </div>
       )}
-
-      <div className="flex items-start gap-2 p-4 bg-blue-50 rounded-lg">
-        <InfoIcon className="h-5 w-5 text-blue-500 mt-0.5" />
-        <p className="text-sm text-blue-700">
-          El intervalo PR prolongado puede estar asociado a alteraciones de la conducción cardíaca fetal.
-        </p>
-      </div>
     </div>
   );
 }
