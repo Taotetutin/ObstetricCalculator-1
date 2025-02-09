@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, Baby, Stethoscope } from "lucide-react";
-
-// Placeholder components - will be implemented next
-const AgeCalculator = () => <div>Age Calculator</div>;
-const FirstTrimesterCalculator = () => <div>First Trimester</div>;
-const SecondTrimesterCalculator = () => <div>Second Trimester</div>;
+import AgeCalculator from "./T21/AgeCalculator";
+import FirstTrimesterCalculator from "./T21/FirstTrimesterCalculator";
+import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
 
 export default function T21Calculator() {
   return (
