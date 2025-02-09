@@ -27,7 +27,7 @@ export default function PesoFetalCalculator() {
     }
 
     const resultado = calculatePesoFetal(data);
-    setResult(resultado.peso); // Only store the weight
+    setResult(resultado);
 
     try {
       await fetch("/api/calculations", {
@@ -36,7 +36,7 @@ export default function PesoFetalCalculator() {
         body: JSON.stringify({
           calculatorType: "pesoFetal",
           input: JSON.stringify(data),
-          result: JSON.stringify({ peso: resultado.peso }), // Send only the weight
+          result: JSON.stringify({ peso: resultado }), // Send only the weight
         }),
       });
     } catch (error) {
