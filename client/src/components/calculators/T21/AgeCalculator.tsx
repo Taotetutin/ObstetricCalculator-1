@@ -147,7 +147,7 @@ export default function AgeCalculator() {
 
       {result && (
         <div className="mt-6 p-4 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+          <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
           <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
           <p className={`font-medium ${
             result.interpretation === "Alto Riesgo"

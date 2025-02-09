@@ -8,21 +8,25 @@ import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
 export default function T21Calculator() {
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Riesgo de Trisomía 21</h2>
+      </div>
+
       <Tabs defaultValue="age" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="age">
+        <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
+          <TabsTrigger value="age" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
               <Calculator className="w-4 h-4" />
               <span>Riesgo por Edad</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="first">
+          <TabsTrigger value="first" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
               <Baby className="w-4 h-4" />
               <span>Primer Trimestre</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="second">
+          <TabsTrigger value="second" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
               <Stethoscope className="w-4 h-4" />
               <span>Segundo Trimestre</span>
