@@ -76,20 +76,6 @@ export const calculators = [
     component: DopplerCalculator
   },
   {
-    id: "bienestar-fetal",
-    name: "Bienestar Fetal",
-    description: "Evaluación del bienestar fetal",
-    icon: Heart,
-    component: () => null
-  },
-  {
-    id: "percentiles",
-    name: "Percentiles de Crecimiento",
-    description: "Calcula percentiles de crecimiento fetal",
-    icon: Ruler,
-    component: () => null
-  },
-  {
     id: "ganancia-peso",
     name: "Ganancia de Peso",
     description: "Control de ganancia de peso en embarazo",
