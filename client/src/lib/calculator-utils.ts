@@ -234,29 +234,37 @@ export function calculateBishop(input: CalculatorInput<"bishop">) {
 // Rangos normales de Doppler por semana gestacional
 const DOPPLER_RANGES = {
   umbilicalPI: {
-    20: { mean: 1.23, sd: 0.19 },
-    24: { mean: 1.18, sd: 0.18 },
-    28: { mean: 1.12, sd: 0.17 },
-    32: { mean: 1.05, sd: 0.16 },
-    36: { mean: 0.98, sd: 0.15 },
-    40: { mean: 0.91, sd: 0.14 }
+    20: { mean: 1.23, sd: 0.19, p5: 0.92 },
+    24: { mean: 1.18, sd: 0.18, p5: 0.89 },
+    28: { mean: 1.12, sd: 0.17, p5: 0.85 },
+    32: { mean: 1.05, sd: 0.16, p5: 0.80 },
+    36: { mean: 0.98, sd: 0.15, p5: 0.75 },
+    40: { mean: 0.91, sd: 0.14, p5: 0.70 }
   },
   cerebralPI: {
-    20: { mean: 1.56, sd: 0.32 },
-    24: { mean: 1.67, sd: 0.33 },
-    28: { mean: 1.78, sd: 0.34 },
-    32: { mean: 1.89, sd: 0.35 },
-    36: { mean: 1.54, sd: 0.33 },
-    40: { mean: 1.23, sd: 0.31 }
+    20: { mean: 1.56, sd: 0.32, p5: 1.12 },
+    24: { mean: 1.67, sd: 0.33, p5: 1.20 },
+    28: { mean: 1.78, sd: 0.34, p5: 1.28 },
+    32: { mean: 1.89, sd: 0.35, p5: 1.36 },
+    36: { mean: 1.54, sd: 0.33, p5: 1.10 },
+    40: { mean: 1.23, sd: 0.31, p5: 0.85 }
   },
   // PSV en cm/s
   cerebralPSV: {
-    20: { mean: 23.5, sd: 4.2 },
-    24: { mean: 29.4, sd: 5.1 },
-    28: { mean: 36.8, sd: 6.3 },
-    32: { mean: 46.0, sd: 7.8 },
-    36: { mean: 57.5, sd: 9.7 },
-    40: { mean: 71.9, sd: 12.1 }
+    20: { mean: 23.5, sd: 4.2, p5: 17.1 },
+    24: { mean: 29.4, sd: 5.1, p5: 21.4 },
+    28: { mean: 36.8, sd: 6.3, p5: 26.8 },
+    32: { mean: 46.0, sd: 7.8, p5: 33.5 },
+    36: { mean: 57.5, sd: 9.7, p5: 41.9 },
+    40: { mean: 71.9, sd: 12.1, p5: 52.3 }
+  },
+  cpr: {
+    20: { mean: 1.27, sd: 0.33, p5: 0.85 },
+    24: { mean: 1.41, sd: 0.34, p5: 0.90 },
+    28: { mean: 1.59, sd: 0.35, p5: 1.00 },
+    32: { mean: 1.80, sd: 0.36, p5: 1.08 },
+    36: { mean: 1.57, sd: 0.35, p5: 0.96 },
+    40: { mean: 1.35, sd: 0.34, p5: 0.82 }
   }
 };
 
@@ -265,12 +273,16 @@ function interpolateRange(week: number, ranges: typeof DOPPLER_RANGES.umbilicalP
   const lowerWeek = Math.max(...weeks.filter(w => w <= week));
   const upperWeek = Math.min(...weeks.filter(w => w >= week));
 
-  if (lowerWeek === upperWeek) return ranges[lowerWeek];
+  if (lowerWeek === upperWeek) return ranges[lowerWeek as keyof typeof ranges];
 
   const ratio = (week - lowerWeek) / (upperWeek - lowerWeek);
+  const lowerValues = ranges[lowerWeek as keyof typeof ranges];
+  const upperValues = ranges[upperWeek as keyof typeof ranges];
+
   return {
-    mean: ranges[lowerWeek].mean + (ranges[upperWeek].mean - ranges[lowerWeek].mean) * ratio,
-    sd: ranges[lowerWeek].sd + (ranges[upperWeek].sd - ranges[lowerWeek].sd) * ratio
+    mean: lowerValues.mean + (upperValues.mean - lowerValues.mean) * ratio,
+    sd: lowerValues.sd + (upperValues.sd - lowerValues.sd) * ratio,
+    p5: lowerValues.p5 + (upperValues.p5 - lowerValues.p5) * ratio
   };
 }
 
@@ -300,7 +312,8 @@ export function calculateDoppler(input: CalculatorInput<"doppler">) {
   const ranges = {
     umbilical: interpolateRange(gestationalAge, DOPPLER_RANGES.umbilicalPI),
     cerebral: interpolateRange(gestationalAge, DOPPLER_RANGES.cerebralPI),
-    psv: interpolateRange(gestationalAge, DOPPLER_RANGES.cerebralPSV)
+    psv: interpolateRange(gestationalAge, DOPPLER_RANGES.cerebralPSV),
+    cpr: interpolateRange(gestationalAge, DOPPLER_RANGES.cpr)
   };
 
   // Calcular percentiles
@@ -312,35 +325,59 @@ export function calculateDoppler(input: CalculatorInput<"doppler">) {
 
   // Calcular ratio cerebro-placentario (CPR)
   const cpr = input.acmPi / input.auPi;
+  const cprPercentile = calculatePercentile(cpr, ranges.cpr.mean, ranges.cpr.sd);
 
-  // Evaluación general
+  // Evaluación según criterios de medicina fetal Barcelona
   let evaluation = "Normal";
-  let recommendations = [];
+  let recommendations: string[] = [];
 
+  // Evaluación arteria umbilical
   if (input.auPi > ranges.umbilical.mean + 2 * ranges.umbilical.sd) {
     evaluation = "Alterado";
-    recommendations.push("Resistencias umbilicales aumentadas");
+    recommendations.push("IP de arteria umbilical elevado (>p95): Sugiere aumento de resistencias placentarias");
   }
 
-  if (input.acmPi < ranges.cerebral.mean - 2 * ranges.cerebral.sd) {
+  // Evaluación ACM y brain-sparing
+  const isAcmVasodilatacion = input.acmPi < ranges.cerebral.p5;
+  const isCprAlterado = cpr < ranges.cpr.p5;
+
+  if (isAcmVasodilatacion && isCprAlterado) {
     evaluation = "Alterado";
-    recommendations.push("Vasodilatación cerebral (brain-sparing)");
-  }
-
-  if (cpr < 1) {
+    recommendations.push("Vasodilatación cerebral con IPC alterado: Patrón de redistribución hemodinámica establecido");
+  } else if (isAcmVasodilatacion) {
     evaluation = "Alterado";
-    recommendations.push("Ratio cerebro-placentario alterado");
+    recommendations.push("Vasodilatación cerebral: Posible inicio de redistribución hemodinámica");
+  } else if (isCprAlterado) {
+    evaluation = "Alterado";
+    recommendations.push("IPC alterado sin vasodilatación cerebral evidente: Vigilancia estrecha");
   }
 
+  // Evaluación ductus venoso
   if (input.dvWave !== 'normal') {
     evaluation = "Alterado";
-    recommendations.push(`Onda a del ductus venoso ${input.dvWave}`);
+    const dvMessage = input.dvWave === 'ausente' 
+      ? "Onda a del ductus venoso ausente: Posible compromiso cardíaco"
+      : "Onda a del ductus venoso reversa: Compromiso cardíaco significativo";
+    recommendations.push(dvMessage);
   }
+
+  // Recomendaciones generales basadas en la severidad
+  let seguimiento = "Control habitual";
+  if (evaluation === "Alterado") {
+    if (input.dvWave !== 'normal' || (isAcmVasodilatacion && isCprAlterado)) {
+      seguimiento = "Control en 24-48h. Valorar finalización según edad gestacional";
+    } else {
+      seguimiento = "Control en 72h";
+    }
+  }
+
+  recommendations.push(`Seguimiento: ${seguimiento}`);
 
   return {
     percentiles,
     cpr,
+    cprPercentile,
     evaluation,
-    recommendations: recommendations.join(". ") || "No se detectan alteraciones significativas."
+    recommendations: recommendations.join(". ")
   };
 }

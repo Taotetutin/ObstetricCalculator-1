@@ -25,6 +25,7 @@ type DopplerResult = {
     acmPsv: number;
   };
   cpr: number;
+  cprPercentile: number; // Added cprPercentile
   evaluation: string;
   recommendations: string;
 };
@@ -240,7 +241,7 @@ export default function DopplerCalculator() {
             <h3 className="text-lg font-semibold mb-4">Resultados:</h3>
             <div className="space-y-4">
               <div>
-                <p className="font-medium">Percentiles:</p>
+                <p className="font-medium">Índices Doppler:</p>
                 <ul className="list-disc list-inside ml-4">
                   <li>AU-IP: <span className="font-medium">{result.percentiles.auPi}%</span></li>
                   <li>ACM-IP: <span className="font-medium">{result.percentiles.acmPi}%</span></li>
@@ -249,18 +250,23 @@ export default function DopplerCalculator() {
               </div>
 
               <div>
-                <p className="font-medium">Ratio Cerebro-Placentario:</p>
-                <p className="ml-4">{result.cpr.toFixed(2)}</p>
+                <p className="font-medium">Índice Cerebro-Placentario (IPC):</p>
+                <ul className="list-disc list-inside ml-4">
+                  <li>Valor: <span className="font-medium">{result.cpr.toFixed(2)}</span></li>
+                  <li>Percentil: <span className="font-medium">{result.cprPercentile}%</span></li>
+                </ul>
               </div>
 
               <div>
-                <p className="font-medium">Evaluación:</p>
-                <p className="ml-4">{result.evaluation}</p>
+                <p className="font-medium">Estado:</p>
+                <p className={`ml-4 font-medium ${result.evaluation === "Alterado" ? "text-red-600" : "text-green-600"}`}>
+                  {result.evaluation}
+                </p>
               </div>
 
               <div>
-                <p className="font-medium">Recomendaciones:</p>
-                <p className="ml-4">{result.recommendations}</p>
+                <p className="font-medium">Interpretación y Recomendaciones:</p>
+                <p className="ml-4 text-sm">{result.recommendations}</p>
               </div>
             </div>
           </CardContent>
