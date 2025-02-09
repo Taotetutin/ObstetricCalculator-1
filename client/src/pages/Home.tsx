@@ -3,7 +3,11 @@ import { calculators } from "@/components/calculators";
 import { Link } from "wouter";
 
 export default function Home() {
+  // Debugging logs
   console.log("Calculadoras disponibles:", calculators);
+  console.log("¿Es array?", Array.isArray(calculators));
+  console.log("Longitud:", calculators?.length);
+  console.log("Keys:", calculators && Object.keys(calculators));
 
   return (
     <div className="container mx-auto">
