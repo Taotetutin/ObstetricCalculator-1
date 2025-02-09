@@ -158,17 +158,17 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
   const finalRisk = baselineRisk * ageRisk * bmiRisk * medicalFactorsRisk * 
                    obstetricFactorsRisk * ethnicityRisk * mapRisk * biomarkerRisk;
 
-  // Convertir a porcentaje y redondear a 2 decimales
-  const riskPercentage = Math.round(finalRisk * 10000) / 100;
+  // Convertir el riesgo a una relación (1/N)
+  const riskRatio = Math.round(1 / finalRisk);
 
   // Determinar categoría y recomendaciones
   let category: string;
   let recommendation: string;
 
-  if (riskPercentage < 1) {
+  if (riskRatio > 100) {
     category = "Bajo";
     recommendation = "Control prenatal de rutina";
-  } else if (riskPercentage < 5) {
+  } else if (riskRatio > 50) {
     category = "Intermedio";
     recommendation = "Considerar aspirina 150mg/día antes de las 16 semanas si hay factores de riesgo adicionales";
   } else {
@@ -177,7 +177,7 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
   }
 
   return {
-    riskPercentage,
+    riskRatio,
     category,
     recommendation,
     map

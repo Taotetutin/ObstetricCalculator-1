@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -48,7 +48,7 @@ type PreeclampsiaInput = {
 
 export default function PreeclampsiaCalculator() {
   const [result, setResult] = useState<{
-    riskPercentage: number;
+    riskRatio: number;
     category: string;
     recommendation: string;
     map: number;
@@ -163,8 +163,8 @@ export default function PreeclampsiaCalculator() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Etnia</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <SelectTrigger>
@@ -202,8 +202,8 @@ export default function PreeclampsiaCalculator() {
                   name={field.name as keyof PreeclampsiaInput}
                   render={({ field: { value, onChange } }) => (
                     <FormItem className="flex items-center space-x-2">
-                      <Checkbox 
-                        checked={value} 
+                      <Checkbox
+                        checked={value}
                         onCheckedChange={onChange}
                       />
                       <FormLabel className="font-normal">{field.label}</FormLabel>
@@ -346,7 +346,7 @@ export default function PreeclampsiaCalculator() {
             <div className="space-y-2">
               <p>
                 Riesgo de Preeclampsia:{" "}
-                <span className="font-medium">{result.riskPercentage}%</span>
+                <span className="font-medium">1/{Math.round(1 / (result.riskRatio / 100))}</span>
               </p>
               <p>
                 Presión Arterial Media:{" "}
