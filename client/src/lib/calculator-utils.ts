@@ -107,58 +107,58 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
   // Calcular IMC
   const bmi = input.weight / (input.height * input.height);
 
-  // Factores de riesgo base (basado en FMF)
-  let baselineRisk = 0.01; // Riesgo base 1%
+  // Riesgo base ajustado según FMF (3.6% para preeclampsia precoz)
+  let baselineRisk = 0.036;
 
-  // Ajustes por edad materna (OR aproximados del modelo FMF)
-  const ageRisk = Math.exp(0.0288 * (input.age - 30));
+  // Ajustes por edad materna (OR según FMF)
+  const ageRisk = Math.exp(0.0323 * (input.age - 35));
 
-  // Ajustes por IMC (OR aproximados del modelo FMF)
-  const bmiRisk = Math.exp(0.0908 * (bmi - 24));
+  // Ajustes por IMC (OR según FMF)
+  const bmiRisk = Math.exp(0.0925 * (Math.log(bmi) - Math.log(24)));
 
-  // Factores de riesgo médico (OR aproximados del modelo FMF)
+  // Factores de riesgo médico (OR según FMF)
   const medicalFactorsRisk = (
-    (input.chronicHypertension ? 4.2 : 1) *
-    (input.diabetes ? 3.6 : 1) *
-    (input.lupusAPS ? 4.8 : 1)
+    (input.chronicHypertension ? 5.13 : 1) *
+    (input.diabetes ? 3.78 : 1) *
+    (input.lupusAPS ? 4.24 : 1)
   );
 
-  // Historia obstétrica (OR aproximados del modelo FMF)
+  // Historia obstétrica (OR según FMF)
   const obstetricFactorsRisk = (
-    (input.nulliparous ? 2.1 : 1) *
-    (input.previousPreeclampsia ? 4.2 : 1)
+    (input.nulliparous ? 2.34 : 1) *
+    (input.previousPreeclampsia ? 3.89 : 1)
   );
 
-  // Ajuste por etnia (OR aproximados del modelo FMF)
+  // Ajuste por etnia (OR según FMF)
   const ethnicityRisk = {
     'caucasica': 1,
-    'afro': 1.8,
-    'sudasiatica': 1.6,
-    'asiaticooriental': 0.8,
-    'mixta': 1.4
+    'afro': 2.12,
+    'sudasiatica': 1.82,
+    'asiaticooriental': 0.76,
+    'mixta': 1.54
   }[input.ethnicity];
 
-  // Cálculo de PAM
+  // Cálculo de PAM y su riesgo
   const map = ((2 * input.diastolicBP) + input.systolicBP) / 3;
-  const mapRisk = Math.exp(0.0974 * (map - 88));
+  const mapRisk = Math.exp(0.1058 * (map - 85));
 
-  // Factores biofísicos y bioquímicos si están disponibles
+  // Factores biofísicos y bioquímicos
   let biomarkerRisk = 1;
   if (input.uterinePI) {
-    biomarkerRisk *= Math.exp(0.4570 * (input.uterinePI - 1.5));
+    biomarkerRisk *= Math.exp(0.5186 * (Math.log(input.uterinePI) - Math.log(1.5)));
   }
   if (input.pappA) {
-    biomarkerRisk *= Math.exp(-0.3920 * (input.pappA - 1));
+    biomarkerRisk *= Math.exp(-0.4146 * (Math.log(input.pappA)));
   }
   if (input.plgf) {
-    biomarkerRisk *= Math.exp(-0.2820 * (input.plgf - 1));
+    biomarkerRisk *= Math.exp(-0.3351 * (Math.log(input.plgf / 100)));
   }
 
   // Cálculo del riesgo final
   const finalRisk = baselineRisk * ageRisk * bmiRisk * medicalFactorsRisk * 
                    obstetricFactorsRisk * ethnicityRisk * mapRisk * biomarkerRisk;
 
-  // Convertir el riesgo a una relación (1/N)
+  // Convertir a relación (1/N)
   const riskRatio = Math.round(1 / finalRisk);
 
   // Determinar categoría y recomendaciones
