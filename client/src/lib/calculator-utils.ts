@@ -102,3 +102,41 @@ export function calcularPercentilOMS(semanas: number, peso: number) {
   if (peso <= datos.p97) return { percentil: "90-97", clasificacion: "Grande para la edad gestacional" };
   return { percentil: ">97", clasificacion: "Muy grande para la edad gestacional" };
 }
+
+export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">) {
+  let riskScore = 0;
+
+  // Base risk factors
+  if (input.age > 35) riskScore += 1;
+  if (input.age > 40) riskScore += 1;
+  if (input.bmi > 30) riskScore += 1;
+  if (input.bmi > 35) riskScore += 1;
+
+  // Major risk factors
+  if (input.nulliparous) riskScore += 2;
+  if (input.previousPreeclampsia) riskScore += 3;
+  if (input.chronicHypertension) riskScore += 3;
+  if (input.diabetes) riskScore += 2;
+  if (input.multiplePregnancy) riskScore += 2;
+
+  // Calculate risk category
+  let riskCategory: string;
+  let recommendation: string;
+
+  if (riskScore <= 2) {
+    riskCategory = "Bajo";
+    recommendation = "Control prenatal de rutina";
+  } else if (riskScore <= 5) {
+    riskCategory = "Moderado";
+    recommendation = "Seguimiento más frecuente y considerar aspirina en dosis bajas";
+  } else {
+    riskCategory = "Alto";
+    recommendation = "Referir a especialista y considerar medidas preventivas incluyendo aspirina en dosis bajas";
+  }
+
+  return {
+    score: riskScore,
+    category: riskCategory,
+    recommendation
+  };
+}

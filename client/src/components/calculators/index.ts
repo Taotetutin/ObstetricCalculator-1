@@ -6,6 +6,7 @@ import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 import PesoFetalCalculator from "./PesoFetalCalculator";
 import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
+import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
 
 export const calculators = [
   {
@@ -55,7 +56,7 @@ export const calculators = [
     name: "Riesgo de Preeclampsia",
     description: "Evalúa el riesgo de preeclampsia",
     icon: Activity,
-    component: () => null
+    component: PreeclampsiaCalculator
   },
   {
     id: "bishop",

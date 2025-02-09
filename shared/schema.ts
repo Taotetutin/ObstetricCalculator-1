@@ -31,7 +31,17 @@ export const calculatorTypes = {
   curvaCrecimiento: z.object({
     semanasGestacion: z.number().min(20).max(42),
     pesoFetal: z.number().min(100).max(5000),
-  })
+  }),
+  preeclampsia: z.object({
+    age: z.number().min(12).max(60),
+    gestationalAge: z.number().min(20).max(42),
+    bmi: z.number().min(15).max(60),
+    nulliparous: z.boolean(),
+    previousPreeclampsia: z.boolean(),
+    chronicHypertension: z.boolean(),
+    diabetes: z.boolean(),
+    multiplePregnancy: z.boolean(),
+  }),
 } as const;
 
 // Type helpers
