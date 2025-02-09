@@ -96,7 +96,7 @@ export default function IMCCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
             <p>
               IMC: <span className="font-medium">{result}</span>
             </p>

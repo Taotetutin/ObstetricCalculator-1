@@ -79,6 +79,10 @@ export default function CurvaCrecimientoCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Curva de Crecimiento</h2>
+      </div>
+
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
@@ -124,7 +128,7 @@ export default function CurvaCrecimientoCalculator() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Evaluar Crecimiento
           </Button>
         </form>
@@ -133,7 +137,7 @@ export default function CurvaCrecimientoCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Curva de Crecimiento Fetal</h3>
+            <h3 className="text-lg font-semibold mb-4 text-blue-700">Curva de Crecimiento Fetal</h3>
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>

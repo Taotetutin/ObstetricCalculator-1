@@ -45,6 +45,10 @@ export default function GestationalAgeCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Edad Gestacional</h2>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -83,7 +87,7 @@ export default function GestationalAgeCalculator() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
           </Button>
         </form>
@@ -92,7 +96,7 @@ export default function GestationalAgeCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
             <p>
               Edad Gestacional:{" "}
               <span className="font-medium">

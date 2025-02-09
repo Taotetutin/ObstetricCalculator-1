@@ -77,7 +77,7 @@ export default function LiquidoAmnioticoCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
             <p>
               Índice de Líquido Amniótico:{" "}
               <span className="font-medium">{result.ila} cm</span>
