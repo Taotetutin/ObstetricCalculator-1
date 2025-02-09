@@ -32,21 +32,6 @@ export default function Calculator() {
 
   return (
     <div className="container mx-auto py-6">
-      {/* Navigation Menu */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {calculators.map((calc) => (
-          <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-            <Button
-              variant={calc.id === id ? "default" : "outline"}
-              className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
-            >
-              <calc.icon className="h-4 w-4" />
-              {calc.name}
-            </Button>
-          </Link>
-        ))}
-      </div>
-
       {/* Calculator Content */}
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-lg bg-white/80 backdrop-blur-sm">
