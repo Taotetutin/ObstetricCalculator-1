@@ -3,18 +3,12 @@ import { calculators } from "@/components/calculators";
 import { Link } from "wouter";
 
 export default function Home() {
-  // Debugging logs
-  console.log("Calculadoras disponibles:", calculators);
-  console.log("¿Es array?", Array.isArray(calculators));
-  console.log("Longitud:", calculators?.length);
-  console.log("Keys:", calculators && Object.keys(calculators));
-
   return (
     <div className="container mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-primary">ObsteriX Pro</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {calculators && calculators.map((calc) => (
+        {calculators.map((calc) => (
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="p-6">
@@ -27,7 +21,7 @@ export default function Home() {
         ))}
       </div>
 
-      {(!calculators || calculators.length === 0) && (
+      {calculators.length === 0 && (
         <div className="text-center text-gray-500">
           No hay calculadoras disponibles en este momento.
         </div>

@@ -3,17 +3,7 @@ import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
-import CVRCalculator from "./CVRCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
-
-// Debug logs para verificar importaciones
-console.log("Verificando importaciones de calculadoras:");
-console.log("FPP Calculator:", !!FPPCalculator);
-console.log("Gestational Age Calculator:", !!GestationalAgeCalculator);
-console.log("IMC Calculator:", !!IMCCalculator);
-console.log("Liquido Amniotico Calculator:", !!LiquidoAmnioticoCalculator);
-console.log("CVR Calculator:", !!CVRCalculator);
-console.log("Pulmonary Predictor Calculator:", !!PulmonaryPredictorCalculator);
 
 export const calculators = [
   {
@@ -52,7 +42,3 @@ export const calculators = [
     component: PulmonaryPredictorCalculator
   }
 ];
-
-// Debug log para verificar el array de calculadoras
-console.log("Número total de calculadoras:", calculators.length);
-console.log("IDs de calculadoras disponibles:", calculators.map(calc => calc.id));
