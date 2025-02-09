@@ -8,9 +8,14 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 border-r bg-card p-4 flex flex-col gap-4">
-      <div className="h-16 flex items-center px-2">
+      <div className="h-24 flex items-center px-2 border-b pb-4">
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
+            <img 
+              src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
+              alt="MiMaternoFetal Logo"
+              className="h-16 w-auto"
+            />
             <span className="font-bold text-xl">ObsteriX Pro</span>
           </div>
         </Link>
