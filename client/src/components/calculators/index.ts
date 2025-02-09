@@ -1,5 +1,4 @@
 import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar, Dna, Stethoscope } from "lucide-react";
-import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico, calculatePesoFetal, calculateLHR, calculateCVR } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
@@ -11,8 +10,8 @@ import BishopCalculator from "./BishopCalculator";
 import DopplerCalculator from "./DopplerCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import T21Calculator from "./T21Calculator";
-import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import TallaFetalCalculator from "./TallaFetalCalculator";
+import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
