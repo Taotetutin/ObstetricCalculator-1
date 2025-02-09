@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Riesgo de Parto Prematuro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculadora de Riesgo de Parto Prematuro</h1>
+            <p>Esta herramienta calcula el riesgo de parto prematuro basado en factores clínicos.</p>
+        </header>
+
+        <main>
+            <form id="riskForm">
+                <div class="form-group">
+                    <label for="previousPreterm">¿Ha tenido partos prematuros anteriores?</label>
+                    <select id="previousPreterm" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="yes">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cervixLength">Longitud cervical (mm)</label>
+                    <input type="number" id="cervixLength" required min="0" max="100" step="0.1">
+                    <div class="tooltip">
+                        <span class="tooltip-text">Ingrese la longitud cervical medida por ultrasonido transvaginal</span>
+                        <i class="info-icon">i</i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gestationalAge">Edad gestacional actual (semanas)</label>
+                    <input type="number" id="gestationalAge" required min="16" max="32" step="0.1">
+                    <div class="tooltip">
+                        <span class="tooltip-text">Ingrese la edad gestacional actual en semanas</span>
+                        <i class="info-icon">i</i>
+                    </div>
+                </div>
+
+                <button type="submit">Calcular Riesgo</button>
+            </form>
+
+            <div id="results" style="display: none;">
+                <!-- Los resultados se mostrarán aquí -->
+            </div>
+
+            <div class="info-section">
+                <h2>Información Importante</h2>
+                <ul>
+                    <li>Esta calculadora está diseñada para uso profesional</li>
+                    <li>Los resultados son estimaciones basadas en estudios poblacionales</li>
+                    <li>No reemplaza el juicio clínico profesional</li>
+                    <li>Consulte siempre con su médico para interpretación de resultados</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p>Derechos reservados a MiMaternoFetal.cl</p>
+        </footer>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
