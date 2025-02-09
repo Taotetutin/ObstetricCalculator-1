@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { calculatorTypes } from "@shared/schema";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { InfoIcon } from "lucide-react";
+import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { InfoIcon } from 'lucide-react';
 
 export default function PRCalculator() {
   const [formData, setFormData] = useState({
