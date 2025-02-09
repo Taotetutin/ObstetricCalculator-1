@@ -26,6 +26,7 @@ import PartoPrematuroCalculator from "./PartoPrematuroCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import MEFICalculator from "./MEFICalculator";
 import FemurCortoCalculator from "./FemurCortoCalculator";
+import HuesoNasalCalculator from "./HuesoNasalCalculator";
 
 export const calculators = [
   {
@@ -139,5 +140,12 @@ export const calculators = [
     description: "Análisis de la longitud del fémur fetal y sus percentiles",
     icon: Scale,
     component: FemurCortoCalculator,
+  },
+  {
+    id: "hueso-nasal",
+    name: "Evaluación del Hueso Nasal",
+    description: "Análisis del hueso nasal fetal y sus implicaciones",
+    icon: Scale,
+    component: HuesoNasalCalculator,
   },
 ];

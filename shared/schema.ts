@@ -160,6 +160,13 @@ export const calculatorTypes = {
     biparietal: z.number().min(1).max(150).optional(),  // Diámetro biparietal en mm (opcional)
     headCircumference: z.number().min(1).max(500).optional(), // Circunferencia cefálica en mm (opcional)
   }),
+  huesoNasal: z.object({
+    huesoNasalLength: z.number().min(0).max(20),    // Longitud del hueso nasal en mm
+    semanasGestacion: z.number().min(11).max(14),   // Semanas de gestación
+    diasGestacion: z.number().min(0).max(6),        // Días adicionales
+    dbp: z.number().min(0).max(100),                // Diámetro biparietal en mm
+    moms: z.number().min(0).max(10),                // Multiple of medians
+  }),
 } as const;
 
 // Type helpers
