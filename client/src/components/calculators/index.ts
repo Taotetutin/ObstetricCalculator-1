@@ -2,6 +2,7 @@ import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, Tr
 import { calculateFPP, calculateIMC, calculateGestationalAge } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
+import IMCCalculator from "./IMCCalculator";
 
 export const calculators = [
   {
@@ -23,7 +24,7 @@ export const calculators = [
     name: "Índice de Masa Corporal",
     description: "Calcula el IMC materno",
     icon: Scale,
-    component: () => null
+    component: IMCCalculator
   },
   {
     id: "liquido-amniotico",
