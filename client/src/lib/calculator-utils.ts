@@ -381,3 +381,75 @@ export function calculateDoppler(input: CalculatorInput<"doppler">) {
     recommendations: recommendations.join(". ")
   };
 }
+
+export function calculateWeightGain(input: CalculatorInput<"weightGain">) {
+  // Calculate BMI
+  const heightInMeters = input.height / 100;
+  const prePregnancyBMI = input.prePregnancyWeight / (heightInMeters * heightInMeters);
+
+  // Calculate current gestational age in weeks
+  const gestationalAge = input.semanasGestacion + (input.diasGestacion / 7);
+
+  // Calculate total weight gain
+  const weightGain = input.currentWeight - input.prePregnancyWeight;
+
+  // Define recommended weight gain ranges based on pre-pregnancy BMI
+  let recommendedTotalGain: { min: number; max: number };
+  let recommendedWeeklyGain: { min: number; max: number };
+
+  if (prePregnancyBMI < 18.5) {
+    // Underweight
+    recommendedTotalGain = { min: 12.5, max: 18 };
+    recommendedWeeklyGain = { min: 0.44, max: 0.58 };
+  } else if (prePregnancyBMI < 25) {
+    // Normal weight
+    recommendedTotalGain = { min: 11.5, max: 16 };
+    recommendedWeeklyGain = { min: 0.35, max: 0.5 };
+  } else if (prePregnancyBMI < 30) {
+    // Overweight
+    recommendedTotalGain = { min: 7, max: 11.5 };
+    recommendedWeeklyGain = { min: 0.23, max: 0.33 };
+  } else {
+    // Obese
+    recommendedTotalGain = { min: 5, max: 9 };
+    recommendedWeeklyGain = { min: 0.17, max: 0.27 };
+  }
+
+  // Calculate expected weight gain at current gestational age
+  const expectedMinGain = gestationalAge >= 12 
+    ? (gestationalAge - 12) * recommendedWeeklyGain.min + 2 // 2kg for first trimester
+    : (gestationalAge / 12) * 2; // proportional gain in first trimester
+
+  const expectedMaxGain = gestationalAge >= 12
+    ? (gestationalAge - 12) * recommendedWeeklyGain.max + 2
+    : (gestationalAge / 12) * 2;
+
+  // Evaluate weight gain status
+  let status = "Adecuado";
+  if (weightGain < expectedMinGain) {
+    status = "Insuficiente";
+  } else if (weightGain > expectedMaxGain) {
+    status = "Excesivo";
+  }
+
+  let recommendation = "";
+  if (status === "Insuficiente") {
+    recommendation = "Se recomienda aumentar la ingesta calórica y consultar con nutricionista para plan personalizado.";
+  } else if (status === "Excesivo") {
+    recommendation = "Se recomienda revisar hábitos alimentarios y consultar con nutricionista para plan de alimentación adecuado.";
+  } else {
+    recommendation = "Continuar con los hábitos alimentarios actuales y seguimiento regular.";
+  }
+
+  return {
+    prePregnancyBMI: Number(prePregnancyBMI.toFixed(1)),
+    weightGain: Number(weightGain.toFixed(1)),
+    expectedRange: {
+      min: Number(expectedMinGain.toFixed(1)),
+      max: Number(expectedMaxGain.toFixed(1))
+    },
+    recommendedTotal: recommendedTotalGain,
+    status,
+    recommendation
+  };
+}

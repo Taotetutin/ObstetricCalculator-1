@@ -82,6 +82,13 @@ export const calculatorTypes = {
     semanasGestacion: z.number().min(20).max(40),
     diasGestacion: z.number().min(0).max(6),
   }),
+  weightGain: z.object({
+    prePregnancyWeight: z.number().min(30).max(200),
+    height: z.number().min(120).max(220),
+    currentWeight: z.number().min(30).max(200),
+    semanasGestacion: z.number().min(0).max(42),
+    diasGestacion: z.number().min(0).max(6),
+  }),
 } as const;
 
 // Type helpers

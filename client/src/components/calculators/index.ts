@@ -8,7 +8,8 @@ import PesoFetalCalculator from "./PesoFetalCalculator";
 import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
 import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
 import BishopCalculator from "./BishopCalculator";
-import DopplerCalculator from "./DopplerCalculator"; // Added import statement
+import DopplerCalculator from "./DopplerCalculator";
+import WeightGainCalculator from "./WeightGainCalculator";
 
 export const calculators = [
   {
@@ -93,6 +94,6 @@ export const calculators = [
     name: "Ganancia de Peso",
     description: "Control de ganancia de peso en embarazo",
     icon: TrendingUp,
-    component: () => null
+    component: WeightGainCalculator
   }
 ];
