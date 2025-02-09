@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from 'react';
 import { calculatorTypes } from "@shared/schema";
 
 interface FormData {
@@ -127,9 +127,9 @@ function ResultDisplay({ result }: { result: Result }) {
             {result.riskLevel}
           </span>
         </div>
-        
+
         <p className="text-gray-700 mb-4">{result.pathology}</p>
-        
+
         <div className="space-y-4">
           <div>
             <h3 className="font-medium text-gray-900 mb-2">Criterios diagnósticos:</h3>
@@ -139,7 +139,7 @@ function ResultDisplay({ result }: { result: Result }) {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-medium text-gray-900 mb-2">Recomendaciones:</h3>
             <ul className="list-disc pl-5 space-y-1">
@@ -155,14 +155,14 @@ function ResultDisplay({ result }: { result: Result }) {
 }
 
 export default function MEFICalculator() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = React.useState<FormData>({
     fcb: "",
     variabilidad: "",
     aceleraciones: "",
     desaceleraciones: "",
   });
 
-  const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = React.useState<Result | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
