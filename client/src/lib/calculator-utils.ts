@@ -47,12 +47,14 @@ export function calculateLiquidoAmniotico(input: CalculatorInput<"liquidoAmnioti
 export function calculatePesoFetal(input: CalculatorInput<"pesoFetal">) {
   const { dbp, cc, ca, lf } = input;
 
-  // Fórmula de Hadlock modificada (más precisa para el rango normal de peso fetal)
-  const peso = Math.pow(10, 1.304 + 
-    0.05281 * ca/10 + 
-    0.1938 * lf/10 - 
-    0.004 * Math.pow(lf/10, 2)
-  ) * 100;
+  // Fórmula de Hadlock más precisa para estimación de peso fetal
+  const logPeso = 1.326 - 
+                 0.00326 * ca * lf + 
+                 0.0107 * cc + 
+                 0.0438 * ca + 
+                 0.158 * lf;
+
+  const peso = Math.pow(10, logPeso);
 
   let percentil = "";
   if (peso < 2500) {
