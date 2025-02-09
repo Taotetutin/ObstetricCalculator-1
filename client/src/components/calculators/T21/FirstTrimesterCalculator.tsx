@@ -43,34 +43,34 @@ export default function FirstTrimesterCalculator() {
   });
 
   const onSubmit = async (data: any) => {
-    // Implementación del cálculo de riesgo basado en todos los marcadores
-    let baseRisk = Math.exp(-0.1 * (data.age - 35));
+    // Cálculo del riesgo combinado
+    let risk = Math.exp(-0.1 * (data.age - 35));
 
     // Ajustes por marcadores bioquímicos
     if (data.bhcg !== undefined) {
-      baseRisk *= Math.exp(Math.abs(data.bhcg - 1));
+      risk *= Math.exp(Math.abs(data.bhcg - 1));
     }
     if (data.pappA !== undefined) {
-      baseRisk *= Math.exp(Math.abs(1 - data.pappA));
+      risk *= Math.exp(Math.abs(1 - data.pappA));
     }
 
     // Ajustes por marcadores ecográficos
-    baseRisk *= Math.exp(data.nuchalTranslucency - 2);
-    if (!data.nasalBone) baseRisk *= 2.5;
-    if (data.ductusVenosus !== 'normal') baseRisk *= 2;
-    if (data.tricuspidFlow === 'regurgitacion') baseRisk *= 2;
+    risk *= Math.exp(data.nuchalTranslucency - 2);
+    if (!data.nasalBone) risk *= 2.5;
+    if (data.ductusVenosus !== 'normal') risk *= 2;
+    if (data.tricuspidFlow === 'regurgitacion') risk *= 2;
 
     // Ajustes por factores de riesgo
-    if (data.diabetesType1) baseRisk *= 1.5;
-    if (data.smoker) baseRisk *= 1.3;
-    if (data.previousT21) baseRisk *= 2.5;
+    if (data.diabetesType1) risk *= 1.5;
+    if (data.smoker) risk *= 1.3;
+    if (data.previousT21) risk *= 2.5;
 
-    const calculatedRisk = baseRisk / 1000;
+    const finalRisk = risk / 1000;
 
     const resultado = {
-      risk: calculatedRisk,
-      interpretation: calculatedRisk > 0.01 ? "Riesgo Aumentado" : "Riesgo Bajo",
-      details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/calculatedRisk)}`
+      risk: finalRisk,
+      interpretation: finalRisk > (1/350) ? "Riesgo Aumentado" : "Riesgo Bajo",
+      details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/finalRisk)}`
     };
 
     setResult(resultado);
@@ -95,7 +95,7 @@ export default function FirstTrimesterCalculator() {
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
-          Calculadora de riesgo de T21 basada en marcadores del primer trimestre.
+          Calculadora de riesgo combinado del primer trimestre para trisomía 21.
         </AlertDescription>
       </Alert>
 
@@ -186,9 +186,9 @@ export default function FirstTrimesterCalculator() {
 
           <Separator />
 
-          {/* Factores de Riesgo */}
+          {/* Antecedentes */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Factores de Riesgo</h3>
+            <h3 className="text-lg font-medium mb-4">Antecedentes</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
@@ -236,9 +236,9 @@ export default function FirstTrimesterCalculator() {
 
           <Separator />
 
-          {/* Datos Ecográficos */}
+          {/* Marcadores Ecográficos */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Datos Ecográficos</h3>
+            <h3 className="text-lg font-medium mb-4">Marcadores Ecográficos</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -358,14 +358,14 @@ export default function FirstTrimesterCalculator() {
 
           {/* Marcadores Bioquímicos */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Marcadores Bioquímicos (Opcional)</h3>
+            <h3 className="text-lg font-medium mb-4">Marcadores Bioquímicos (MoM)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="bhcg"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>β-hCG libre (MoM)</FormLabel>
+                    <FormLabel>β-hCG libre</FormLabel>
                     <Input
                       type="number"
                       step="0.01"
@@ -382,7 +382,7 @@ export default function FirstTrimesterCalculator() {
                 name="pappA"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>PAPP-A (MoM)</FormLabel>
+                    <FormLabel>PAPP-A</FormLabel>
                     <Input
                       type="number"
                       step="0.01"
