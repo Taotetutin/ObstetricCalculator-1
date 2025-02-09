@@ -155,7 +155,8 @@ export const calculatorTypes = {
   }),
   femurCorto: z.object({
     femurLength: z.number().min(1).max(150),      // Longitud del fémur en mm
-    gestationalAge: z.number().min(12).max(42),   // Edad gestacional en semanas
+    semanasGestacion: z.number().min(12).max(42),   // Semanas de gestación
+    diasGestacion: z.number().min(0).max(6),      // Días adicionales
     biparietal: z.number().min(1).max(150).optional(),  // Diámetro biparietal en mm (opcional)
     headCircumference: z.number().min(1).max(500).optional(), // Circunferencia cefálica en mm (opcional)
   }),

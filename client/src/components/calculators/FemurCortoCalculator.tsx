@@ -24,7 +24,8 @@ export default function FemurCortoCalculator() {
     resolver: zodResolver(calculatorTypes.femurCorto),
     defaultValues: {
       femurLength: undefined,
-      gestationalAge: undefined,
+      semanasGestacion: undefined,
+      diasGestacion: 0,
       biparietal: undefined,
       headCircumference: undefined,
     },
@@ -32,7 +33,9 @@ export default function FemurCortoCalculator() {
 
   const onSubmit = async (data: any) => {
     try {
-      const resultado = calculateFemurPercentile(data.femurLength, data.gestationalAge);
+      // Convertir semanas y días a edad gestacional decimal
+      const gestationalAge = data.semanasGestacion + (data.diasGestacion / 7);
+      const resultado = calculateFemurPercentile(data.femurLength, gestationalAge);
       setResult(resultado);
 
       await fetch("/api/calculations", {
@@ -80,12 +83,31 @@ export default function FemurCortoCalculator() {
 
           <FormField
             control={form.control}
-            name="gestationalAge"
+            name="semanasGestacion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Edad Gestacional (semanas)</FormLabel>
+                <FormLabel>Semanas de Gestación</FormLabel>
                 <Input
                   type="number"
+                  step="1"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="diasGestacion"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Días Adicionales</FormLabel>
+                <Input
+                  type="number"
+                  min="0"
+                  max="6"
                   step="1"
                   {...field}
                   onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
