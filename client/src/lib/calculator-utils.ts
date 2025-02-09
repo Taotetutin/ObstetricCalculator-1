@@ -294,10 +294,13 @@ function erf(x: number): number {
 }
 
 export function calculateDoppler(input: CalculatorInput<"doppler">) {
+  // Convertir la edad gestacional a semanas decimales para interpolación
+  const gestationalAge = input.semanasGestacion + (input.diasGestacion / 7);
+
   const ranges = {
-    umbilical: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.umbilicalPI),
-    cerebral: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.cerebralPI),
-    psv: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.cerebralPSV)
+    umbilical: interpolateRange(gestationalAge, DOPPLER_RANGES.umbilicalPI),
+    cerebral: interpolateRange(gestationalAge, DOPPLER_RANGES.cerebralPI),
+    psv: interpolateRange(gestationalAge, DOPPLER_RANGES.cerebralPSV)
   };
 
   // Calcular percentiles

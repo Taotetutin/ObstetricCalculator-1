@@ -35,15 +35,13 @@ export default function DopplerCalculator() {
   const form = useForm({
     resolver: zodResolver(calculatorTypes.doppler),
     defaultValues: {
-      auIr: 0,
       auPi: 0,
-      auSd: 0,
-      acmIr: 0,
       acmPi: 0,
       acmPsv: 0,
       dvPi: 0,
       dvWave: 'normal',
       semanasGestacion: 28,
+      diasGestacion: 0,
     },
   });
 
@@ -80,82 +78,29 @@ export default function DopplerCalculator() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <h3 className="text-lg font-medium mb-4">Arteria Umbilical</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="auIr"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Índice de Resistencia</FormLabel>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="auPi"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Índice de Pulsatilidad</FormLabel>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="auSd"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Relación S/D</FormLabel>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="auPi"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Índice de Pulsatilidad</FormLabel>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           <Separator />
 
           <div>
             <h3 className="text-lg font-medium mb-4">Arteria Cerebral Media</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="acmIr"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Índice de Resistencia</FormLabel>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="acmPi"
@@ -242,23 +187,46 @@ export default function DopplerCalculator() {
 
           <Separator />
 
-          <FormField
-            control={form.control}
-            name="semanasGestacion"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Semanas de Gestación</FormLabel>
-                <Input
-                  type="number"
-                  min="20"
-                  max="40"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div>
+            <h3 className="text-lg font-medium mb-4">Edad Gestacional</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="semanasGestacion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Semanas</FormLabel>
+                    <Input
+                      type="number"
+                      min="20"
+                      max="40"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="diasGestacion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Días</FormLabel>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="6"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
 
           <Button type="submit" className="w-full">
             Calcular
@@ -279,7 +247,7 @@ export default function DopplerCalculator() {
                   <li>ACM-PSV: <span className="font-medium">{result.percentiles.acmPsv}%</span></li>
                 </ul>
               </div>
-              
+
               <div>
                 <p className="font-medium">Ratio Cerebro-Placentario:</p>
                 <p className="ml-4">{result.cpr.toFixed(2)}</p>
