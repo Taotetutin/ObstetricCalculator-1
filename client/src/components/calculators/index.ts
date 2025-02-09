@@ -13,6 +13,22 @@ import T21Calculator from "./T21Calculator";
 import TallaFetalCalculator from "./TallaFetalCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
+// Debug logs para verificar importaciones
+console.log("Verificando importaciones de calculadoras:");
+console.log("FPP Calculator:", !!FPPCalculator);
+console.log("Gestational Age Calculator:", !!GestationalAgeCalculator);
+console.log("IMC Calculator:", !!IMCCalculator);
+console.log("Liquido Amniotico Calculator:", !!LiquidoAmnioticoCalculator);
+console.log("Peso Fetal Calculator:", !!PesoFetalCalculator);
+console.log("Curva Crecimiento Calculator:", !!CurvaCrecimientoCalculator);
+console.log("Preeclampsia Calculator:", !!PreeclampsiaCalculator);
+console.log("Bishop Calculator:", !!BishopCalculator);
+console.log("Doppler Calculator:", !!DopplerCalculator);
+console.log("Weight Gain Calculator:", !!WeightGainCalculator);
+console.log("T21 Calculator:", !!T21Calculator);
+console.log("Talla Fetal Calculator:", !!TallaFetalCalculator);
+console.log("Pulmonary Predictor Calculator:", !!PulmonaryPredictorCalculator);
+
 export const calculators = [
   {
     id: "fpp",
@@ -106,3 +122,7 @@ export const calculators = [
     component: PulmonaryPredictorCalculator
   }
 ];
+
+// Debug log para verificar el array de calculadoras
+console.log("Número total de calculadoras:", calculators.length);
+console.log("IDs de calculadoras disponibles:", calculators.map(calc => calc.id));
