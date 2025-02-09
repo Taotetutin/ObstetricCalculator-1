@@ -1,6 +1,5 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import Logo from "./Logo";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 
@@ -12,9 +11,6 @@ export default function Sidebar() {
       <div className="h-16 flex items-center px-2">
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-8 h-8">
-              <Logo />
-            </div>
             <span className="font-bold text-xl">ObsteriX Pro</span>
           </div>
         </Link>
