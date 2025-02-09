@@ -2,82 +2,142 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-gradient-to-b from-white to-blue-50 min-h-screen font-sans;
-  }
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-@layer components {
-  .form-container {
-    @apply max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8;
-  }
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-  .form-group {
-    @apply mb-4;
-  }
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-  .label-text {
-    @apply block text-base font-medium text-gray-700 mb-2;
-  }
+.form-group {
+    margin-bottom: 20px;
+    flex: 1;
+}
 
-  .input-field {
-    @apply block w-full rounded-xl border-2 border-blue-300/50 py-2.5 px-4 text-gray-900 shadow-sm 
-    focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm transition-colors;
-  }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
 
-  .switch {
-    @apply relative inline-flex h-7 w-14 cursor-pointer items-center;
-  }
+.custom-roller input,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
-  .switch input {
-    @apply sr-only;
-  }
+.switch-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-  .slider {
-    @apply absolute inset-0 h-7 w-14 rounded-full bg-gray-200 transition-colors duration-200;
-  }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 28px;
+}
 
-  .switch input:checked + .slider {
-    @apply bg-blue-500;
-  }
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-  .slider:before {
-    @apply absolute left-1 top-1 h-5 w-5 transform rounded-full bg-white shadow-md 
-    transition-transform duration-200 ease-in-out content-[''];
-  }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
 
-  .switch input:checked + .slider:before {
-    @apply translate-x-7;
-  }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
 
-  .slider-text {
-    @apply absolute text-xs font-medium select-none;
-  }
+.slider-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+}
 
-  .slider-text.left {
-    @apply left-2 text-gray-600;
-  }
+.slider-text.left {
+    left: 8px;
+}
 
-  .slider-text.right {
-    @apply right-2 text-white opacity-0 transition-opacity duration-200;
-  }
+.slider-text.right {
+    right: 8px;
+    color: white;
+    opacity: 0;
+}
 
-  .switch input:checked + .slider .slider-text.right {
-    @apply opacity-100;
-  }
+input:checked + .slider {
+    background-color: #333;
+}
 
-  .switch input:checked + .slider .slider-text.left {
-    @apply opacity-0;
-  }
+input:checked + .slider:before {
+    transform: translateX(32px);
+}
 
-  .switch-label {
-    @apply flex items-center justify-between py-2;
-  }
+input:checked + .slider .slider-text.right {
+    opacity: 1;
+}
 
-  .submit-button {
-    @apply w-full rounded-xl bg-blue-500 py-3 px-4 text-base font-semibold text-white shadow-lg 
-    hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-    transition-colors duration-200;
-  }
+input:checked + .slider .slider-text.left {
+    opacity: 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+#result {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: none;
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #666;
 }
