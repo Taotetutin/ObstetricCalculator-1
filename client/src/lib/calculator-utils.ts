@@ -563,3 +563,92 @@ function calculateBasePrematurityRisk(cervicalLength: number) {
 
   return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));
 }
+
+// Added femur length percentile data (weeks 12-42)
+const FEMUR_LENGTH_PERCENTILES = {
+  12: { p3: 6.2, p5: 6.5, p10: 6.9, p50: 8.3, p90: 9.7, p95: 10.1, p97: 10.4 },
+  13: { p3: 7.5, p5: 7.8, p10: 8.2, p50: 9.6, p90: 11.0, p95: 11.4, p97: 11.7 },
+  14: { p3: 8.8, p5: 9.1, p10: 9.5, p50: 10.9, p90: 12.3, p95: 12.7, p97: 13.0 },
+  15: { p3: 10.1, p5: 10.4, p10: 10.8, p50: 12.2, p90: 13.6, p95: 14.0, p97: 14.3 },
+  16: { p3: 11.4, p5: 11.7, p10: 12.1, p50: 13.5, p90: 14.9, p95: 15.3, p97: 15.6 },
+  17: { p3: 12.7, p5: 13.0, p10: 13.4, p50: 14.8, p90: 16.2, p95: 16.6, p97: 16.9 },
+  18: { p3: 14.0, p5: 14.3, p10: 14.7, p50: 16.1, p90: 17.5, p95: 17.9, p97: 18.2 },
+  19: { p3: 15.3, p5: 15.6, p10: 16.0, p50: 17.4, p90: 18.8, p95: 19.2, p97: 19.5 },
+  20: { p3: 16.6, p5: 16.9, p10: 17.3, p50: 18.7, p90: 20.1, p95: 20.5, p7: 20.8 },
+  21: { p3: 17.9, p5: 18.2, p10: 18.6, p50: 20.0, p90: 21.4, p95: 21.8, p97: 22.1 },
+  22: { p3: 19.2, p5: 19.5, p10: 19.9, p50: 21.3, p90: 22.7, p95: 23.1, p97: 23.4 },
+  23: { p3: 20.5, p5: 20.8, p10: 21.2, p50: 22.6, p90: 24.0, p95: 24.4, p97: 24.7 },
+  24: { p3: 21.8, p5: 22.1, p10: 22.5, p50: 23.9, p90: 25.3, p95: 25.7, p97: 26.0 },
+  25: { p3: 23.1, p5: 23.4, p10: 23.8, p50: 25.2, p90: 26.6, p95: 27.0, p97: 27.3 },
+  26: { p3: 24.4, p5: 24.7, p10: 25.1, p50: 26.5, p90: 27.9, p95: 28.3, p97: 28.6 },
+  27: { p3: 25.7, p5: 26.0, p10: 26.4, p50: 27.8, p90: 29.2, p95: 29.6, p97: 29.9 },
+  28: { p3: 27.0, p5: 27.3, p10: 27.7, p50: 29.1, p90: 30.5, p95: 30.9, p97: 31.2 },
+  29: { p3: 28.3, p5: 28.6, p10: 29.0, p50: 30.4, p90: 31.8, p95: 32.2, p97: 32.5 },
+  30: { p3: 29.6, p5: 29.9, p10: 30.3, p50: 31.7, p90: 33.1, p95: 33.5, p97: 33.8 },
+  31: { p3: 30.9, p5: 31.2, p10: 31.6, p50: 33.0, p90: 34.4, p95: 34.8, p97: 35.1 },
+  32: { p3: 32.2, p5: 32.5, p10: 32.9, p50: 34.3, p90: 35.7, p95: 36.1, p97: 36.4 },
+  33: { p3: 33.5, p5: 33.8, p10: 34.2, p50: 35.6, p90: 37.0, p95: 37.4, p97: 37.7 },
+  34: { p3: 34.8, p5: 35.1, p10: 35.5, p50: 36.9, p90: 38.3, p95: 38.7, p97: 39.0 },
+  35: { p3: 36.1, p5: 36.4, p10: 36.8, p50: 38.2, p90: 39.6, p95: 40.0, p97: 40.3 },
+  36: { p3: 37.4, p5: 37.7, p10: 38.1, p50: 39.5, p90: 40.9, p95: 41.3, p97: 41.6 },
+  37: { p3: 38.7, p5: 39.0, p10: 39.4, p50: 40.8, p90: 42.2, p95: 42.6, p97: 42.9 },
+  38: { p3: 40.0, p5: 40.3, p10: 40.7, p50: 42.1, p90: 43.5, p95: 43.9, p97: 44.2 },
+  39: { p3: 41.3, p5: 41.6, p10: 42.0, p50: 43.4, p90: 44.8, p95: 45.2, p97: 45.5 },
+  40: { p3: 42.6, p5: 42.9, p10: 43.3, p50: 44.7, p90: 46.1, p95: 46.5, p97: 46.8 },
+  41: { p3: 43.9, p5: 44.2, p10: 44.6, p50: 46.0, p90: 47.4, p95: 47.8, p97: 48.1 },
+  42: { p3: 45.2, p5: 45.5, p10: 45.9, p50: 47.3, p90: 48.7, p95: 49.1, p97: 49.4 }
+};
+
+export function calculateFemurPercentile(femurLength: number, gestationalAge: number) {
+  const weekData = FEMUR_LENGTH_PERCENTILES[Math.round(gestationalAge) as keyof typeof FEMUR_LENGTH_PERCENTILES];
+  if (!weekData) {
+    throw new Error("Edad gestacional fuera de rango (12-42 semanas)");
+  }
+
+  // Calculate Z-score based on the median (p50) and estimated SD
+  const median = weekData.p50;
+  const sd = (weekData.p97 - weekData.p3) / (2 * 1.88); // Approximate SD using the 3rd and 97th percentiles
+  const zScore = (femurLength - median) / sd;
+
+  // Determine percentile and classification
+  let percentile: string;
+  let isShort = false;
+  let recommendation: string;
+
+  if (femurLength < weekData.p3) {
+    percentile = "<p3";
+    isShort = true;
+    recommendation = "Fémur corto. Se recomienda evaluación detallada y seguimiento.";
+  } else if (femurLength < weekData.p5) {
+    percentile = "p3-p5";
+    isShort = true;
+    recommendation = "Fémur en límite inferior. Considerar seguimiento.";
+  } else if (femurLength < weekData.p10) {
+    percentile = "p5-p10";
+    isShort = false;
+    recommendation = "Longitud femoral en rango bajo de normalidad.";
+  } else if (femurLength <= weekData.p90) {
+    percentile = "p10-p90";
+    isShort = false;
+    recommendation = "Longitud femoral normal.";
+  } else if (femurLength <= weekData.p95) {
+    percentile = "p90-p95";
+    isShort = false;
+    recommendation = "Longitud femoral en rango alto de normalidad.";
+  } else if (femurLength <= weekData.p97) {
+    percentile = "p95-p97";
+    isShort = false;
+    recommendation = "Fémur largo. Control habitual.";
+  } else {
+    percentile = ">p97";
+    isShort = false;
+    recommendation = "Fémur significativamente largo. Control habitual.";
+  }
+
+  return {
+    percentile,
+    isShort,
+    recommendation,
+    zScore: Number(zScore.toFixed(2))
+  };
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { calculatorTypes } from "@shared/schema";
+import { calculateFemurPercentile } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,45 +10,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 
-type FemurCortoInput = {
-  femurLength: number;
-  gestationalAge: number;
-  biparietal?: number;
-  headCircumference?: number;
-};
-
 type FemurCortoResult = {
   percentile: string;
   isShort: boolean;
   recommendation: string;
-  zScore?: number;
+  zScore: number;
 };
 
 export default function FemurCortoCalculator() {
   const [result, setResult] = useState<FemurCortoResult | null>(null);
 
-  const form = useForm<FemurCortoInput>({
+  const form = useForm({
     resolver: zodResolver(calculatorTypes.femurCorto),
     defaultValues: {
-      femurLength: 0,
-      gestationalAge: 0,
+      femurLength: undefined,
+      gestationalAge: undefined,
       biparietal: undefined,
       headCircumference: undefined,
     },
   });
 
-  const onSubmit = async (data: FemurCortoInput) => {
-    // Placeholder for calculation logic
-    // Will be updated once we have the specific formulas and criteria
-    const resultado: FemurCortoResult = {
-      percentile: "Pendiente de implementar",
-      isShort: false,
-      recommendation: "Pendiente de implementar recomendaciones específicas",
-    };
-
-    setResult(resultado);
-
+  const onSubmit = async (data: any) => {
     try {
+      const resultado = calculateFemurPercentile(data.femurLength, data.gestationalAge);
+      setResult(resultado);
+
       await fetch("/api/calculations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,7 +45,7 @@ export default function FemurCortoCalculator() {
         }),
       });
     } catch (error) {
-      console.error("Error saving calculation:", error);
+      console.error("Error en el cálculo:", error);
     }
   };
 
@@ -84,7 +71,7 @@ export default function FemurCortoCalculator() {
                   type="number"
                   step="0.1"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                 />
                 <FormMessage />
               </FormItem>
@@ -101,7 +88,7 @@ export default function FemurCortoCalculator() {
                   type="number"
                   step="1"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                 />
                 <FormMessage />
               </FormItem>
@@ -160,13 +147,11 @@ export default function FemurCortoCalculator() {
                 Estado: <span className="font-medium">{result.isShort ? "Fémur corto" : "Normal"}</span>
               </p>
               <p>
+                Z-Score: <span className="font-medium">{result.zScore.toFixed(2)}</span>
+              </p>
+              <p>
                 Recomendación: <span className="font-medium">{result.recommendation}</span>
               </p>
-              {result.zScore !== undefined && (
-                <p>
-                  Z-Score: <span className="font-medium">{result.zScore.toFixed(2)}</span>
-                </p>
-              )}
             </div>
           </CardContent>
         </Card>
