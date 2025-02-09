@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { calculatorTypes } from "@shared/schema";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
-import { calculatorTypes } from "@shared/schema";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type AgeRiskResult = {
   risk: number;
@@ -43,12 +41,12 @@ export default function AgeCalculator() {
   const form = useForm({
     resolver: zodResolver(calculatorTypes.t21Age),
     defaultValues: {
-      age: 35,
+      age: undefined,
+      previousT21: false,
     },
   });
 
   const onSubmit = async (data: any) => {
-    // Calcula el riesgo basado en la tabla
     let risk: number;
     const age = Math.round(data.age);
 
@@ -57,7 +55,6 @@ export default function AgeCalculator() {
     } else if (age >= 45) {
       risk = 1 / 20;
     } else {
-      // Interpolación lineal entre edades si no está en la tabla
       const ages = Object.keys(ageRiskTable).map(Number);
       const lowerAge = ages.filter(a => a <= age).pop() || 20;
       const upperAge = ages.find(a => a > age) || 45;
@@ -69,10 +66,14 @@ export default function AgeCalculator() {
       risk = lowerRisk + t * (upperRisk - lowerRisk);
     }
 
+    if (data.previousT21) {
+      risk *= 2.5;
+    }
+
     const resultado = {
       risk,
       interpretation: risk > (1/350) ? "Riesgo Aumentado" : "Riesgo Bajo",
-      details: `El riesgo por edad materna de ${age} años es de 1:${Math.round(1/risk)}`
+      details: `Riesgo por edad materna de ${age} años: 1:${Math.round(1/risk)}`
     };
 
     setResult(resultado);
@@ -94,12 +95,9 @@ export default function AgeCalculator() {
 
   return (
     <div className="space-y-6">
-      <Alert>
-        <InfoIcon className="h-4 w-4" />
-        <AlertDescription>
-          Esta calculadora estima el riesgo de trisomía 21 basado en la edad materna utilizando datos epidemiológicos.
-        </AlertDescription>
-      </Alert>
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Riesgo por Edad Materna</h2>
+      </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -111,50 +109,51 @@ export default function AgeCalculator() {
                 <FormLabel>Edad Materna (años)</FormLabel>
                 <Input
                   type="number"
-                  min="15"
-                  max="60"
+                  className="w-full"
+                  placeholder="Ingrese la edad materna"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                 />
-                <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <FormField
+            control={form.control}
+            name="previousT21"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  id="previousT21"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+                <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
+                  Antecedente de hijo con Trisomía 21
+                </FormLabel>
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular Riesgo
           </Button>
         </form>
       </Form>
 
       {result && (
-        <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Resultados:</h3>
-            <div className="space-y-4">
-              <div>
-                <p className="font-medium">Riesgo Estimado:</p>
-                <p className="ml-4">1:{Math.round(1/result.risk)}</p>
-              </div>
-
-              <div>
-                <p className="font-medium">Interpretación:</p>
-                <p className={`ml-4 font-medium ${
-                  result.interpretation === "Riesgo Bajo" 
-                    ? "text-green-600" 
-                    : "text-amber-600"
-                }`}>
-                  {result.interpretation}
-                </p>
-              </div>
-
-              <div>
-                <p className="font-medium">Detalles:</p>
-                <p className="ml-4 text-sm">{result.details}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mt-6 p-4 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
+          <p className={`font-medium ${
+            result.interpretation === "Riesgo Bajo" 
+              ? "text-green-600" 
+              : "text-amber-600"
+          }`}>
+            {result.interpretation}
+          </p>
+          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+        </div>
       )}
     </div>
   );
