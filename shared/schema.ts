@@ -27,6 +27,10 @@ export const calculatorTypes = {
     cc: z.number().min(50).max(500),     // Rango típico en mm
     ca: z.number().min(50).max(500),     // Rango típico en mm
     lf: z.number().min(10).max(120),     // Rango típico en mm
+  }),
+  curvaCrecimiento: z.object({
+    semanasGestacion: z.number().min(20).max(42),
+    pesoFetal: z.number().min(100).max(5000),
   })
 } as const;
 

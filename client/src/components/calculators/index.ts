@@ -5,6 +5,7 @@ import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 import PesoFetalCalculator from "./PesoFetalCalculator";
+import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
 
 export const calculators = [
   {
@@ -47,7 +48,7 @@ export const calculators = [
     name: "Curva de Crecimiento",
     description: "Seguimiento del crecimiento fetal",
     icon: LineChart,
-    component: () => null
+    component: CurvaCrecimientoCalculator
   },
   {
     id: "preeclampsia",
