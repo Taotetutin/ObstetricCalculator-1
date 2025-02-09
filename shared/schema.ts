@@ -33,33 +33,34 @@ export const calculatorTypes = {
     pesoFetal: z.number().min(100).max(5000),
   }),
   preeclampsia: z.object({
-    // Factores maternos
+    // Maternal characteristics
     age: z.number().min(12).max(60),
     weight: z.number().min(35).max(200),
-    height: z.number().min(1.0).max(2.5),
+    height: z.number().min(120).max(220), // Changed to cm
     ethnicity: z.enum(['caucasica', 'afro', 'sudasiatica', 'asiaticooriental', 'mixta']),
+    familyHistory: z.boolean(),
+    conceptionMethod: z.enum(['spontaneous', 'ovulation', 'ivf']),
+    multiplePregnancy: z.boolean(),
 
-    // Historia médica
+    // Medical history
     chronicHypertension: z.boolean(),
-    diabetes: z.boolean(),
+    diabetesType1: z.boolean(),
+    diabetesType2: z.boolean(),
     lupusAPS: z.boolean(),
 
-    // Historia obstétrica
+    // Obstetric history
     nulliparous: z.boolean(),
     previousPreeclampsia: z.boolean(),
 
-    // Marcadores biofísicos
-    systolicBP: z.number().min(70).max(200),
-    diastolicBP: z.number().min(40).max(120),
-    crownRumpLength: z.number().min(45).max(84), // CRL en mm según FMF
+    // Biophysical measurements
+    meanArterialPressure: z.number().min(45).max(140),
     uterinePI: z.number().min(0).max(5).optional(),
+    measurementDate: z.date(),
+    crownRumpLength: z.number().min(45).max(84), // CRL en mm según FMF
 
-    // Marcadores bioquímicos (opcionales)
+    // Biochemical markers (optional)
     pappA: z.number().min(0).max(10).optional(),
     plgf: z.number().min(0).max(2000).optional(),
-
-    // Embarazo actual
-    multiplePregnancy: z.boolean(),
   }),
 } as const;
 

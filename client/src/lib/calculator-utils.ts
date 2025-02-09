@@ -104,35 +104,21 @@ export function calcularPercentilOMS(semanas: number, peso: number) {
 }
 
 export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">) {
-  // Calcular IMC
-  const bmi = input.weight / (input.height * input.height);
+  // Riesgo base ajustado según FMF
+  const baselineRisk = 0.02472;
 
-  // Riesgo base ajustado según FMF (Fetal Medicine Foundation)
-  let baselineRisk = 0.02472;
-
-  // Factor de corrección por CRL (según FMF)
+  // Factor de corrección por CRL
   const crlFactor = Math.exp(-0.0378 * (input.crownRumpLength - 65));
 
-  // Ajustes por edad materna (OR según FMF)
+  // Ajustes por edad materna
   const ageRisk = Math.exp(0.0323 * (input.age - 35));
 
-  // Ajustes por IMC (OR según FMF)
+  // Ajustes por IMC (height en cm convertido a m)
+  const heightInMeters = input.height / 100;
+  const bmi = input.weight / (heightInMeters * heightInMeters);
   const bmiRisk = Math.exp(0.0925 * (Math.log(bmi) - Math.log(24)));
 
-  // Factores de riesgo médico (OR según FMF)
-  const medicalFactorsRisk = (
-    (input.chronicHypertension ? 5.13 : 1) *
-    (input.diabetes ? 3.78 : 1) *
-    (input.lupusAPS ? 4.24 : 1)
-  );
-
-  // Historia obstétrica (OR según FMF)
-  const obstetricFactorsRisk = (
-    (input.nulliparous ? 2.34 : 1) *
-    (input.previousPreeclampsia ? 3.89 : 1)
-  );
-
-  // Ajuste por etnia (OR según FMF)
+  // Ajuste por etnia
   const ethnicityRisk = {
     'caucasica': 1,
     'afro': 2.12,
@@ -141,9 +127,32 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
     'mixta': 1.54
   }[input.ethnicity];
 
-  // Cálculo de PAM y su riesgo
-  const map = ((2 * input.diastolicBP) + input.systolicBP) / 3;
-  const mapRisk = Math.exp(0.1058 * (map - 85));
+  // Historia médica
+  const medicalFactorsRisk = (
+    (input.chronicHypertension ? 5.13 : 1) *
+    ((input.diabetesType1 || input.diabetesType2) ? 3.78 : 1) *
+    (input.lupusAPS ? 4.24 : 1)
+  );
+
+  // Historia obstétrica
+  const obstetricFactorsRisk = (
+    (input.nulliparous ? 2.34 : 1) *
+    (input.previousPreeclampsia ? 3.89 : 1) *
+    (input.familyHistory ? 1.42 : 1)
+  );
+
+  // Factor por método de concepción
+  const conceptionRisk = {
+    'spontaneous': 1,
+    'ovulation': 1.41,
+    'ivf': 1.72
+  }[input.conceptionMethod];
+
+  // Riesgo por embarazo múltiple
+  const multiplePregnancyRisk = input.multiplePregnancy ? 1.68 : 1;
+
+  // Cálculo de riesgo por MAP
+  const mapRisk = Math.exp(0.1058 * (input.meanArterialPressure - 85));
 
   // Factores biofísicos y bioquímicos
   let biomarkerRisk = 1;
@@ -157,9 +166,10 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
     biomarkerRisk *= Math.exp(-0.3351 * (Math.log(input.plgf / 100)));
   }
 
-  // Cálculo del riesgo final incluyendo el factor CRL
-  const finalRisk = baselineRisk * crlFactor * ageRisk * bmiRisk * medicalFactorsRisk * 
-                   obstetricFactorsRisk * ethnicityRisk * mapRisk * biomarkerRisk;
+  // Cálculo del riesgo final
+  const finalRisk = baselineRisk * crlFactor * ageRisk * bmiRisk * ethnicityRisk * 
+                   medicalFactorsRisk * obstetricFactorsRisk * conceptionRisk * 
+                   multiplePregnancyRisk * mapRisk * biomarkerRisk;
 
   // Convertir a relación (1/N)
   const riskRatio = Math.round(1 / finalRisk);
@@ -183,6 +193,6 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
     riskRatio,
     category,
     recommendation,
-    map
+    map: input.meanArterialPressure
   };
 }
