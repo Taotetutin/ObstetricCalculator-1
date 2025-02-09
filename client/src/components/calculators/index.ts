@@ -1,6 +1,7 @@
 import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar } from "lucide-react";
 import { calculateFPP, calculateIMC, calculateGestationalAge } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
+import GestationalAgeCalculator from "./GestationalAgeCalculator";
 
 export const calculators = [
   {
@@ -15,7 +16,7 @@ export const calculators = [
     name: "Edad Gestacional",
     description: "Determina la edad gestacional actual",
     icon: Baby,
-    component: () => null 
+    component: GestationalAgeCalculator
   },
   {
     id: "imc",
