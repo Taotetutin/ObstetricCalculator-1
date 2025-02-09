@@ -22,6 +22,10 @@ export default function PesoFetalCalculator() {
   });
 
   const onSubmit = async (data: { dbp: number; cc: number; ca: number; lf: number }) => {
+    if (Object.values(data).some(value => value === 0)) {
+      return;
+    }
+
     const resultado = calculatePesoFetal(data);
     setResult(resultado);
 
@@ -40,6 +44,11 @@ export default function PesoFetalCalculator() {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
+    const value = e.target.value === '' ? 0 : parseFloat(e.target.value);
+    field.onChange(value);
+  };
+
   return (
     <div className="space-y-6">
       <Form {...form}>
@@ -53,8 +62,9 @@ export default function PesoFetalCalculator() {
                 <Input
                   type="number"
                   step="0.1"
+                  placeholder="0.0"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange(e, field)}
                 />
                 <FormMessage />
               </FormItem>
@@ -70,8 +80,9 @@ export default function PesoFetalCalculator() {
                 <Input
                   type="number"
                   step="0.1"
+                  placeholder="0.0"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange(e, field)}
                 />
                 <FormMessage />
               </FormItem>
@@ -87,8 +98,9 @@ export default function PesoFetalCalculator() {
                 <Input
                   type="number"
                   step="0.1"
+                  placeholder="0.0"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange(e, field)}
                 />
                 <FormMessage />
               </FormItem>
@@ -104,15 +116,20 @@ export default function PesoFetalCalculator() {
                 <Input
                   type="number"
                   step="0.1"
+                  placeholder="0.0"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange(e, field)}
                 />
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={Object.values(form.getValues()).every(value => value === 0)}
+          >
             Calcular
           </Button>
         </form>

@@ -23,10 +23,10 @@ export const calculatorTypes = {
     q4: z.number().min(0).max(25),
   }),
   pesoFetal: z.object({
-    dbp: z.number().min(0).max(100),  // Diámetro Biparietal
-    cc: z.number().min(0).max(400),   // Circunferencia Cefálica
-    ca: z.number().min(0).max(400),   // Circunferencia Abdominal
-    lf: z.number().min(0).max(100),   // Longitud Femoral
+    dbp: z.number().min(10).max(120),    // Rango típico en mm
+    cc: z.number().min(50).max(500),     // Rango típico en mm
+    ca: z.number().min(50).max(500),     // Rango típico en mm
+    lf: z.number().min(10).max(120),     // Rango típico en mm
   })
 } as const;
 
