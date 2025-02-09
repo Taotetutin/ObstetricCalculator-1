@@ -7,7 +7,7 @@ export default function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <div className="w-64 border-r bg-card p-4 flex flex-col gap-4">
+    <div className="w-64 border-r bg-white p-4 flex flex-col gap-4 min-h-screen">
       <div className="h-24 flex items-center px-2 border-b pb-4">
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
@@ -16,13 +16,13 @@ export default function Sidebar() {
               alt="MiMaternoFetal Logo"
               className="h-16 w-auto"
             />
-            <span className="font-bold text-xl">ObsteriX Pro</span>
+            <span className="font-bold text-xl text-primary">ObsteriX Pro</span>
           </div>
         </Link>
       </div>
 
       <nav className="space-y-2">
-        {calculators && calculators.map((calc) => (
+        {calculators.map((calc) => (
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <Button
               variant={location === `/calculadora/${calc.id}` ? "secondary" : "ghost"}
