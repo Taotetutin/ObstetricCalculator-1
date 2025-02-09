@@ -37,7 +37,7 @@ export default function PRCalculator() {
 
       <div className="mb-8">
         <img 
-          src="/pr-graph.jpg" 
+          src="/images/pr-graph.jpg" 
           alt="Gráfico de percentiles PR"
           className="mx-auto max-w-full h-auto"
         />
