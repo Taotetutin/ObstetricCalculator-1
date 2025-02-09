@@ -8,10 +8,7 @@ import { Link } from "wouter";
 
 export default function Calculator() {
   const { id } = useParams();
-  console.log('Current calculator ID:', id); // Debug log
   const calculator = calculators.find(c => c.id === id);
-
-  console.log('Available calculator IDs:', calculators.map(c => c.id)); // Debug log
 
   if (!calculator) {
     return (
@@ -41,7 +38,7 @@ export default function Calculator() {
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <Button
               variant={calc.id === id ? "default" : "outline"}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
             >
               <calc.icon className="h-4 w-4" />
               {calc.name}
@@ -51,10 +48,10 @@ export default function Calculator() {
       </div>
 
       {/* Calculator Content */}
-      <div className="max-w-2xl mx-auto">
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      <div className="max-w-4xl mx-auto">
+        <Card className="shadow-lg bg-white/80 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
+            <CardTitle className="flex items-center gap-2 text-blue-700">
               <calculator.icon className="w-6 h-6" />
               {calculator.name}
             </CardTitle>
