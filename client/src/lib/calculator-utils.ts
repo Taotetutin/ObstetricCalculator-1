@@ -506,3 +506,60 @@ export function calculateCVR(input: CalculatorInput<"cvr">) {
     risk
   };
 }
+
+export function calculatePrematurityRisk(input: {
+  cervicalLength: number;
+  fetusCount: number;
+  hasContractions: boolean;
+  hasPreviousPretermBirth: boolean;
+  hasMembraneRupture: boolean;
+  hasCervicalSurgery: boolean;
+}) {
+  const baseRisk = calculateBasePrematurityRisk(input.cervicalLength);
+
+  const riskMultipliers = {
+    multipleGestation: input.fetusCount > 1 ? 1.5 : 1,
+    contractions: input.hasContractions ? 1.2 : 1,
+    previousPreterm: input.hasPreviousPretermBirth ? 1.3 : 1,
+    membraneRupture: input.hasMembraneRupture ? 1.4 : 1,
+    cervicalSurgery: input.hasCervicalSurgery ? 1.1 : 1
+  };
+
+  const totalRisk = baseRisk * Object.values(riskMultipliers).reduce((a, b) => a * b, 1);
+  const finalRisk = Math.min(totalRisk, 0.99);
+
+  // Calculate risk category and recommendations
+  let riskCategory: string;
+  let recommendations: string[] = [];
+
+  if (finalRisk < 0.1) {
+    riskCategory = "Bajo";
+    recommendations.push("Control prenatal habitual");
+  } else if (finalRisk < 0.3) {
+    riskCategory = "Moderado";
+    recommendations.push("Seguimiento más frecuente");
+    recommendations.push("Considerar progesterona si hay factores de riesgo adicionales");
+  } else {
+    riskCategory = "Alto";
+    recommendations.push("Seguimiento estrecho");
+    recommendations.push("Considerar hospitalización según caso");
+    recommendations.push("Evaluar uso de corticoides para maduración pulmonar");
+  }
+
+  return {
+    risk: Number((finalRisk * 100).toFixed(1)),
+    category: riskCategory,
+    recommendations: recommendations.join(". ")
+  };
+}
+
+function calculateBasePrematurityRisk(cervicalLength: number) {
+  const maxRisk = 0.80;
+  const minRisk = 0.007;
+  const decayRate = 0.08;
+
+  if (cervicalLength <= 5) return maxRisk;
+  if (cervicalLength >= 50) return minRisk;
+
+  return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));
+}
