@@ -10,6 +10,9 @@ export default function Calculator() {
   const { id } = useParams();
   const calculator = calculators.find(c => c.id === id);
 
+  console.log("ID de calculadora:", id); // Debug log
+  console.log("Calculadora encontrada:", calculator); // Debug log
+
   if (!calculator) {
     return (
       <div className="container mx-auto py-6">
@@ -36,7 +39,7 @@ export default function Calculator() {
         <Card className="shadow-lg bg-white/80 backdrop-blur-sm">
           <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
             <CardTitle className="flex items-center gap-2 text-blue-700">
-              <calculator.icon className="w-6 h-6" />
+              {calculator.icon && <calculator.icon className="w-6 h-6" />}
               {calculator.name}
             </CardTitle>
           </CardHeader>
