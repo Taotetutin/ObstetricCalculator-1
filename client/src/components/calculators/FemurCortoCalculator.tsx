@@ -178,6 +178,15 @@ export default function FemurCortoCalculator() {
           </CardContent>
         </Card>
       )}
+
+      <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h4 className="text-sm font-semibold text-blue-800 mb-2">Nota importante:</h4>
+        <p className="text-sm text-blue-700">
+          El fémur corto aislado puede ser una variante normal o estar asociado a restricción del crecimiento, 
+          displasias esqueléticas o aneuploidías. Se recomienda una evaluación detallada de la anatomía fetal 
+          y seguimiento del crecimiento cuando se detecta esta condición.
+        </p>
+      </div>
     </div>
   );
 }
