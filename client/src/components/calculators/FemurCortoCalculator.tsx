@@ -1,41 +1,34 @@
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { calculatorTypes } from "@shared/schema";
 import { calculateFemurPercentile } from "@/lib/calculator-utils";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 
-type FemurCortoResult = {
-  percentile: string;
-  isShort: boolean;
-  recommendation: string;
-  zScore: number;
-};
-
 export default function FemurCortoCalculator() {
-  const [result, setResult] = useState<FemurCortoResult | null>(null);
-
-  const form = useForm({
-    resolver: zodResolver(calculatorTypes.femurCorto),
-    defaultValues: {
-      femurLength: undefined,
-      semanasGestacion: undefined,
-      diasGestacion: 0,
-      biparietal: undefined,
-      headCircumference: undefined,
-    },
+  const [formData, setFormData] = useState({
+    semanasGestacion: '',
+    diasGestacion: '',
+    femurLength: '',
+    headCircumference: '',
+    cerebellarLength: '',
+    footLength: '',
   });
 
-  const onSubmit = async (data: any) => {
+  const [result, setResult] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      // Convertir semanas y días a edad gestacional decimal
-      const gestationalAge = data.semanasGestacion + (data.diasGestacion / 7);
-      const resultado = calculateFemurPercentile(data.femurLength, gestationalAge);
+      const gestationalAge = Number(formData.semanasGestacion) + (Number(formData.diasGestacion) / 7);
+      const resultado = calculateFemurPercentile(Number(formData.femurLength), gestationalAge);
       setResult(resultado);
 
       await fetch("/api/calculations", {
@@ -43,125 +36,115 @@ export default function FemurCortoCalculator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           calculatorType: "femurCorto",
-          input: JSON.stringify(data),
+          input: JSON.stringify(formData),
           result: JSON.stringify(resultado),
         }),
       });
     } catch (error) {
-      console.error("Error en el cálculo:", error);
+      console.error("Error:", error);
     }
   };
 
   return (
     <div className="space-y-6">
-      <Alert>
-        <InfoIcon className="h-4 w-4" />
-        <AlertDescription>
-          Esta calculadora evalúa la longitud del fémur fetal en relación con la edad gestacional,
-          proporcionando percentiles y recomendaciones específicas.
-        </AlertDescription>
-      </Alert>
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-blue-700 mb-2">
+          Diagnóstico Certero de Fémur Corto
+        </h2>
+        <p className="text-gray-600">
+          Sistema de evaluación fetal avanzado
+        </p>
+      </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Semanas</label>
+            <Input
+              type="number"
+              name="semanasGestacion"
+              value={formData.semanasGestacion}
+              onChange={handleChange}
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Días</label>
+            <Input
+              type="number"
+              name="diasGestacion"
+              value={formData.diasGestacion}
+              onChange={handleChange}
+              min="0"
+              max="6"
+              className="mt-1"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Longitud de Fémur (mm)
+          </label>
+          <Input
+            type="number"
             name="femurLength"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Longitud del Fémur (mm)</FormLabel>
-                <Input
-                  type="number"
-                  step="0.1"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
+            value={formData.femurLength}
+            onChange={handleChange}
+            className="mt-1"
           />
+        </div>
 
-          <FormField
-            control={form.control}
-            name="semanasGestacion"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Semanas de Gestación</FormLabel>
-                <Input
-                  type="number"
-                  step="1"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="diasGestacion"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Días Adicionales</FormLabel>
-                <Input
-                  type="number"
-                  min="0"
-                  max="6"
-                  step="1"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="biparietal"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Diámetro Biparietal (mm) - Opcional</FormLabel>
-                <Input
-                  type="number"
-                  step="0.1"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Circunferencia Cardíaca (mm)
+          </label>
+          <Input
+            type="number"
             name="headCircumference"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Circunferencia Cefálica (mm) - Opcional</FormLabel>
-                <Input
-                  type="number"
-                  step="0.1"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
+            value={formData.headCircumference}
+            onChange={handleChange}
+            className="mt-1"
           />
+        </div>
 
-          <Button type="submit" className="w-full">
-            Evaluar Fémur
-          </Button>
-        </form>
-      </Form>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Longitud de Cerebelo (mm)
+          </label>
+          <Input
+            type="number"
+            name="cerebellarLength"
+            value={formData.cerebellarLength}
+            onChange={handleChange}
+            className="mt-1"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Longitud de Pie (mm)
+          </label>
+          <Input
+            type="number"
+            name="footLength"
+            value={formData.footLength}
+            onChange={handleChange}
+            className="mt-1"
+          />
+        </div>
+
+        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+          Calcular
+        </Button>
+      </form>
 
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Resultado:</h3>
             <div className="space-y-2">
+              <h3 className="text-lg font-semibold">Resultados:</h3>
               <p>
                 Percentil: <span className="font-medium">{result.percentile}</span>
               </p>
@@ -179,12 +162,10 @@ export default function FemurCortoCalculator() {
         </Card>
       )}
 
-      <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <h4 className="text-sm font-semibold text-blue-800 mb-2">Nota importante:</h4>
+      <div className="flex items-start gap-2 p-4 bg-blue-50 rounded-lg">
+        <InfoIcon className="h-5 w-5 text-blue-500 mt-0.5" />
         <p className="text-sm text-blue-700">
-          El fémur corto aislado puede ser una variante normal o estar asociado a restricción del crecimiento, 
-          displasias esqueléticas o aneuploidías. Se recomienda una evaluación detallada de la anatomía fetal 
-          y seguimiento del crecimiento cuando se detecta esta condición.
+          Si la Edad Gestacional es segura, basta con el valor de la longitud del Fémur "Bajo Pc 1"
         </p>
       </div>
     </div>
