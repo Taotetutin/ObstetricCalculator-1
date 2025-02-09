@@ -42,6 +42,10 @@ export default function LiquidoAmnioticoCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Índice de Líquido Amniótico</h2>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {[1, 2, 3, 4].map((quadrant) => (
@@ -64,7 +68,7 @@ export default function LiquidoAmnioticoCalculator() {
             />
           ))}
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
           </Button>
         </form>

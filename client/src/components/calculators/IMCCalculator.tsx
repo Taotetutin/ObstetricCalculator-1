@@ -47,6 +47,10 @@ export default function IMCCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Índice de Masa Corporal</h2>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -83,7 +87,7 @@ export default function IMCCalculator() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
           </Button>
         </form>
