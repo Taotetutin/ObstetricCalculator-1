@@ -31,7 +31,12 @@ export default function Calculator() {
   const CalculatorComponent = calculator.component;
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-6 relative">
+      <img 
+        src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png" 
+        alt="MiMaternoFetal Logo" 
+        className="absolute top-0 right-0 w-32 h-auto z-10"
+      />
       {/* Calculator Content */}
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-lg bg-white/80 backdrop-blur-sm">
