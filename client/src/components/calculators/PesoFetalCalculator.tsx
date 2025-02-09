@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PesoFetalCalculator() {
-  const [result, setResult] = useState<{ peso: number; percentil: string } | null>(null);
+  const [result, setResult] = useState<number | null>(null);
 
   const form = useForm({
     resolver: zodResolver(calculatorTypes.pesoFetal),
@@ -27,7 +27,7 @@ export default function PesoFetalCalculator() {
     }
 
     const resultado = calculatePesoFetal(data);
-    setResult(resultado);
+    setResult(resultado.peso); // Only store the weight
 
     try {
       await fetch("/api/calculations", {
@@ -36,7 +36,7 @@ export default function PesoFetalCalculator() {
         body: JSON.stringify({
           calculatorType: "pesoFetal",
           input: JSON.stringify(data),
-          result: JSON.stringify(resultado),
+          result: JSON.stringify({ peso: resultado.peso }), // Send only the weight
         }),
       });
     } catch (error) {
@@ -141,11 +141,7 @@ export default function PesoFetalCalculator() {
             <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
             <p>
               Peso Fetal Estimado:{" "}
-              <span className="font-medium">{result.peso} gramos</span>
-            </p>
-            <p>
-              Clasificación:{" "}
-              <span className="font-medium">{result.percentil}</span>
+              <span className="font-medium">{result} gramos</span>
             </p>
           </CardContent>
         </Card>

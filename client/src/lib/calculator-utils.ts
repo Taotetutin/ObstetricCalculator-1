@@ -60,17 +60,5 @@ export function calculatePesoFetal(input: CalculatorInput<"pesoFetal">) {
 
   const peso = Math.pow(10, logPeso);
 
-  let percentil = "";
-  if (peso < 2500) {
-    percentil = "Bajo peso";
-  } else if (peso <= 4000) {
-    percentil = "Normal";
-  } else {
-    percentil = "Macrosómico";
-  }
-
-  return {
-    peso: Math.round(peso),
-    percentil
-  };
+  return Math.round(peso);
 }
