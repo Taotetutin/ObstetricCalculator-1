@@ -3,17 +3,81 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply bg-gradient-to-b from-white to-blue-50 min-h-screen font-sans;
   }
 }
 
 @layer components {
-  .container {
-    @apply mx-auto px-4 sm:px-6 lg:px-8;
+  .form-container {
+    @apply max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .label-text {
+    @apply block text-base font-medium text-gray-700 mb-2;
+  }
+
+  .input-field {
+    @apply block w-full rounded-xl border-2 border-blue-300/50 py-2.5 px-4 text-gray-900 shadow-sm 
+    focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm transition-colors;
+  }
+
+  .switch {
+    @apply relative inline-flex h-7 w-14 cursor-pointer items-center;
+  }
+
+  .switch input {
+    @apply sr-only;
+  }
+
+  .slider {
+    @apply absolute inset-0 h-7 w-14 rounded-full bg-gray-200 transition-colors duration-200;
+  }
+
+  .switch input:checked + .slider {
+    @apply bg-blue-500;
+  }
+
+  .slider:before {
+    @apply absolute left-1 top-1 h-5 w-5 transform rounded-full bg-white shadow-md 
+    transition-transform duration-200 ease-in-out content-[''];
+  }
+
+  .switch input:checked + .slider:before {
+    @apply translate-x-7;
+  }
+
+  .slider-text {
+    @apply absolute text-xs font-medium select-none;
+  }
+
+  .slider-text.left {
+    @apply left-2 text-gray-600;
+  }
+
+  .slider-text.right {
+    @apply right-2 text-white opacity-0 transition-opacity duration-200;
+  }
+
+  .switch input:checked + .slider .slider-text.right {
+    @apply opacity-100;
+  }
+
+  .switch input:checked + .slider .slider-text.left {
+    @apply opacity-0;
+  }
+
+  .switch-label {
+    @apply flex items-center justify-between py-2;
+  }
+
+  .submit-button {
+    @apply w-full rounded-xl bg-blue-500 py-3 px-4 text-base font-semibold text-white shadow-lg 
+    hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+    transition-colors duration-200;
   }
 }
