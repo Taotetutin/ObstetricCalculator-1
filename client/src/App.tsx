@@ -16,27 +16,29 @@ function Router() {
     <div className="min-h-screen bg-background">
       <div className="flex min-h-screen">
         <Sidebar />
-        <main className="flex-1 p-6">
-          {location !== "/" && (
-            <Button
-              variant="ghost"
-              className="mb-4"
-              onClick={() => setLocation("/")}
-            >
-              <HomeIcon className="w-4 h-4 mr-2" />
-              Volver al Inicio
-            </Button>
-          )}
-          <Switch>
-            <Route path="/" component={Home} />
-            <Route path="/calculadora/:id" component={Calculator} />
-            <Route component={NotFound} />
-          </Switch>
-        </main>
+        <div className="flex-1 flex flex-col">
+          <main className="flex-1 p-6">
+            {location !== "/" && (
+              <Button
+                variant="ghost"
+                className="mb-4"
+                onClick={() => setLocation("/")}
+              >
+                <HomeIcon className="w-4 h-4 mr-2" />
+                Volver al Inicio
+              </Button>
+            )}
+            <Switch>
+              <Route path="/" component={Home} />
+              <Route path="/calculadora/:id" component={Calculator} />
+              <Route component={NotFound} />
+            </Switch>
+          </main>
+          <footer className="py-4 text-right text-sm text-blue-600 bg-white/50 px-6">
+            Todos los derechos reservados a MiMaternoFetal.cl
+          </footer>
+        </div>
       </div>
-      <footer className="fixed bottom-0 w-full py-4 text-center text-sm text-blue-600 bg-white/50">
-        Todos los derechos reservados a MiMaternoFetal.cl
-      </footer>
     </div>
   );
 }

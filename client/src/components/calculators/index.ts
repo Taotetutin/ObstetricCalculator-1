@@ -9,30 +9,27 @@ import {
   Activity,
   Weight,
   BarChart,
-  Brain,
 } from "lucide-react";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
-import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import BishopCalculator from "./BishopCalculator";
-import CVRCalculator from "./CVRCalculator";
 import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
 import DopplerCalculator from "./DopplerCalculator";
-import LHRCalculator from "./LHRCalculator";
 import PesoFetalCalculator from "./PesoFetalCalculator";
 import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
 import T21Calculator from "./T21Calculator";
 import TallaFetalCalculator from "./TallaFetalCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
+import PartoPrematuroCalculator from "./PartoPrematuroCalculator";
+import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
     id: "fpp",
     name: "Fecha Probable de Parto",
-    description:
-      "Calcula la fecha probable de parto basada en la última menstruación",
+    description: "Calcula la fecha probable de parto basada en la última menstruación",
     icon: Calendar,
     component: FPPCalculator,
   },
@@ -59,8 +56,8 @@ export const calculators = [
   },
   {
     id: "pulmonary-predictor",
-    name: "Predictor Pulmonar",
-    description: "Evaluación de patologías pulmonares fetales (LHR y CVR)",
+    name: "Predictor de Disfunción Pulmonar",
+    description: "Evaluación integral de patologías pulmonares fetales (LHR y CVR)",
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
   },
@@ -70,13 +67,6 @@ export const calculators = [
     description: "Evaluación del índice de Bishop",
     icon: BarChart,
     component: BishopCalculator,
-  },
-  {
-    id: "cvr",
-    name: "CVR",
-    description: "Cálculo del ratio cerebro-volumen",
-    icon: Brain,
-    component: CVRCalculator,
   },
   {
     id: "curva-crecimiento",
@@ -93,18 +83,25 @@ export const calculators = [
     component: DopplerCalculator,
   },
   {
-    id: "lhr",
-    name: "LHR",
-    description: "Cálculo del ratio pulmón-cabeza",
-    icon: Stethoscope,
-    component: LHRCalculator,
-  },
-  {
     id: "peso-fetal",
     name: "Peso Fetal",
     description: "Estimación del peso fetal",
     icon: Weight,
     component: PesoFetalCalculator,
+  },
+  {
+    id: "talla-fetal",
+    name: "Talla Fetal",
+    description: "Estimación de la talla fetal",
+    icon: Scale,
+    component: TallaFetalCalculator,
+  },
+  {
+    id: "parto-prematuro",
+    name: "Riesgo de Parto Prematuro",
+    description: "Evaluación del riesgo de parto prematuro",
+    icon: Baby,
+    component: PartoPrematuroCalculator,
   },
   {
     id: "preeclampsia",
@@ -119,13 +116,6 @@ export const calculators = [
     description: "Cálculo del riesgo de trisomía 21",
     icon: Calculator,
     component: T21Calculator,
-  },
-  {
-    id: "talla-fetal",
-    name: "Talla Fetal",
-    description: "Estimación de la talla fetal",
-    icon: Scale,
-    component: TallaFetalCalculator,
   },
   {
     id: "weight-gain",
