@@ -12,6 +12,7 @@ import DopplerCalculator from "./DopplerCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import T21Calculator from "./T21Calculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
+import TallaFetalCalculator from "./TallaFetalCalculator";
 
 export const calculators = [
   {
@@ -48,6 +49,13 @@ export const calculators = [
     description: "Estima el peso fetal según medidas ecográficas",
     icon: Weight,
     component: PesoFetalCalculator
+  },
+  {
+    id: "talla-fetal",
+    name: "Talla Fetal",
+    description: "Calcula la talla fetal basada en la longitud del fémur",
+    icon: Ruler,
+    component: TallaFetalCalculator
   },
   {
     id: "curva-crecimiento",

@@ -141,6 +141,10 @@ export const calculatorTypes = {
     width: z.number().min(1).max(100),     // Ancho en mm
     headCircumference: z.number().min(10).max(500), // Circunferencia cefálica en mm
   }),
+  tallaFetal: z.object({
+    femurLength: z.number().min(10).max(120),      // Longitud del fémur en mm
+    gestationalAge: z.number().min(12).max(42),    // Edad gestacional en semanas
+  }),
 } as const;
 
 // Type helpers
