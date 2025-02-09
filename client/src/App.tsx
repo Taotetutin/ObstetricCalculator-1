@@ -9,7 +9,7 @@ import Sidebar from "@/components/Sidebar";
 
 function Router() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-sky-100">
+    <div className="min-h-screen bg-white">
       <div className="flex min-h-screen">
         <Sidebar />
         <main className="flex-1 p-6">
