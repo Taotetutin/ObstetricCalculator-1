@@ -69,6 +69,21 @@ export const calculatorTypes = {
     posicion: z.number().min(0).max(2),
     estacion: z.number().min(0).max(3),
   }),
+  doppler: z.object({
+    // Arteria umbilical
+    auIr: z.number().min(0).max(2),     // Índice de resistencia
+    auPi: z.number().min(0).max(3),     // Índice de pulsatilidad
+    auSd: z.number().min(0).max(10),    // Relación sístole/diástole
+    // Arteria cerebral media
+    acmIr: z.number().min(0).max(2),    // Índice de resistencia
+    acmPi: z.number().min(0).max(3),    // Índice de pulsatilidad
+    acmPsv: z.number().min(0).max(100), // Velocidad sistólica pico
+    // Ductus venoso
+    dvPi: z.number().min(0).max(3),     // Índice de pulsatilidad
+    dvWave: z.enum(['normal', 'ausente', 'reversa']), // Onda a
+    // Edad gestacional (necesaria para percentiles)
+    semanasGestacion: z.number().min(20).max(40),
+  }),
 } as const;
 
 // Type helpers

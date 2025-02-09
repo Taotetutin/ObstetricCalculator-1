@@ -230,3 +230,114 @@ export function calculateBishop(input: CalculatorInput<"bishop">) {
     recommendation
   };
 }
+
+// Rangos normales de Doppler por semana gestacional
+const DOPPLER_RANGES = {
+  umbilicalPI: {
+    20: { mean: 1.23, sd: 0.19 },
+    24: { mean: 1.18, sd: 0.18 },
+    28: { mean: 1.12, sd: 0.17 },
+    32: { mean: 1.05, sd: 0.16 },
+    36: { mean: 0.98, sd: 0.15 },
+    40: { mean: 0.91, sd: 0.14 }
+  },
+  cerebralPI: {
+    20: { mean: 1.56, sd: 0.32 },
+    24: { mean: 1.67, sd: 0.33 },
+    28: { mean: 1.78, sd: 0.34 },
+    32: { mean: 1.89, sd: 0.35 },
+    36: { mean: 1.54, sd: 0.33 },
+    40: { mean: 1.23, sd: 0.31 }
+  },
+  // PSV en cm/s
+  cerebralPSV: {
+    20: { mean: 23.5, sd: 4.2 },
+    24: { mean: 29.4, sd: 5.1 },
+    28: { mean: 36.8, sd: 6.3 },
+    32: { mean: 46.0, sd: 7.8 },
+    36: { mean: 57.5, sd: 9.7 },
+    40: { mean: 71.9, sd: 12.1 }
+  }
+};
+
+function interpolateRange(week: number, ranges: typeof DOPPLER_RANGES.umbilicalPI) {
+  const weeks = Object.keys(ranges).map(Number);
+  const lowerWeek = Math.max(...weeks.filter(w => w <= week));
+  const upperWeek = Math.min(...weeks.filter(w => w >= week));
+
+  if (lowerWeek === upperWeek) return ranges[lowerWeek];
+
+  const ratio = (week - lowerWeek) / (upperWeek - lowerWeek);
+  return {
+    mean: ranges[lowerWeek].mean + (ranges[upperWeek].mean - ranges[lowerWeek].mean) * ratio,
+    sd: ranges[lowerWeek].sd + (ranges[upperWeek].sd - ranges[lowerWeek].sd) * ratio
+  };
+}
+
+function calculatePercentile(value: number, mean: number, sd: number): number {
+  const zScore = (value - mean) / sd;
+  return Math.round(100 * (0.5 * (1 + erf(zScore / Math.sqrt(2)))));
+}
+
+function erf(x: number): number {
+  const sign = Math.sign(x);
+  x = Math.abs(x);
+  const a1 = 0.254829592;
+  const a2 = -0.284496736;
+  const a3 = 1.421413741;
+  const a4 = -1.453152027;
+  const a5 = 1.061405429;
+  const p = 0.3275911;
+  const t = 1 / (1 + p * x);
+  const erfx = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+  return sign * erfx;
+}
+
+export function calculateDoppler(input: CalculatorInput<"doppler">) {
+  const ranges = {
+    umbilical: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.umbilicalPI),
+    cerebral: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.cerebralPI),
+    psv: interpolateRange(input.semanasGestacion, DOPPLER_RANGES.cerebralPSV)
+  };
+
+  // Calcular percentiles
+  const percentiles = {
+    auPi: calculatePercentile(input.auPi, ranges.umbilical.mean, ranges.umbilical.sd),
+    acmPi: calculatePercentile(input.acmPi, ranges.cerebral.mean, ranges.cerebral.sd),
+    acmPsv: calculatePercentile(input.acmPsv, ranges.psv.mean, ranges.psv.sd)
+  };
+
+  // Calcular ratio cerebro-placentario (CPR)
+  const cpr = input.acmPi / input.auPi;
+
+  // Evaluación general
+  let evaluation = "Normal";
+  let recommendations = [];
+
+  if (input.auPi > ranges.umbilical.mean + 2 * ranges.umbilical.sd) {
+    evaluation = "Alterado";
+    recommendations.push("Resistencias umbilicales aumentadas");
+  }
+
+  if (input.acmPi < ranges.cerebral.mean - 2 * ranges.cerebral.sd) {
+    evaluation = "Alterado";
+    recommendations.push("Vasodilatación cerebral (brain-sparing)");
+  }
+
+  if (cpr < 1) {
+    evaluation = "Alterado";
+    recommendations.push("Ratio cerebro-placentario alterado");
+  }
+
+  if (input.dvWave !== 'normal') {
+    evaluation = "Alterado";
+    recommendations.push(`Onda a del ductus venoso ${input.dvWave}`);
+  }
+
+  return {
+    percentiles,
+    cpr,
+    evaluation,
+    recommendations: recommendations.join(". ") || "No se detectan alteraciones significativas."
+  };
+}

@@ -8,6 +8,7 @@ import PesoFetalCalculator from "./PesoFetalCalculator";
 import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
 import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
 import BishopCalculator from "./BishopCalculator";
+import DopplerCalculator from "./DopplerCalculator"; // Added import statement
 
 export const calculators = [
   {
@@ -71,7 +72,7 @@ export const calculators = [
     name: "Doppler Fetal",
     description: "Análisis de flujos Doppler fetales",
     icon: Heart,
-    component: () => null
+    component: DopplerCalculator
   },
   {
     id: "bienestar-fetal",
