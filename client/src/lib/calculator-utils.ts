@@ -107,8 +107,11 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
   // Calcular IMC
   const bmi = input.weight / (input.height * input.height);
 
-  // Riesgo base ajustado según FMF (3.6% para preeclampsia precoz)
-  let baselineRisk = 0.036;
+  // Riesgo base ajustado según FMF (Fetal Medicine Foundation)
+  let baselineRisk = 0.02472;
+
+  // Factor de corrección por CRL (según FMF)
+  const crlFactor = Math.exp(-0.0378 * (input.crownRumpLength - 65));
 
   // Ajustes por edad materna (OR según FMF)
   const ageRisk = Math.exp(0.0323 * (input.age - 35));
@@ -154,8 +157,8 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
     biomarkerRisk *= Math.exp(-0.3351 * (Math.log(input.plgf / 100)));
   }
 
-  // Cálculo del riesgo final
-  const finalRisk = baselineRisk * ageRisk * bmiRisk * medicalFactorsRisk * 
+  // Cálculo del riesgo final incluyendo el factor CRL
+  const finalRisk = baselineRisk * crlFactor * ageRisk * bmiRisk * medicalFactorsRisk * 
                    obstetricFactorsRisk * ethnicityRisk * mapRisk * biomarkerRisk;
 
   // Convertir a relación (1/N)

@@ -32,7 +32,7 @@ type PreeclampsiaInput = {
   weight: number;
   height: number;
   ethnicity: "caucasica" | "afro" | "sudasiatica" | "asiaticooriental" | "mixta";
-  gestationalAge: number;
+  crownRumpLength: number;
   systolicBP: number;
   diastolicBP: number;
   nulliparous: boolean;
@@ -61,7 +61,7 @@ export default function PreeclampsiaCalculator() {
       weight: 60,
       height: 1.65,
       ethnicity: 'caucasica',
-      gestationalAge: 12,
+      crownRumpLength: 65,
       systolicBP: 120,
       diastolicBP: 80,
       nulliparous: false,
@@ -219,10 +219,10 @@ export default function PreeclampsiaCalculator() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="gestationalAge"
+                name="crownRumpLength"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Edad Gestacional (semanas)</FormLabel>
+                    <FormLabel>Longitud Cráneo-Rabadilla (mm)</FormLabel>
                     <Input
                       type="number"
                       step="0.1"

@@ -51,6 +51,7 @@ export const calculatorTypes = {
     // Marcadores biofísicos
     systolicBP: z.number().min(70).max(200),
     diastolicBP: z.number().min(40).max(120),
+    crownRumpLength: z.number().min(45).max(84), // CRL en mm según FMF
     uterinePI: z.number().min(0).max(5).optional(),
 
     // Marcadores bioquímicos (opcionales)
@@ -58,7 +59,6 @@ export const calculatorTypes = {
     plgf: z.number().min(0).max(2000).optional(),
 
     // Embarazo actual
-    gestationalAge: z.number().min(11).max(14),
     multiplePregnancy: z.boolean(),
   }),
 } as const;
