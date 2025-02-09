@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 export default function Sidebar() {
   const [location] = useLocation();
 
-  console.log("Calculadoras en Sidebar:", calculators); // Debug log
-
   return (
     <div className="w-64 border-r bg-card p-4 flex flex-col gap-4">
       <div className="h-24 flex items-center px-2 border-b pb-4">
@@ -24,7 +22,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="space-y-2">
-        {Array.isArray(calculators) && calculators.map((calc) => (
+        {calculators && calculators.map((calc) => (
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <Button
               variant={location === `/calculadora/${calc.id}` ? "secondary" : "ghost"}
