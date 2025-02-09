@@ -145,6 +145,14 @@ export const calculatorTypes = {
     femurLength: z.number().min(10).max(120),      // Longitud del fémur en mm
     gestationalAge: z.number().min(12).max(42),    // Edad gestacional en semanas
   }),
+  mefi: z.object({
+    fcb: z.string(),
+    variabilidad: z.string(),
+    aceleraciones: z.string(),
+    desaceleraciones: z.string(),
+    movimientos: z.string().optional(),
+    duracionRegistro: z.string().optional(),
+  }),
 } as const;
 
 // Type helpers

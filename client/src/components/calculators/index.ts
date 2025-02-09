@@ -24,6 +24,7 @@ import TallaFetalCalculator from "./TallaFetalCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import PartoPrematuroCalculator from "./PartoPrematuroCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
+import MEFICalculator from "./MEFICalculator";
 
 export const calculators = [
   {
@@ -123,5 +124,12 @@ export const calculators = [
     description: "Control de ganancia de peso durante el embarazo",
     icon: Weight,
     component: WeightGainCalculator,
+  },
+  {
+    id: "mefi",
+    name: "Monitoreo Fetal Intraparto",
+    description: "Evaluación del registro cardiotocográfico intraparto",
+    icon: Activity,
+    component: MEFICalculator,
   },
 ];
