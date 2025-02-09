@@ -1,5 +1,6 @@
-import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, Thermometer, TrendingUp, Weight, Calendar } from "lucide-react";
+import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar } from "lucide-react";
 import { calculateFPP, calculateIMC, calculateGestationalAge } from "@/lib/calculator-utils";
+import FPPCalculator from "./FPPCalculator";
 
 export const calculators = [
   {
@@ -7,14 +8,14 @@ export const calculators = [
     name: "Fecha Probable de Parto",
     description: "Calcula la fecha probable de parto basada en la última menstruación",
     icon: Calendar,
-    component: () => null // Implement specific calculator component
+    component: FPPCalculator
   },
   {
     id: "edad-gestacional",
     name: "Edad Gestacional",
     description: "Determina la edad gestacional actual",
     icon: Baby,
-    component: () => null
+    component: () => null 
   },
   {
     id: "imc",

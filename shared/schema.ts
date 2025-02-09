@@ -1,8 +1,8 @@
-import { pgTable, text, serial, date, numeric } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, date, numeric, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Base types for calculator inputs/outputs
+// Calculator input/output types
 export const calculatorTypes = {
   fpp: z.object({
     lastPeriodDate: z.date(),
@@ -16,8 +16,24 @@ export const calculatorTypes = {
     ultrasoundDate: z.date().optional(),
     crownRumpLength: z.number().optional(),
   }),
-  // Add more calculator schemas as needed
 } as const;
 
 // Type helpers
 export type CalculatorInput<T extends keyof typeof calculatorTypes> = z.infer<typeof calculatorTypes[T]>;
+
+// Database tables
+export const calculations = pgTable("calculations", {
+  id: serial("id").primaryKey(),
+  calculatorType: text("calculator_type").notNull(),
+  input: text("input").notNull(), // JSON string of inputs
+  result: text("result").notNull(), // JSON string of results
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertCalculationSchema = createInsertSchema(calculations).omit({ 
+  id: true, 
+  createdAt: true 
+});
+
+export type Calculation = typeof calculations.$inferSelect;
+export type InsertCalculation = z.infer<typeof insertCalculationSchema>;

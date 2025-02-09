@@ -1,39 +1,27 @@
-import { users, type User, type InsertUser } from "@shared/schema";
-
-// modify the interface with any CRUD methods
-// you might need
+import { calculations, type Calculation, type InsertCalculation } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  saveCalculation(calculation: InsertCalculation): Promise<Calculation>;
+  getCalculationById(id: number): Promise<Calculation | undefined>;
+  getCalculationsByType(type: string): Promise<Calculation[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  currentId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.currentId = 1;
+export class DatabaseStorage implements IStorage {
+  async saveCalculation(calculation: InsertCalculation): Promise<Calculation> {
+    const [saved] = await db.insert(calculations).values(calculation).returning();
+    return saved;
   }
 
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getCalculationById(id: number): Promise<Calculation | undefined> {
+    const [calculation] = await db.select().from(calculations).where(eq(calculations.id, id));
+    return calculation;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async getCalculationsByType(type: string): Promise<Calculation[]> {
+    return await db.select().from(calculations).where(eq(calculations.calculatorType, type));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
