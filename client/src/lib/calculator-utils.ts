@@ -193,3 +193,40 @@ export function calculatePreeclampsiaRisk(input: CalculatorInput<"preeclampsia">
     map: input.meanArterialPressure
   };
 }
+
+// Add Bishop Score calculation function
+export function calculateBishop(input: CalculatorInput<"bishop">) {
+  // Sum all the scores
+  const totalScore = 
+    input.dilatacion + 
+    input.borramiento + 
+    input.consistencia + 
+    input.posicion + 
+    input.estacion;
+
+  // Determine favorability
+  let favorability: string;
+  if (totalScore < 5) {
+    favorability = "Desfavorable";
+  } else if (totalScore <= 8) {
+    favorability = "Intermedio";
+  } else {
+    favorability = "Favorable";
+  }
+
+  // Determine recommendation
+  let recommendation: string;
+  if (totalScore < 5) {
+    recommendation = "Considerar maduración cervical antes de la inducción";
+  } else if (totalScore <= 8) {
+    recommendation = "Inducción posible, monitorizar progreso cuidadosamente";
+  } else {
+    recommendation = "Condiciones favorables para inducción";
+  }
+
+  return {
+    score: totalScore,
+    favorability,
+    recommendation
+  };
+}

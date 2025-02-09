@@ -62,6 +62,13 @@ export const calculatorTypes = {
     pappA: z.number().min(0).max(10).optional(),
     plgf: z.number().min(0).max(2000).optional(),
   }),
+  bishop: z.object({
+    dilatacion: z.number().min(0).max(5),
+    borramiento: z.number().min(0).max(5),
+    consistencia: z.number().min(0).max(2),
+    posicion: z.number().min(0).max(2),
+    estacion: z.number().min(0).max(3),
+  }),
 } as const;
 
 // Type helpers

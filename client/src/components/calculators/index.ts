@@ -7,6 +7,7 @@ import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 import PesoFetalCalculator from "./PesoFetalCalculator";
 import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
 import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
+import BishopCalculator from "./BishopCalculator";
 
 export const calculators = [
   {
@@ -63,7 +64,7 @@ export const calculators = [
     name: "Test de Bishop",
     description: "Evalúa las condiciones cervicales",
     icon: Calculator,
-    component: () => null
+    component: BishopCalculator
   },
   {
     id: "doppler",
