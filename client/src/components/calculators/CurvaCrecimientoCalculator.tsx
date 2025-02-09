@@ -1,62 +1,55 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { calculatorTypes } from "@shared/schema";
+import { calcularPercentilOMS } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-const curvaCrecimientoSchema = z.object({
-  semanasGestacion: z.number().min(20).max(42),
-  pesoFetal: z.number().min(100).max(5000),
-});
-
-type CurvaCrecimientoData = z.infer<typeof curvaCrecimientoSchema>;
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 export default function CurvaCrecimientoCalculator() {
-  const [percentil, setPercentil] = useState<string | null>(null);
+  const [result, setResult] = useState<{ percentil: string; clasificacion: string } | null>(null);
 
-  const form = useForm<CurvaCrecimientoData>({
-    resolver: zodResolver(curvaCrecimientoSchema),
+  const form = useForm({
+    resolver: zodResolver(calculatorTypes.curvaCrecimiento),
     defaultValues: {
       semanasGestacion: 20,
       pesoFetal: 500,
     },
   });
 
-  const calcularPercentil = (semanas: number, peso: number) => {
-    // Valores aproximados basados en tablas de percentiles fetales
-    const p10 = -1200 + (semanas * 150);
-    const p50 = -1500 + (semanas * 180);
-    const p90 = -1800 + (semanas * 210);
-
-    if (peso < p10) return "< Percentil 10 (Pequeño para edad gestacional)";
-    if (peso > p90) return "> Percentil 90 (Grande para edad gestacional)";
-    return "Entre Percentil 10-90 (Adecuado para edad gestacional)";
-  };
-
-  const onSubmit = async (data: CurvaCrecimientoData) => {
-    const resultado = calcularPercentil(data.semanasGestacion, data.pesoFetal);
-    setPercentil(resultado);
-
+  const onSubmit = async (data: { semanasGestacion: number; pesoFetal: number }) => {
     try {
+      const resultado = calcularPercentilOMS(data.semanasGestacion, data.pesoFetal);
+      setResult(resultado);
+
       await fetch("/api/calculations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           calculatorType: "curvaCrecimiento",
           input: JSON.stringify(data),
-          result: JSON.stringify({ percentil: resultado }),
+          result: JSON.stringify(resultado),
         }),
       });
     } catch (error) {
-      console.error("Error saving calculation:", error);
+      console.error("Error en el cálculo:", error);
     }
   };
 
   return (
     <div className="space-y-6">
+      <Alert>
+        <InfoIcon className="h-4 w-4" />
+        <AlertDescription>
+          Esta calculadora utiliza los estándares de crecimiento fetal de la OMS
+          para evaluar el peso según la edad gestacional.
+        </AlertDescription>
+      </Alert>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -64,7 +57,7 @@ export default function CurvaCrecimientoCalculator() {
             name="semanasGestacion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Semanas de Gestación</FormLabel>
+                <FormLabel>Semanas de Gestación (20-42)</FormLabel>
                 <Input
                   type="number"
                   min="20"
@@ -100,11 +93,17 @@ export default function CurvaCrecimientoCalculator() {
         </form>
       </Form>
 
-      {percentil && (
+      {result && (
         <Card>
           <CardContent className="pt-6">
             <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
-            <p>{percentil}</p>
+            <p className="mb-2">
+              Percentil: <span className="font-medium">{result.percentil}</span>
+            </p>
+            <p>
+              Clasificación:{" "}
+              <span className="font-medium">{result.clasificacion}</span>
+            </p>
           </CardContent>
         </Card>
       )}
