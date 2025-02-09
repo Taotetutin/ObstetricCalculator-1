@@ -453,3 +453,56 @@ export function calculateWeightGain(input: CalculatorInput<"weightGain">) {
     recommendation
   };
 }
+
+export function calculateLHR(input: CalculatorInput<"lhr">) {
+  // Cálculo del LHR (Lung-to-Head Ratio)
+  // LHR = (Área pulmonar en mm²) / (Circunferencia cefálica en mm)
+  const lhr = input.lungArea / input.headCircumference;
+
+  // Obtener el LHR esperado según la edad gestacional
+  // Basado en valores de referencia
+  const expectedLHR = 1.0; // Simplificado para el ejemplo
+
+  // Calcular el LHR observado/esperado (o/e LHR)
+  const oeLHR = lhr / expectedLHR;
+
+  let prognosis = "";
+  if (oeLHR < 0.25) {
+    prognosis = "Extremadamente severo";
+  } else if (oeLHR < 0.35) {
+    prognosis = "Severo";
+  } else if (oeLHR < 0.45) {
+    prognosis = "Moderado";
+  } else {
+    prognosis = "Leve";
+  }
+
+  return {
+    lhr: Number(lhr.toFixed(2)),
+    oeLHR: Number(oeLHR.toFixed(2)),
+    prognosis
+  };
+}
+
+export function calculateCVR(input: CalculatorInput<"cvr">) {
+  // Cálculo del volumen de la lesión (Length × Height × Width × 0.52)
+  const lesionVolume = input.length * input.height * input.width * 0.52;
+
+  // CVR = Volumen de la lesión / Circunferencia cefálica
+  const cvr = lesionVolume / input.headCircumference;
+
+  let risk = "";
+  if (cvr > 1.6) {
+    risk = "Alto riesgo - Considerar intervención fetal";
+  } else if (cvr > 1.0) {
+    risk = "Riesgo moderado - Seguimiento estrecho";
+  } else {
+    risk = "Bajo riesgo - Seguimiento rutinario";
+  }
+
+  return {
+    lesionVolume: Number(lesionVolume.toFixed(1)),
+    cvr: Number(cvr.toFixed(2)),
+    risk
+  };
+}

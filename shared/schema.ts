@@ -126,6 +126,21 @@ export const calculatorTypes = {
     hcg: z.number().optional(),
     ue3: z.number().optional(),
   }),
+  lhr: z.object({
+    // Medidas fetales
+    headCircumference: z.number().min(10).max(500),  // Circunferencia cefálica en mm
+    lungArea: z.number().min(1).max(1000),          // Área pulmonar en mm²
+    gestationalWeeks: z.number().min(20).max(40),   // Semanas de gestación
+    side: z.enum(['left', 'right']),               // Lado afectado
+    method: z.enum(['2D', '3D']),                  // Método de medición
+  }),
+  cvr: z.object({
+    // Medidas de la lesión CPAM
+    length: z.number().min(1).max(100),    // Longitud en mm
+    height: z.number().min(1).max(100),    // Altura en mm
+    width: z.number().min(1).max(100),     // Ancho en mm
+    headCircumference: z.number().min(10).max(500), // Circunferencia cefálica en mm
+  }),
 } as const;
 
 // Type helpers

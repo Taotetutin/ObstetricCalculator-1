@@ -1,5 +1,5 @@
-import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar, Dna } from "lucide-react";
-import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico, calculatePesoFetal } from "@/lib/calculator-utils";
+import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar, Dna, Stethoscope } from "lucide-react";
+import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico, calculatePesoFetal, calculateLHR, calculateCVR } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
@@ -11,6 +11,8 @@ import BishopCalculator from "./BishopCalculator";
 import DopplerCalculator from "./DopplerCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import T21Calculator from "./T21Calculator";
+import LHRCalculator from "./LHRCalculator";
+import CVRCalculator from "./CVRCalculator";
 
 export const calculators = [
   {
@@ -89,5 +91,19 @@ export const calculators = [
     description: "Calcula el riesgo de trisomía 21",
     icon: Dna,
     component: T21Calculator
+  },
+  {
+    id: "lhr",
+    name: "LHR - Hernia Diafragmática",
+    description: "Lung-to-Head Ratio para pronóstico de hernia diafragmática",
+    icon: Stethoscope,
+    component: LHRCalculator
+  },
+  {
+    id: "cvr",
+    name: "CVR - CPAM",
+    description: "CPAM Volume Ratio para evaluación de malformación pulmonar",
+    icon: Stethoscope,
+    component: CVRCalculator
   }
 ];
