@@ -43,3 +43,29 @@ export function calculateLiquidoAmniotico(input: CalculatorInput<"liquidoAmnioti
     categoria
   };
 }
+
+export function calculatePesoFetal(input: CalculatorInput<"pesoFetal">) {
+  // Fórmula de Hadlock para estimación de peso fetal
+  const log10 = Math.log10;
+  const peso = Math.pow(10, 
+    1.335 - 
+    0.0034 * input.ca * input.lf +
+    0.0316 * input.dbp +
+    0.0457 * input.ca +
+    0.1623 * input.lf
+  );
+
+  let percentil = "";
+  if (peso < 2500) {
+    percentil = "Bajo peso";
+  } else if (peso <= 4000) {
+    percentil = "Normal";
+  } else {
+    percentil = "Macrosómico";
+  }
+
+  return {
+    peso: Math.round(peso),  // Peso en gramos
+    percentil
+  };
+}

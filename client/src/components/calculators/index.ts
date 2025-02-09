@@ -1,9 +1,10 @@
 import { Calculator, Baby, Scale, Droplet, LineChart, Activity, Heart, Ruler, TrendingUp, Weight, Calendar } from "lucide-react";
-import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico } from "@/lib/calculator-utils";
+import { calculateFPP, calculateIMC, calculateGestationalAge, calculateLiquidoAmniotico, calculatePesoFetal } from "@/lib/calculator-utils";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
+import PesoFetalCalculator from "./PesoFetalCalculator";
 
 export const calculators = [
   {
@@ -39,7 +40,7 @@ export const calculators = [
     name: "Peso Fetal Estimado",
     description: "Estima el peso fetal según medidas ecográficas",
     icon: Weight,
-    component: () => null
+    component: PesoFetalCalculator
   },
   {
     id: "curva-crecimiento",
