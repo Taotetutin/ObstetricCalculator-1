@@ -67,6 +67,10 @@ export default function DopplerCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Doppler Fetal</h2>
+      </div>
+
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
@@ -229,7 +233,7 @@ export default function DopplerCalculator() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
           </Button>
         </form>
@@ -238,10 +242,10 @@ export default function DopplerCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Resultados:</h3>
+            <h3 className="text-lg font-semibold mb-4 text-blue-700">Resultados:</h3>
             <div className="space-y-4">
               <div>
-                <p className="font-medium">Índices Doppler:</p>
+                <p className="font-medium text-blue-700">Índices Doppler:</p>
                 <ul className="list-disc list-inside ml-4">
                   <li>AU-IP: <span className="font-medium">{result.percentiles.auPi}%</span></li>
                   <li>ACM-IP: <span className="font-medium">{result.percentiles.acmPi}%</span></li>
@@ -250,7 +254,7 @@ export default function DopplerCalculator() {
               </div>
 
               <div>
-                <p className="font-medium">Índice Cerebro-Placentario (IPC):</p>
+                <p className="font-medium text-blue-700">Índice Cerebro-Placentario (IPC):</p>
                 <ul className="list-disc list-inside ml-4">
                   <li>Valor: <span className="font-medium">{result.cpr.toFixed(2)}</span></li>
                   <li>Percentil: <span className="font-medium">{result.cprPercentile}%</span></li>
@@ -258,14 +262,14 @@ export default function DopplerCalculator() {
               </div>
 
               <div>
-                <p className="font-medium">Estado:</p>
+                <p className="font-medium text-blue-700">Estado:</p>
                 <p className={`ml-4 font-medium ${result.evaluation === "Alterado" ? "text-red-600" : "text-green-600"}`}>
                   {result.evaluation}
                 </p>
               </div>
 
               <div>
-                <p className="font-medium">Interpretación y Recomendaciones:</p>
+                <p className="font-medium text-blue-700">Interpretación y Recomendaciones:</p>
                 <p className="ml-4 text-sm">{result.recommendations}</p>
               </div>
             </div>

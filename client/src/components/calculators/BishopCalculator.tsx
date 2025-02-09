@@ -94,6 +94,10 @@ export default function BishopCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Test de Bishop</h2>
+      </div>
+
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
@@ -119,8 +123,8 @@ export default function BishopCalculator() {
                   </SelectTrigger>
                   <SelectContent>
                     {dilatacionOptions.map((option) => (
-                      <SelectItem 
-                        key={option.value} 
+                      <SelectItem
+                        key={option.value}
                         value={option.value.toString()}
                       >
                         {option.label}
@@ -148,8 +152,8 @@ export default function BishopCalculator() {
                   </SelectTrigger>
                   <SelectContent>
                     {borramientoOptions.map((option) => (
-                      <SelectItem 
-                        key={option.value} 
+                      <SelectItem
+                        key={option.value}
                         value={option.value.toString()}
                       >
                         {option.label}
@@ -177,8 +181,8 @@ export default function BishopCalculator() {
                   </SelectTrigger>
                   <SelectContent>
                     {consistenciaOptions.map((option) => (
-                      <SelectItem 
-                        key={option.value} 
+                      <SelectItem
+                        key={option.value}
                         value={option.value.toString()}
                       >
                         {option.label}
@@ -206,8 +210,8 @@ export default function BishopCalculator() {
                   </SelectTrigger>
                   <SelectContent>
                     {posicionOptions.map((option) => (
-                      <SelectItem 
-                        key={option.value} 
+                      <SelectItem
+                        key={option.value}
                         value={option.value.toString()}
                       >
                         {option.label}
@@ -235,8 +239,8 @@ export default function BishopCalculator() {
                   </SelectTrigger>
                   <SelectContent>
                     {estacionOptions.map((option) => (
-                      <SelectItem 
-                        key={option.value} 
+                      <SelectItem
+                        key={option.value}
                         value={option.value.toString()}
                       >
                         {option.label}
@@ -249,7 +253,7 @@ export default function BishopCalculator() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
           </Button>
         </form>
@@ -258,7 +262,7 @@ export default function BishopCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
             <div className="space-y-2">
               <p>
                 Puntuación Bishop:{" "}
