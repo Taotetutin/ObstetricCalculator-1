@@ -1,4 +1,16 @@
-import { Calculator, Baby, Scale, Droplet, Stethoscope, Calendar, Heart, Activity, Weight, BarChart, Brain } from "lucide-react";
+import {
+  Calculator,
+  Baby,
+  Scale,
+  Droplet,
+  Stethoscope,
+  Calendar,
+  Heart,
+  Activity,
+  Weight,
+  BarChart,
+  Brain,
+} from "lucide-react";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
@@ -19,106 +31,107 @@ export const calculators = [
   {
     id: "fpp",
     name: "Fecha Probable de Parto",
-    description: "Calcula la fecha probable de parto basada en la última menstruación",
+    description:
+      "Calcula la fecha probable de parto basada en la última menstruación",
     icon: Calendar,
-    component: FPPCalculator
+    component: FPPCalculator,
   },
   {
     id: "edad-gestacional",
     name: "Edad Gestacional",
     description: "Determina la edad gestacional actual",
     icon: Baby,
-    component: GestationalAgeCalculator
+    component: GestationalAgeCalculator,
   },
   {
     id: "imc",
     name: "Índice de Masa Corporal",
     description: "Calcula el IMC materno",
     icon: Scale,
-    component: IMCCalculator
+    component: IMCCalculator,
   },
   {
     id: "liquido-amniotico",
     name: "Líquido Amniótico",
     description: "Evalúa el índice de líquido amniótico",
     icon: Droplet,
-    component: LiquidoAmnioticoCalculator
+    component: LiquidoAmnioticoCalculator,
   },
   {
     id: "pulmonary-predictor",
     name: "Predictor Pulmonar",
     description: "Evaluación de patologías pulmonares fetales (LHR y CVR)",
     icon: Stethoscope,
-    component: PulmonaryPredictorCalculator
+    component: PulmonaryPredictorCalculator,
   },
   {
     id: "bishop",
     name: "Bishop Score",
     description: "Evaluación del índice de Bishop",
     icon: BarChart,
-    component: BishopCalculator
+    component: BishopCalculator,
   },
   {
     id: "cvr",
     name: "CVR",
     description: "Cálculo del ratio cerebro-volumen",
     icon: Brain,
-    component: CVRCalculator
+    component: CVRCalculator,
   },
   {
     id: "curva-crecimiento",
     name: "Curva de Crecimiento",
     description: "Seguimiento del crecimiento fetal",
     icon: Activity,
-    component: CurvaCrecimientoCalculator
+    component: CurvaCrecimientoCalculator,
   },
   {
     id: "doppler",
     name: "Doppler Fetal",
     description: "Evaluación de flujos Doppler fetales",
     icon: Heart,
-    component: DopplerCalculator
+    component: DopplerCalculator,
   },
   {
     id: "lhr",
     name: "LHR",
     description: "Cálculo del ratio pulmón-cabeza",
     icon: Stethoscope,
-    component: LHRCalculator
+    component: LHRCalculator,
   },
   {
     id: "peso-fetal",
     name: "Peso Fetal",
     description: "Estimación del peso fetal",
     icon: Weight,
-    component: PesoFetalCalculator
+    component: PesoFetalCalculator,
   },
   {
     id: "preeclampsia",
     name: "Riesgo de Preeclampsia",
     description: "Evaluación del riesgo de preeclampsia",
     icon: Activity,
-    component: PreeclampsiaCalculator
+    component: PreeclampsiaCalculator,
   },
   {
     id: "t21",
     name: "Riesgo de T21",
     description: "Cálculo del riesgo de trisomía 21",
     icon: Calculator,
-    component: T21Calculator
+    component: T21Calculator,
   },
   {
     id: "talla-fetal",
     name: "Talla Fetal",
     description: "Estimación de la talla fetal",
     icon: Scale,
-    component: TallaFetalCalculator
+    component: TallaFetalCalculator,
   },
   {
     id: "weight-gain",
     name: "Ganancia de Peso",
     description: "Control de ganancia de peso durante el embarazo",
     icon: Weight,
-    component: WeightGainCalculator
-  }
+    component: WeightGainCalculator,
+  },
 ];
