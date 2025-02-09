@@ -27,6 +27,7 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import MEFICalculator from "./MEFICalculator";
 import FemurCortoCalculator from "./FemurCortoCalculator";
 import HuesoNasalCalculator from "./HuesoNasalCalculator";
+import PRCalculator from "./PRCalculator";
 
 export const calculators = [
   {
@@ -147,5 +148,12 @@ export const calculators = [
     description: "Análisis del hueso nasal fetal y sus implicaciones",
     icon: Scale,
     component: HuesoNasalCalculator,
+  },
+  {
+    id: "pr",
+    name: "Intervalo PR Fetal",
+    description: "Evaluación del intervalo PR y conducción cardíaca fetal",
+    icon: Heart,
+    component: PRCalculator,
   },
 ];

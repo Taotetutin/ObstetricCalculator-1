@@ -167,6 +167,13 @@ export const calculatorTypes = {
     dbp: z.number().min(0).max(100),                // Diámetro biparietal en mm
     moms: z.number().min(0).max(10),                // Multiple of medians
   }),
+  pr: z.object({
+    prInterval: z.number().min(0).max(500),    // Intervalo PR en ms
+    semanasGestacion: z.number().min(16).max(40),   // Semanas de gestación
+    diasGestacion: z.number().min(0).max(6),        // Días adicionales
+    avInterval: z.number().min(0).max(500),         // Intervalo AV en ms
+    ductusVenosus: z.number().min(0).max(500),      // Ductus venosus en ms
+  }),
 } as const;
 
 // Type helpers
