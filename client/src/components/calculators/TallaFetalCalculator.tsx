@@ -31,40 +31,40 @@ export default function TallaFetalCalculator() {
 
   const calculateFetalHeight = (femurLength: number): number => {
     // Fórmula de Hadlock para estimar la talla fetal basada en la longitud del fémur
-    return (femurLength * 6.18 + 5.9);
+    return femurLength * 0.78 + 7.15;
   };
 
   const getPercentileAndRecommendation = (height: number, gestationalAge: number): { percentile: string; recommendation: string } => {
     // Valores aproximados de percentiles por edad gestacional
     const p50 = gestationalAge * 1.2; // Valor aproximado del percentil 50
-    
+
     if (height < p50 * 0.9) {
       return {
         percentile: "< p10",
-        recommendation: "Requiere seguimiento cercano. Considerar evaluación del crecimiento fetal."
+        recommendation: "Talla fetal por debajo del percentil 10. Se recomienda seguimiento ecográfico."
       };
     } else if (height > p50 * 1.1) {
       return {
         percentile: "> p90",
-        recommendation: "Dentro de rangos normales altos. Mantener control habitual."
+        recommendation: "Talla fetal por encima del percentil 90. Control habitual."
       };
     }
     return {
       percentile: "p10-p90",
-      recommendation: "Dentro de rangos normales. Mantener control habitual."
+      recommendation: "Talla fetal dentro de rangos normales."
     };
   };
 
   const onSubmit = async (data: TallaFetalInput) => {
     const height = calculateFetalHeight(data.femurLength);
     const { percentile, recommendation } = getPercentileAndRecommendation(height, data.gestationalAge);
-    
+
     const resultado = {
       height: parseFloat(height.toFixed(1)),
       percentile,
       recommendation
     };
-    
+
     setResult(resultado);
 
     try {
