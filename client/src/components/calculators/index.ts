@@ -11,8 +11,7 @@ import BishopCalculator from "./BishopCalculator";
 import DopplerCalculator from "./DopplerCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import T21Calculator from "./T21Calculator";
-import LHRCalculator from "./LHRCalculator";
-import CVRCalculator from "./CVRCalculator";
+import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
@@ -93,17 +92,10 @@ export const calculators = [
     component: T21Calculator
   },
   {
-    id: "lhr",
-    name: "LHR - Hernia Diafragmática",
-    description: "Lung-to-Head Ratio para pronóstico de hernia diafragmática",
+    id: "pulmonary-predictor",
+    name: "Predictor Pulmonar",
+    description: "Evaluación de patologías pulmonares fetales (LHR y CVR)",
     icon: Stethoscope,
-    component: LHRCalculator
-  },
-  {
-    id: "cvr",
-    name: "CVR - CPAM",
-    description: "CPAM Volume Ratio para evaluación de malformación pulmonar",
-    icon: Stethoscope,
-    component: CVRCalculator
+    component: PulmonaryPredictorCalculator
   }
 ];
