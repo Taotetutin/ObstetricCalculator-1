@@ -37,7 +37,11 @@ export default function FirstTrimesterCalculator() {
 
     const resultado = {
       risk,
-      interpretation: risk > (1/350) ? "Riesgo Aumentado" : "Riesgo Bajo",
+      interpretation: risk > (1/100) 
+        ? "Alto Riesgo" 
+        : risk > (1/1000) 
+          ? "Riesgo Intermedio" 
+          : "Bajo Riesgo",
       details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/risk)}`
     };
 
@@ -219,9 +223,11 @@ export default function FirstTrimesterCalculator() {
           <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
           <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
           <p className={`font-medium ${
-            result.interpretation === "Riesgo Bajo" 
-              ? "text-green-600" 
-              : "text-amber-600"
+            result.interpretation === "Alto Riesgo"
+              ? "text-red-600"
+              : result.interpretation === "Riesgo Intermedio"
+                ? "text-amber-600"
+                : "text-green-600"
           }`}>
             {result.interpretation}
           </p>
