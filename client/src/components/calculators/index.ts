@@ -25,6 +25,7 @@ import WeightGainCalculator from "./WeightGainCalculator";
 import PartoPrematuroCalculator from "./PartoPrematuroCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import MEFICalculator from "./MEFICalculator";
+import FemurCortoCalculator from "./FemurCortoCalculator";
 
 export const calculators = [
   {
@@ -131,5 +132,12 @@ export const calculators = [
     description: "Evaluación del registro cardiotocográfico intraparto",
     icon: Activity,
     component: MEFICalculator,
+  },
+  {
+    id: "femur-corto",
+    name: "Evaluación de Fémur Corto",
+    description: "Análisis de la longitud del fémur fetal y sus percentiles",
+    icon: Scale,
+    component: FemurCortoCalculator,
   },
 ];
