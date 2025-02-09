@@ -15,6 +15,28 @@ type AgeRiskResult = {
   details: string;
 };
 
+// Tabla de riesgos por edad (basada en datos epidemiológicos)
+const ageRiskTable: Record<number, number> = {
+  20: 1525,
+  25: 1340,
+  30: 940,
+  31: 885,
+  32: 725,
+  33: 535,
+  34: 390,
+  35: 290,
+  36: 225,
+  37: 170,
+  38: 125,
+  39: 100,
+  40: 75,
+  41: 60,
+  42: 45,
+  43: 35,
+  44: 25,
+  45: 20,
+};
+
 export default function AgeCalculator() {
   const [result, setResult] = useState<AgeRiskResult | null>(null);
 
@@ -26,14 +48,33 @@ export default function AgeCalculator() {
   });
 
   const onSubmit = async (data: any) => {
-    // TODO: Implement age risk calculation logic
-    const calculatedRisk = 1 / (1000 * Math.exp(-0.1 * (data.age - 35)));
+    // Calcula el riesgo basado en la tabla
+    let risk: number;
+    const age = Math.round(data.age);
+
+    if (age <= 20) {
+      risk = 1 / 1525;
+    } else if (age >= 45) {
+      risk = 1 / 20;
+    } else {
+      // Interpolación lineal entre edades si no está en la tabla
+      const ages = Object.keys(ageRiskTable).map(Number);
+      const lowerAge = ages.filter(a => a <= age).pop() || 20;
+      const upperAge = ages.find(a => a > age) || 45;
+
+      const lowerRisk = 1 / ageRiskTable[lowerAge];
+      const upperRisk = 1 / ageRiskTable[upperAge];
+
+      const t = (age - lowerAge) / (upperAge - lowerAge);
+      risk = lowerRisk + t * (upperRisk - lowerRisk);
+    }
+
     const resultado = {
-      risk: calculatedRisk,
-      interpretation: calculatedRisk > 0.01 ? "Riesgo Aumentado" : "Riesgo Bajo",
-      details: `El riesgo por edad materna de ${data.age} años es de 1:${Math.round(1/calculatedRisk)}`
+      risk,
+      interpretation: risk > (1/350) ? "Riesgo Aumentado" : "Riesgo Bajo",
+      details: `El riesgo por edad materna de ${age} años es de 1:${Math.round(1/risk)}`
     };
-    
+
     setResult(resultado);
 
     try {
@@ -56,7 +97,7 @@ export default function AgeCalculator() {
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
-          Esta calculadora estima el riesgo de trisomía 21 basado en la edad materna.
+          Esta calculadora estima el riesgo de trisomía 21 basado en la edad materna utilizando datos epidemiológicos.
         </AlertDescription>
       </Alert>
 
