@@ -8,9 +8,15 @@
     padding: 20px;
 }
 
+body {
+    background: linear-gradient(to bottom, #ffffff, #f0f4f8);
+    min-height: 100vh;
+}
+
 h1 {
     text-align: center;
     margin-bottom: 30px;
+    color: #2c5282;
 }
 
 .form-row {
@@ -27,14 +33,23 @@ h1 {
 .form-group label {
     display: block;
     margin-bottom: 8px;
+    color: #2d3748;
 }
 
 .custom-roller input,
 select {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.custom-roller input:focus,
+select:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    outline: none;
 }
 
 .switch-label {
@@ -63,7 +78,7 @@ select {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #cbd5e0;
     transition: .4s;
     border-radius: 34px;
 }
@@ -98,7 +113,7 @@ select {
 }
 
 input:checked + .slider {
-    background-color: #333;
+    background-color: #4299e1;
 }
 
 input:checked + .slider:before {
@@ -115,29 +130,32 @@ input:checked + .slider .slider-text.left {
 
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #333;
+    padding: 12px;
+    background-color: #4299e1;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 20px;
+    transition: background-color 0.2s;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: #3182ce;
 }
 
 #result {
     margin-top: 30px;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: none;
 }
 
 footer {
     margin-top: 30px;
     text-align: center;
-    color: #666;
+    color: #718096;
 }
