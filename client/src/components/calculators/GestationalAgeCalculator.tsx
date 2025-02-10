@@ -29,7 +29,6 @@ export default function GestationalAgeCalculator() {
   const form = useForm({
     resolver: zodResolver(calculatorTypes.gestationalAge),
     defaultValues: {
-      lastPeriodDate: undefined,
       ultrasoundDate: new Date(),
       crownRumpLength: undefined,
       dbp: undefined,
@@ -59,58 +58,20 @@ export default function GestationalAgeCalculator() {
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="fur" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="fur">FUR conocida</TabsTrigger>
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-blue-700">
+          Edad Gestacional Dudosa
+        </h3>
+        <p className="text-sm text-gray-600">
+          Cálculo por medidas ecográficas
+        </p>
+      </div>
+
+      <Tabs defaultValue="crl" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="crl">CRL (≤14 sem)</TabsTrigger>
           <TabsTrigger value="biometria">Biometría (&gt;20 sem)</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="fur">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="lastPeriodDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fecha de última menstruación</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                        >
-                          <Calendar className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP", { locale: es })
-                          ) : (
-                            <span>Seleccione una fecha</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <CalendarComponent
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                Calcular
-              </Button>
-            </form>
-          </Form>
-        </TabsContent>
 
         <TabsContent value="crl">
           <Alert className="mb-4">
