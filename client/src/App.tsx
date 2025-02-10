@@ -17,7 +17,7 @@ function Router() {
       <div className="flex min-h-screen">
         <Sidebar />
         <div className="flex-1 flex flex-col">
-          <main className="flex-1 p-6 pb-24">
+          <main className="flex-1 p-4 md:p-6 pb-24">
             {location !== "/" && (
               <Button
                 variant="ghost"

@@ -14,8 +14,8 @@ export default function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <SidebarProvider defaultState="expanded">
-      <CollapsibleSidebar collapsible="icon">
+    <SidebarProvider defaultOpen>
+      <CollapsibleSidebar>
         <SidebarHeader className="border-b">
           <Link href="/">
             <div className="flex items-center gap-2 px-4 py-3">
