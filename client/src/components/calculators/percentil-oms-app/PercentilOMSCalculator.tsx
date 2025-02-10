@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { CalculatorHeader } from './components/CalculatorHeader';
 import { InputField } from './components/InputField';
 import { ResultDisplay } from './components/ResultDisplay';
 import { calcularPercentil } from './utils/calculations';
