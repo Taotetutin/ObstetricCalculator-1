@@ -69,22 +69,24 @@ export default function Sidebar() {
   return (
     <>
       {/* Móvil */}
-      <Sheet>
-        <SheetTrigger asChild className="md:hidden fixed top-4 left-4 z-50">
-          <Button 
-            size="icon" 
-            className="bg-white shadow-lg border-blue-100"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-80 p-0 bg-white">
-          <SidebarContent />
-        </SheetContent>
-      </Sheet>
+      <div className="md:hidden">
+        <Button 
+          size="icon" 
+          className="fixed top-4 left-4 z-50 bg-white shadow-lg border-blue-100"
+          onClick={() => document.querySelector('[role="dialog"]')?.setAttribute('data-state', 'open')}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
+        <Sheet>
+          <SheetContent side="left" className="w-80 p-0 bg-white border-r">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
 
       {/* Desktop */}
-      <div className="hidden md:block w-80 border-r bg-white shadow-lg">
+      <div className="hidden md:block w-80 border-r bg-white">
         <SidebarContent />
       </div>
     </>
