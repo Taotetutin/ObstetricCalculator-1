@@ -35,18 +35,18 @@ import PercentilOMSCalculator from "./percentil-oms-app/PercentilOMSCalculator";
 
 export const calculators = [
   {
+    id: "gestacional",
+    name: "Edad Gestacional",
+    description: "Determina la edad gestacional actual",
+    icon: Baby,
+    component: GestationalAgeCalculator,
+  },
+  {
     id: "fpp",
     name: "Fecha Probable de Parto",
     description: "Calcula la fecha probable de parto basada en la última menstruación",
     icon: Calendar,
     component: FPPCalculator,
-  },
-  {
-    id: "edad-gestacional",
-    name: "Edad Gestacional",
-    description: "Determina la edad gestacional actual",
-    icon: Baby,
-    component: GestationalAgeCalculator,
   },
   {
     id: "imc",
