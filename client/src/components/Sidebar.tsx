@@ -30,8 +30,8 @@ export default function Sidebar() {
           <SidebarTrigger className="absolute right-2 top-4" />
         </SidebarHeader>
 
-        <SidebarContent className="overflow-y-auto">
-          <nav className="space-y-1 p-2">
+        <SidebarContent>
+          <nav className="p-2 space-y-1">
             {calculators.map((calc) => (
               <Link key={calc.id} href={`/calculadora/${calc.id}`}>
                 <Button

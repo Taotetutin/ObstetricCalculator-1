@@ -10,7 +10,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="w-full p-4">
+    <div className="w-full">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-primary">ObsteriX Legend</h1>
         <p className="text-lg text-muted-foreground">
@@ -18,7 +18,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-max">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {calculators.map((calc) => (
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <TooltipProvider>
