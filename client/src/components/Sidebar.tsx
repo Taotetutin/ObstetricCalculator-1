@@ -23,6 +23,9 @@ const calculatorGroups = {
 export default function Sidebar() {
   const [location] = useLocation();
 
+  // Obtener todas las claves del objeto calculatorGroups para el defaultValue del Accordion
+  const defaultExpandedSections = Object.keys(calculatorGroups);
+
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       <Link href="/">
@@ -38,7 +41,11 @@ export default function Sidebar() {
 
       <ScrollArea className="flex-1">
         <div className="p-2">
-          <Accordion type="multiple" className="space-y-1">
+          <Accordion 
+            type="multiple" 
+            className="space-y-1"
+            defaultValue={defaultExpandedSections}
+          >
             {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
               <AccordionItem key={groupName} value={groupName} className="border-none">
                 <AccordionTrigger className="py-2 px-3 text-sm hover:no-underline hover:bg-accent rounded-md data-[state=open]:bg-muted">
