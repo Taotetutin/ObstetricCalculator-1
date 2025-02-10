@@ -47,17 +47,14 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       setIsLoading(false);
-    }, 2300); // Tiempo suficiente para la animación de fade out
-
-    return () => clearTimeout(timer);
+    }, 2000);
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isLoading && <LoadingScreen />}
-      <Router />
+      {isLoading ? <LoadingScreen /> : <Router />}
       <Toaster />
     </QueryClientProvider>
   );
