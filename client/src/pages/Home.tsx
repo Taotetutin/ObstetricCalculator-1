@@ -10,15 +10,15 @@ import {
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4">
-      <div className="text-center mb-12">
+    <div className="w-full max-w-7xl mx-auto px-4">
+      <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-primary">ObsteriX Legend</h1>
         <p className="text-lg text-muted-foreground">
           Herramientas profesionales para el cálculo y seguimiento obstétrico
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {calculators.map((calc) => (
           <Link key={calc.id} href={`/calculadora/${calc.id}`}>
             <TooltipProvider>
