@@ -19,48 +19,40 @@ export default function PercentilOMSCalculator() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">
-          Percentiles OMS
-        </h2>
-      </div>
+    <div className="space-y-4">
+      <InputField
+        id="gestationalWeeks"
+        label="Edad Gestacional (Semanas):"
+        value={gestationalWeeks}
+        onChange={(e) => setGestationalWeeks(e.target.value)}
+        min="14"
+        max="40"
+      />
 
-      <div className="space-y-4">
-        <InputField
-          id="gestationalWeeks"
-          label="Edad Gestacional (Semanas):"
-          value={gestationalWeeks}
-          onChange={(e) => setGestationalWeeks(e.target.value)}
-          min="14"
-          max="40"
-        />
+      <InputField
+        id="gestationalDays"
+        label="Edad Gestacional (Días):"
+        value={gestationalDays}
+        onChange={(e) => setGestationalDays(e.target.value)}
+        min="0"
+        max="6"
+      />
 
-        <InputField
-          id="gestationalDays"
-          label="Edad Gestacional (Días):"
-          value={gestationalDays}
-          onChange={(e) => setGestationalDays(e.target.value)}
-          min="0"
-          max="6"
-        />
+      <InputField
+        id="fetalWeight"
+        label="Peso Fetal (gramos):"
+        value={fetalWeight}
+        onChange={(e) => setFetalWeight(e.target.value)}
+      />
 
-        <InputField
-          id="fetalWeight"
-          label="Peso Fetal (gramos):"
-          value={fetalWeight}
-          onChange={(e) => setFetalWeight(e.target.value)}
-        />
+      <button
+        onClick={handleCalculate}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-200"
+      >
+        Calcular Percentil
+      </button>
 
-        <button
-          onClick={handleCalculate}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-200"
-        >
-          Calcular Percentil
-        </button>
-
-        <ResultDisplay result={result} />
-      </div>
+      <ResultDisplay result={result} />
     </div>
   );
 }
