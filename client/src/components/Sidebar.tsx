@@ -35,40 +35,39 @@ export default function Sidebar() {
         </div>
       </Link>
 
-      <ScrollArea className="flex-1 py-6">
-        <div className="px-3 space-y-6">
+      <ScrollArea className="flex-1 py-4">
+        <div className="px-2">
           {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-            <div key={groupName} className="space-y-2">
-              <h3 className="px-3 text-sm font-medium text-blue-900/70">
-                {groupName}
-              </h3>
+            <div key={groupName} className="mb-6">
+              <div className="px-3 py-2 bg-blue-50 rounded-lg mb-2">
+                <h3 className="text-sm font-semibold text-blue-900">
+                  {groupName}
+                </h3>
+              </div>
               <div className="space-y-1">
                 {groupCalculators.map((calc) => (
                   <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-                    <Button
-                      variant="ghost"
+                    <button
                       className={cn(
-                        "w-full justify-start gap-3 font-medium px-3 py-2 h-auto text-blue-800/90",
-                        "hover:bg-blue-50 hover:text-blue-900",
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+                        "text-left text-blue-800 hover:bg-blue-50",
                         "active:bg-blue-100",
                         location === `/calculadora/${calc.id}` && 
-                        "bg-blue-100 text-blue-900 hover:bg-blue-200"
+                        "bg-blue-100 font-medium"
                       )}
                     >
                       {calc.icon && (
-                        <div className="w-8 h-8 rounded-md bg-blue-100/50 flex items-center justify-center">
-                          <calc.icon className="w-5 h-5 text-blue-600" />
-                        </div>
+                        <calc.icon className="w-5 h-5 shrink-0 text-blue-600" />
                       )}
-                      <div className="flex flex-col items-start">
-                        <span className="text-sm">{calc.name}</span>
+                      <div>
+                        <div className="font-medium">{calc.name}</div>
                         {calc.description && (
-                          <span className="text-xs text-blue-600/70 font-normal">
+                          <div className="text-xs text-blue-600/70 mt-0.5">
                             {calc.description}
-                          </span>
+                          </div>
                         )}
                       </div>
-                    </Button>
+                    </button>
                   </Link>
                 ))}
               </div>
