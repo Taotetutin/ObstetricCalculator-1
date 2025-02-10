@@ -1,16 +1,18 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Sidebar as ShadcnSidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
 
 // Agrupar calculadoras por categoría
 const calculatorGroups = {
@@ -22,78 +24,50 @@ const calculatorGroups = {
 
 export default function Sidebar() {
   const [location] = useLocation();
-  const defaultExpandedSections = Object.keys(calculatorGroups);
 
-  const SidebarContent = () => (
-    <div className="flex h-full flex-col">
-      <Link href="/">
-        <div className="flex items-center gap-2 px-3 py-2 border-b">
-          <img 
-            src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
-            alt="MiMaternoFetal Logo"
-            className="h-8 w-auto"
-          />
-          <span className="font-semibold text-lg text-primary">ObsteriX Legend</span>
-        </div>
-      </Link>
-
-      <ScrollArea className="flex-1">
-        <div className="p-1">
-          <Accordion 
-            type="multiple" 
-            defaultValue={defaultExpandedSections}
-          >
+  return (
+    <SidebarProvider defaultOpen>
+      <ShadcnSidebar>
+        <SidebarHeader className="border-b px-2">
+          <Link href="/">
+            <div className="flex items-center gap-2 py-2">
+              <img 
+                src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
+                alt="MiMaternoFetal Logo"
+                className="h-8 w-auto"
+              />
+              <span className="font-semibold text-lg text-primary">ObsteriX Legend</span>
+            </div>
+          </Link>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
             {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-              <AccordionItem key={groupName} value={groupName} className="border-none px-1">
-                <AccordionTrigger className="py-1 px-2 text-sm hover:no-underline hover:bg-accent rounded-md data-[state=open]:bg-muted">
-                  {groupName}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex flex-col">
-                    {groupCalculators.map((calc) => (
-                      <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
+              <SidebarMenuItem key={groupName}>
+                <SidebarMenuButton>{groupName}</SidebarMenuButton>
+                <SidebarMenuSub>
+                  {groupCalculators.map((calc) => (
+                    <SidebarMenuSubItem key={calc.id}>
+                      <Link href={`/calculadora/${calc.id}`}>
+                        <div
                           className={cn(
-                            "w-full justify-start gap-2 text-sm font-normal h-7 px-2",
+                            "flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-accent",
                             location === `/calculadora/${calc.id}` && 
                             "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
                           )}
                         >
                           {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
-                          <span className="truncate">{calc.name}</span>
-                        </Button>
+                          <span className="truncate text-sm">{calc.name}</span>
+                        </div>
                       </Link>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarMenuItem>
             ))}
-          </Accordion>
-        </div>
-      </ScrollArea>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Móvil */}
-      <Sheet>
-        <SheetTrigger asChild className="md:hidden fixed top-4 left-4 z-50">
-          <Button variant="outline" size="icon">
-            <Menu className="h-4 w-4" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] p-0">
-          <SidebarContent />
-        </SheetContent>
-      </Sheet>
-
-      {/* Desktop */}
-      <div className="hidden md:block w-[280px] border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <SidebarContent />
-      </div>
-    </>
+          </SidebarMenu>
+        </SidebarContent>
+      </ShadcnSidebar>
+    </SidebarProvider>
   );
 }
