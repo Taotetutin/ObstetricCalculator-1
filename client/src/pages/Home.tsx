@@ -7,7 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Scale, FileText, ShieldCheck, Mail } from "lucide-react";
 
 export default function Home() {
   return (
@@ -42,53 +41,6 @@ export default function Home() {
           </Link>
         ))}
       </div>
-
-      <footer className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t py-4 px-6">
-        <div className="flex justify-end gap-4 items-center max-w-7xl mx-auto">
-          <Link href="/terminos">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="p-2 hover:bg-primary/10 rounded-full">
-                    <FileText className="w-5 h-5 text-primary" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Términos y Condiciones
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Link>
-          <Link href="/privacidad">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="p-2 hover:bg-primary/10 rounded-full">
-                    <ShieldCheck className="w-5 h-5 text-primary" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Política de Privacidad
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Link>
-          <Link href="/contacto">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="p-2 hover:bg-primary/10 rounded-full">
-                    <Mail className="w-5 h-5 text-primary" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Contacto
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Link>
-        </div>
-      </footer>
     </div>
   );
 }

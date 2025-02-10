@@ -40,7 +40,7 @@ export default function Calculator() {
               {calculator.name}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <CalculatorComponent />
           </CardContent>
         </Card>
