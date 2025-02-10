@@ -8,7 +8,7 @@ export default function PulmonaryPredictorCalculator() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Calculadora de Disfunción Pulmonar</CardTitle>
+          <CardTitle>Marcadores de Disfunción Pulmonar</CardTitle>
           <CardDescription>
             Esta herramienta permite evaluar dos condiciones pulmonares fetales principales:
             <ul className="mt-2 list-disc list-inside space-y-1">
