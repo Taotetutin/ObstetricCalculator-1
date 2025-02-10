@@ -60,9 +60,10 @@ export default function GestationalAgeCalculator() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="fur" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="fur">FUR conocida</TabsTrigger>
-          <TabsTrigger value="eco">Ecografía</TabsTrigger>
+          <TabsTrigger value="crl">CRL (≤14 sem)</TabsTrigger>
+          <TabsTrigger value="biometria">Biometría (&gt;20 sem)</TabsTrigger>
         </TabsList>
 
         <TabsContent value="fur">
@@ -111,11 +112,11 @@ export default function GestationalAgeCalculator() {
           </Form>
         </TabsContent>
 
-        <TabsContent value="eco">
+        <TabsContent value="crl">
           <Alert className="mb-4">
             <InfoIcon className="h-4 w-4" />
             <AlertDescription>
-              Ingrese las medidas ecográficas disponibles según la edad gestacional estimada
+              Para cálculo en primer trimestre (≤14 semanas)
             </AlertDescription>
           </Alert>
 
@@ -163,7 +164,7 @@ export default function GestationalAgeCalculator() {
                 name="crownRumpLength"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Longitud Cráneo-Caudal (mm) - hasta 14 semanas</FormLabel>
+                    <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
                     <Input
                       type="number"
                       step="0.1"
@@ -175,9 +176,61 @@ export default function GestationalAgeCalculator() {
                 )}
               />
 
-              <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-700">Medidas después de 14 semanas:</h4>
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                Calcular
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
 
+        <TabsContent value="biometria">
+          <Alert className="mb-4">
+            <InfoIcon className="h-4 w-4" />
+            <AlertDescription>
+              Para cálculo después de 20 semanas. Se requieren las tres medidas.
+            </AlertDescription>
+          </Alert>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="ultrasoundDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha de la ecografía</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
+                          <Calendar className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP", { locale: es })
+                          ) : (
+                            <span>Seleccione una fecha</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <CalendarComponent
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="dbp"
@@ -211,24 +264,24 @@ export default function GestationalAgeCalculator() {
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="abdominalCircumference"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Circunferencia Abdominal (mm) - después de 20 semanas</FormLabel>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
+
+              <FormField
+                control={form.control}
+                name="abdominalCircumference"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Circunferencia Abdominal (mm)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
                 Calcular
