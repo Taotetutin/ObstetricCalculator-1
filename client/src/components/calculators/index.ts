@@ -31,6 +31,7 @@ import HuesoNasalCalculator from "./HuesoNasalCalculator";
 import PRCalculator from "./PRCalculator";
 import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
+import PercentilOMSCalculator from "./percentil-oms-app/PercentilOMSCalculator";
 
 export const calculators = [
   {
@@ -172,5 +173,12 @@ export const calculators = [
     description: "Evaluación del riesgo de colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
+  },
+  {
+    id: "percentil-oms",
+    name: "Percentiles OMS",
+    description: "Cálculo de percentiles según estándares de la OMS",
+    icon: Scale,
+    component: PercentilOMSCalculator,
   },
 ];
