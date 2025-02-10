@@ -10,7 +10,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="w-full">
+    <div className="flex flex-col h-full">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4 text-primary">ObsteriX Legend</h1>
         <p className="text-lg text-muted-foreground">

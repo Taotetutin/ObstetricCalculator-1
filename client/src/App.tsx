@@ -13,9 +13,9 @@ function Router() {
   const [location, setLocation] = useLocation();
 
   return (
-    <div className="grid grid-cols-[250px_1fr] min-h-screen">
+    <div className="grid grid-cols-[250px_1fr]">
       <Sidebar />
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen">
         <main className="flex-1 bg-gradient-to-br from-blue-50 to-white p-4 md:p-6">
           {location !== "/" && (
             <Button
