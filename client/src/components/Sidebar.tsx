@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
     <SidebarProvider defaultOpen>
-      <CollapsibleSidebar>
+      <CollapsibleSidebar variant="inset">
         <SidebarHeader className="border-b">
           <Link href="/">
             <div className="flex items-center gap-2 px-4 py-3">
