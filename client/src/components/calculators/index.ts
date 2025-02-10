@@ -24,7 +24,6 @@ import T21Calculator from "./T21Calculator";
 import TallaFetalCalculator from "./TallaFetalCalculator";
 import WeightGainCalculator from "./WeightGainCalculator";
 import PartoPrematuroCalculator from "./PartoPrematuroCalculator";
-import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import MEFICalculator from "./MEFICalculator";
 import FemurCortoCalculator from "./FemurCortoCalculator";
 import HuesoNasalCalculator from "./HuesoNasalCalculator";
@@ -37,7 +36,7 @@ export const calculators = [
   {
     id: "gestacional",
     name: "Edad Gestacional",
-    description: "Determina la edad gestacional actual",
+    description: "Determina la edad gestacional actual y registra pacientes",
     icon: Baby,
     component: GestationalAgeCalculator,
   },
@@ -61,13 +60,6 @@ export const calculators = [
     description: "Evalúa el índice de líquido amniótico",
     icon: Droplet,
     component: LiquidoAmnioticoCalculator,
-  },
-  {
-    id: "pulmonary-predictor",
-    name: "Disfunción Pulmonar",
-    description: "Evaluación integral de patologías pulmonares fetales (LHR y CVR)",
-    icon: Stethoscope,
-    component: PulmonaryPredictorCalculator,
   },
   {
     id: "bishop",
@@ -170,7 +162,7 @@ export const calculators = [
   {
     id: "colestasis",
     name: "Riesgo Fetal en Colestasis",
-    description: "Evaluación del riesgo de colestasis intrahepática del embarazo",
+    description: "Evaluación del riesgo en colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
   },
