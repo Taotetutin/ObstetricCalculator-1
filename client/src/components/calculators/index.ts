@@ -18,7 +18,7 @@ import FPPCalculator from "./FPPCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 import BishopCalculator from "./BishopCalculator";
-import CurvaCrecimientoCalculator from "./CurvaCrecimientoCalculator";
+import CrecimientoFetalCalculator from "./CrecimientoFetalCalculator";
 import DopplerCalculator from "./DopplerCalculator";
 import PesoFetalCalculator from "./PesoFetalCalculator";
 import PreeclampsiaCalculator from "./PreeclampsiaCalculator";
@@ -32,7 +32,6 @@ import HuesoNasalCalculator from "./HuesoNasalCalculator";
 import PRCalculator from "./PRCalculator";
 import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
-import PercentilOMSCalculator from "./percentil-oms-app/PercentilOMSCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
@@ -49,6 +48,13 @@ export const calculators = [
     description: "Calculadora de edad gestacional por biometría",
     icon: Baby,
     component: GestationalAgeCalculator,
+  },
+  {
+    id: "crecimiento-fetal",
+    name: "Crecimiento Fetal",
+    description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
+    icon: Activity,
+    component: CrecimientoFetalCalculator,
   },
   {
     id: "fpp",
@@ -84,13 +90,6 @@ export const calculators = [
     description: "Evaluación del índice de Bishop",
     icon: BarChart,
     component: BishopCalculator,
-  },
-  {
-    id: "curva-crecimiento",
-    name: "Curva de Crecimiento",
-    description: "Seguimiento del crecimiento fetal",
-    icon: Activity,
-    component: CurvaCrecimientoCalculator,
   },
   {
     id: "doppler",
@@ -182,12 +181,5 @@ export const calculators = [
     description: "Evaluación del riesgo en colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
-  },
-  {
-    id: "percentil-oms",
-    name: "Percentiles OMS",
-    description: "Cálculo de percentiles según estándares de la OMS",
-    icon: Scale,
-    component: PercentilOMSCalculator,
-  },
+  }
 ];
