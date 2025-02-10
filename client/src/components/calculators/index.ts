@@ -31,8 +31,7 @@ import PRCalculator from "./PRCalculator";
 import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PercentilOMSCalculator from "./percentil-oms-app/PercentilOMSCalculator";
-import LHRCalculator from "./LHRCalculator";
-import CVRCalculator from "./CVRCalculator";
+import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
@@ -68,19 +67,7 @@ export const calculators = [
     name: "Disfunción Pulmonar",
     description: "Evaluación integral de patologías pulmonares fetales",
     icon: Stethoscope,
-    component: LHRCalculator,
-    subCalculators: [
-      {
-        id: "lhr",
-        name: "LHR (Lung-to-Head Ratio)",
-        component: LHRCalculator
-      },
-      {
-        id: "cvr",
-        name: "CVR (Congenital Volume Ratio)",
-        component: CVRCalculator
-      }
-    ]
+    component: PulmonaryPredictorCalculator,
   },
   {
     id: "bishop",
