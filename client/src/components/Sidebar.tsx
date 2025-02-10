@@ -4,7 +4,6 @@ import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Reorganizar calculadoras por categoría de forma más intuitiva
 const calculatorGroups = {
@@ -35,46 +34,35 @@ export default function Sidebar() {
         </div>
       </Link>
 
-      <ScrollArea className="flex-1 py-4">
-        <div className="px-2">
-          {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-            <div key={groupName} className="mb-6">
-              <div className="px-3 py-2 bg-blue-50 rounded-lg mb-2">
-                <h3 className="text-sm font-semibold text-blue-900">
-                  {groupName}
-                </h3>
-              </div>
-              <div className="space-y-1">
-                {groupCalculators.map((calc) => (
-                  <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-                    <button
-                      className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-                        "text-left text-blue-800 hover:bg-blue-50",
-                        "active:bg-blue-100",
-                        location === `/calculadora/${calc.id}` && 
-                        "bg-blue-100 font-medium"
-                      )}
-                    >
+      <nav className="flex-1 overflow-y-auto">
+        {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
+          <div key={groupName} className="py-2">
+            <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
+              <h3 className="text-sm font-semibold text-blue-900">{groupName}</h3>
+            </div>
+            <ul className="space-y-1 px-3">
+              {groupCalculators.map((calc) => (
+                <li key={calc.id}>
+                  <Link href={`/calculadora/${calc.id}`}>
+                    <a className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-md",
+                      "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                      "transition-colors duration-200",
+                      location === `/calculadora/${calc.id}` && 
+                      "bg-blue-100 text-blue-900 font-medium"
+                    )}>
                       {calc.icon && (
                         <calc.icon className="w-5 h-5 shrink-0 text-blue-600" />
                       )}
-                      <div>
-                        <div className="font-medium">{calc.name}</div>
-                        {calc.description && (
-                          <div className="text-xs text-blue-600/70 mt-0.5">
-                            {calc.description}
-                          </div>
-                        )}
-                      </div>
-                    </button>
+                      <span>{calc.name}</span>
+                    </a>
                   </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
     </div>
   );
 
