@@ -64,7 +64,7 @@ export const calculators = [
   },
   {
     id: "pulmonary-predictor",
-    name: "Predictor Disfunción Pulmonar",
+    name: "Disfunción Pulmonar",
     description: "Evaluación integral de patologías pulmonares fetales (LHR y CVR)",
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
@@ -162,14 +162,14 @@ export const calculators = [
   },
   {
     id: "riesgo-neonatal",
-    name: "Calculadora de Riesgo Neonatal",
+    name: "Riesgo Neonatal",
     description: "Evaluación de riesgos neonatales basados en edad gestacional",
     icon: Baby,
     component: RiesgoNeonatalCalculator,
   },
   {
     id: "colestasis",
-    name: "Cálculo de Riesgo Fetal en Colestasis",
+    name: "Riesgo Fetal en Colestasis",
     description: "Evaluación del riesgo de colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
