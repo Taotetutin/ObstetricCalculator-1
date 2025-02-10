@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Patient } from "@shared/schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
@@ -73,7 +74,13 @@ export default function GestationalComplexCalculator() {
     }
   });
 
-  const form = useForm({
+  const calculatorForm = useForm({
+    defaultValues: {
+      lastMenstrualPeriod: new Date(),
+    },
+  });
+
+  const patientForm = useForm({
     defaultValues: {
       name: '',
       lastMenstrualPeriod: new Date(),
@@ -108,19 +115,21 @@ export default function GestationalComplexCalculator() {
     };
   };
 
-  const onSubmit = async (data: any) => {
+  const onCalculate = (data: any) => {
     const result = calculateDates(data.lastMenstrualPeriod);
     setResult(result);
+  };
 
-    if (data.name) {
-      try {
-        await saveMutation.mutateAsync({
-          name: data.name,
-          lastPeriodDate: data.lastMenstrualPeriod
-        });
-      } catch (error) {
-        console.error('Error al guardar paciente:', error);
-      }
+  const onSavePatient = async (data: any) => {
+    try {
+      await saveMutation.mutateAsync({
+        name: data.name,
+        lastPeriodDate: data.lastMenstrualPeriod
+      });
+      const result = calculateDates(data.lastMenstrualPeriod);
+      setResult(result);
+    } catch (error) {
+      console.error('Error al guardar paciente:', error);
     }
   };
 
@@ -132,100 +141,155 @@ export default function GestationalComplexCalculator() {
         </AlertDescription>
       </Alert>
 
-      <div className="mb-6">
-        <div className="flex gap-2 mb-4">
-          <Input
-            placeholder="Buscar paciente..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-sm"
-          />
-          <Button variant="outline" size="icon">
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
+      <Tabs defaultValue="calculator">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="calculator">Calculadora</TabsTrigger>
+          <TabsTrigger value="register">Registrar Paciente</TabsTrigger>
+          <TabsTrigger value="search">Buscar Paciente</TabsTrigger>
+        </TabsList>
 
-        {patients && patients.length > 0 && (
-          <Card>
-            <CardContent className="p-4">
-              <div className="space-y-2">
-                {patients.map((patient) => (
-                  <div
-                    key={patient.id}
-                    className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
-                    onClick={() => {
-                      form.setValue('name', patient.name);
-                      form.setValue('lastMenstrualPeriod', new Date(patient.lastPeriodDate));
-                      const result = calculateDates(new Date(patient.lastPeriodDate));
-                      setResult(result);
-                    }}
-                  >
-                    <span className="font-medium">{patient.name}</span>
-                    <span className="text-sm text-gray-500">ID: {patient.id}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+        <TabsContent value="calculator" className="space-y-4">
+          <Form {...calculatorForm}>
+            <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-4">
+              <FormField
+                control={calculatorForm.control}
+                name="lastMenstrualPeriod"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP", { locale: es })
+                          ) : (
+                            <span>Seleccione una fecha</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre del Paciente</FormLabel>
-                <Input {...field} placeholder="Ingrese el nombre" />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <Button type="submit" className="w-full">
+                Calcular Fechas
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
 
-          <FormField
-            control={form.control}
-            name="lastMenstrualPeriod"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal"
+        <TabsContent value="register" className="space-y-4">
+          <Form {...patientForm}>
+            <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-4">
+              <FormField
+                control={patientForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre del Paciente</FormLabel>
+                    <Input {...field} placeholder="Ingrese el nombre" />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={patientForm.control}
+                name="lastMenstrualPeriod"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP", { locale: es })
+                          ) : (
+                            <span>Seleccione una fecha</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Registrar y Calcular
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
+
+        <TabsContent value="search" className="space-y-4">
+          <div className="flex gap-2 mb-4">
+            <Input
+              placeholder="Buscar paciente..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1"
+            />
+            <Button variant="outline" size="icon">
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {patients && patients.length > 0 && (
+            <Card>
+              <CardContent className="p-4">
+                <div className="space-y-2">
+                  {patients.map((patient) => (
+                    <div
+                      key={patient.id}
+                      className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                      onClick={() => {
+                        const result = calculateDates(new Date(patient.lastPeriodDate));
+                        setResult(result);
+                      }}
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: es })
-                      ) : (
-                        <span>Seleccione una fecha</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" className="w-full">
-            Calcular y Guardar
-          </Button>
-        </form>
-      </Form>
+                      <span className="font-medium">{patient.name}</span>
+                      <span className="text-sm text-gray-500">ID: {patient.id}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
 
       {result && (
         <div className="space-y-3">
