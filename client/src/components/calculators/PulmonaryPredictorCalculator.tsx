@@ -16,33 +16,18 @@ export default function PulmonaryPredictorCalculator() {
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border p-4 bg-muted/50">
-            <h3 className="font-semibold mb-2">Seleccione la patología a evaluar:</h3>
+            <h3 className="font-semibold mb-2">Seleccione el índice a calcular:</h3>
             <Tabs defaultValue="lhr" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger 
-                  value="lhr" 
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
-                >
-                  <div className="text-left">
-                    <div className="font-semibold">Hernia Diafragmática</div>
-                    <div className="text-xs opacity-90">LHR (Lung-to-Head Ratio)</div>
-                  </div>
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="cvr"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
-                >
-                  <div className="text-left">
-                    <div className="font-semibold">CPAM</div>
-                    <div className="text-xs opacity-90">CVR (CPAM Volume Ratio)</div>
-                  </div>
-                </TabsTrigger>
+                <TabsTrigger value="lhr">LHR</TabsTrigger>
+                <TabsTrigger value="cvr">CVR</TabsTrigger>
               </TabsList>
 
               <TabsContent value="lhr">
                 <div className="space-y-4">
                   <div className="text-sm text-muted-foreground mb-4">
-                    Calculadora para evaluar la severidad de la hernia diafragmática congénita mediante el índice LHR
+                    <p className="font-medium mb-1">Lung-to-Head Ratio (LHR)</p>
+                    <p>Calculadora para evaluar la severidad de la hernia diafragmática congénita</p>
                   </div>
                   <LHRCalculator />
                 </div>
@@ -50,7 +35,8 @@ export default function PulmonaryPredictorCalculator() {
               <TabsContent value="cvr">
                 <div className="space-y-4">
                   <div className="text-sm text-muted-foreground mb-4">
-                    Calculadora para evaluar la severidad de la malformación adenomatoidea quística congénita mediante el índice CVR
+                    <p className="font-medium mb-1">CPAM Volume Ratio (CVR)</p>
+                    <p>Calculadora para evaluar la severidad de la malformación adenomatoidea quística congénita</p>
                   </div>
                   <CVRCalculator />
                 </div>
