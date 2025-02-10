@@ -47,7 +47,7 @@ export default function GestationalComplexCalculator() {
   const queryClient = useQueryClient();
 
   // Query para buscar pacientes
-  const { data: patients } = useQuery({
+  const { data: searchResults } = useQuery({
     queryKey: ['/api/patients', searchTerm],
     queryFn: async () => {
       if (!searchTerm) return [];
@@ -58,9 +58,24 @@ export default function GestationalComplexCalculator() {
     enabled: searchTerm.length > 2
   });
 
+  // Query para obtener todos los pacientes ordenados
+  const { data: allPatients } = useQuery({
+    queryKey: ['/api/patients'],
+    queryFn: async () => {
+      const response = await fetch('/api/patients');
+      if (!response.ok) throw new Error('Error obteniendo pacientes');
+      return response.json() as Promise<Patient[]>;
+    }
+  });
+
   // Mutación para guardar paciente
   const saveMutation = useMutation({
-    mutationFn: async (patient: { name: string; lastPeriodDate: Date }) => {
+    mutationFn: async (patient: { 
+      firstName: string;
+      lastName: string;
+      identification: string;
+      lastPeriodDate: Date 
+    }) => {
       const response = await fetch('/api/patients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +97,9 @@ export default function GestationalComplexCalculator() {
 
   const patientForm = useForm({
     defaultValues: {
-      name: '',
+      firstName: '',
+      lastName: '',
+      identification: '',
       lastMenstrualPeriod: new Date(),
     },
   });
@@ -123,7 +140,9 @@ export default function GestationalComplexCalculator() {
   const onSavePatient = async (data: any) => {
     try {
       await saveMutation.mutateAsync({
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        identification: data.identification,
         lastPeriodDate: data.lastMenstrualPeriod
       });
       const result = calculateDates(data.lastMenstrualPeriod);
@@ -148,7 +167,7 @@ export default function GestationalComplexCalculator() {
           <TabsTrigger value="search">Buscar Paciente</TabsTrigger>
         </TabsList>
 
-        <div className="mt-6">
+        <div className="mt-8">
           <TabsContent value="calculator" className="space-y-6">
             <Card>
               <CardContent className="pt-6">
@@ -205,13 +224,39 @@ export default function GestationalComplexCalculator() {
               <CardContent className="pt-6">
                 <Form {...patientForm}>
                   <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={patientForm.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base">Apellidos</FormLabel>
+                            <Input {...field} placeholder="Ingrese apellidos" />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={patientForm.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base">Nombres</FormLabel>
+                            <Input {...field} placeholder="Ingrese nombres" />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={patientForm.control}
-                      name="name"
+                      name="identification"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-base">Nombre del Paciente</FormLabel>
-                          <Input {...field} placeholder="Ingrese el nombre" />
+                          <FormLabel className="text-base">Número de ID</FormLabel>
+                          <Input {...field} placeholder="Ingrese número de identificación" />
                           <FormMessage />
                         </FormItem>
                       )}
@@ -255,7 +300,7 @@ export default function GestationalComplexCalculator() {
                     />
 
                     <Button type="submit" className="w-full">
-                      Registrar y Calcular
+                      Registrar Paciente
                     </Button>
                   </form>
                 </Form>
@@ -269,7 +314,7 @@ export default function GestationalComplexCalculator() {
                 <div className="space-y-6">
                   <div className="flex gap-4">
                     <Input
-                      placeholder="Buscar paciente..."
+                      placeholder="Buscar por apellido o ID..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="flex-1"
@@ -279,23 +324,36 @@ export default function GestationalComplexCalculator() {
                     </Button>
                   </div>
 
-                  {patients && patients.length > 0 && (
-                    <div className="space-y-2 mt-4">
-                      {patients.map((patient) => (
-                        <div
-                          key={patient.id}
-                          className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg border cursor-pointer"
-                          onClick={() => {
-                            const result = calculateDates(new Date(patient.lastPeriodDate));
-                            setResult(result);
-                          }}
-                        >
-                          <span className="font-medium">{patient.name}</span>
-                          <span className="text-sm text-gray-500">ID: {patient.id}</span>
-                        </div>
-                      ))}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-sm text-gray-500">Pacientes Registradas</h3>
+                    <div className="space-y-2">
+                      {(searchTerm ? searchResults : allPatients)?.map((patient) => {
+                        const gestationalAge = getGestationalAge(new Date(patient.lastPeriodDate), new Date());
+                        return (
+                          <div
+                            key={patient.id}
+                            className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg border cursor-pointer"
+                            onClick={() => {
+                              const result = calculateDates(new Date(patient.lastPeriodDate));
+                              setResult(result);
+                            }}
+                          >
+                            <div className="space-y-1">
+                              <div className="font-medium">
+                                {patient.lastName}, {patient.firstName}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                ID: {patient.identification}
+                              </div>
+                            </div>
+                            <div className="text-sm text-blue-600 font-medium">
+                              {gestationalAge.weeks}s {gestationalAge.days}d
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

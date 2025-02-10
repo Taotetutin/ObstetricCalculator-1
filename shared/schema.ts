@@ -168,8 +168,9 @@ export const calculatorTypes = {
 // Database tables
 export const patients = pgTable("patients", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  identification: text("identification"),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  identification: text("identification").notNull(),
   lastPeriodDate: date("last_period_date").notNull(),
   dueDate: date("due_date").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

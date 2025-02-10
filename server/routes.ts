@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertCalculationSchema, insertPatientSchema } from "@shared/schema";
+import { desc } from "drizzle-orm";
 
 export function registerRoutes(app: Express): Server {
   // API routes for calculator operations
@@ -66,8 +67,12 @@ export function registerRoutes(app: Express): Server {
   });
 
   app.get("/api/patients", async (req, res) => {
-    const patients = await storage.getAllPatients();
-    res.json(patients);
+    try {
+      const patients = await storage.getAllPatientsSortedByGestationalAge();
+      res.json(patients);
+    } catch (error) {
+      res.status(500).json({ error: String(error) });
+    }
   });
 
   const httpServer = createServer(app);
