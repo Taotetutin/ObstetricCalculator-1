@@ -134,7 +134,7 @@ export default function GestationalComplexCalculator() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <Alert>
         <AlertDescription>
           Calculadora gestacional completa para determinar fechas importantes del embarazo
@@ -148,164 +148,176 @@ export default function GestationalComplexCalculator() {
           <TabsTrigger value="search">Buscar Paciente</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="calculator" className="space-y-4">
-          <Form {...calculatorForm}>
-            <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-4">
-              <FormField
-                control={calculatorForm.control}
-                name="lastMenstrualPeriod"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP", { locale: es })
-                          ) : (
-                            <span>Seleccione una fecha</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Calcular Fechas
-              </Button>
-            </form>
-          </Form>
-        </TabsContent>
-
-        <TabsContent value="register" className="space-y-4">
-          <Form {...patientForm}>
-            <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-4">
-              <FormField
-                control={patientForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre del Paciente</FormLabel>
-                    <Input {...field} placeholder="Ingrese el nombre" />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={patientForm.control}
-                name="lastMenstrualPeriod"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP", { locale: es })
-                          ) : (
-                            <span>Seleccione una fecha</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Registrar y Calcular
-              </Button>
-            </form>
-          </Form>
-        </TabsContent>
-
-        <TabsContent value="search" className="space-y-4">
-          <div className="flex gap-2 mb-4">
-            <Input
-              placeholder="Buscar paciente..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1"
-            />
-            <Button variant="outline" size="icon">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {patients && patients.length > 0 && (
+        <div className="mt-6">
+          <TabsContent value="calculator" className="space-y-6">
             <Card>
-              <CardContent className="p-4">
-                <div className="space-y-2">
-                  {patients.map((patient) => (
-                    <div
-                      key={patient.id}
-                      className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
-                      onClick={() => {
-                        const result = calculateDates(new Date(patient.lastPeriodDate));
-                        setResult(result);
-                      }}
-                    >
-                      <span className="font-medium">{patient.name}</span>
-                      <span className="text-sm text-gray-500">ID: {patient.id}</span>
+              <CardContent className="pt-6">
+                <Form {...calculatorForm}>
+                  <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-6">
+                    <FormField
+                      control={calculatorForm.control}
+                      name="lastMenstrualPeriod"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="text-base">Fecha de Última Regla (FUR)</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {field.value ? (
+                                  format(field.value, "PPP", { locale: es })
+                                ) : (
+                                  <span>Seleccione una fecha</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date > new Date() || date < new Date("1900-01-01")
+                                }
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button type="submit" className="w-full">
+                      Calcular Fechas
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="register" className="space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <Form {...patientForm}>
+                  <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-6">
+                    <FormField
+                      control={patientForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">Nombre del Paciente</FormLabel>
+                          <Input {...field} placeholder="Ingrese el nombre" />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={patientForm.control}
+                      name="lastMenstrualPeriod"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="text-base">Fecha de Última Regla (FUR)</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {field.value ? (
+                                  format(field.value, "PPP", { locale: es })
+                                ) : (
+                                  <span>Seleccione una fecha</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date > new Date() || date < new Date("1900-01-01")
+                                }
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button type="submit" className="w-full">
+                      Registrar y Calcular
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="search" className="space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  <div className="flex gap-4">
+                    <Input
+                      placeholder="Buscar paciente..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button variant="outline" size="icon">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {patients && patients.length > 0 && (
+                    <div className="space-y-2 mt-4">
+                      {patients.map((patient) => (
+                        <div
+                          key={patient.id}
+                          className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg border cursor-pointer"
+                          onClick={() => {
+                            const result = calculateDates(new Date(patient.lastPeriodDate));
+                            setResult(result);
+                          }}
+                        >
+                          <span className="font-medium">{patient.name}</span>
+                          <span className="text-sm text-gray-500">ID: {patient.id}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
-          )}
-        </TabsContent>
+          </TabsContent>
+        </div>
       </Tabs>
 
       {result && (
-        <div className="space-y-3">
+        <div className="space-y-4 mt-6">
           <Card className="overflow-hidden">
-            <CardContent className="p-4">
-              <h3 className="text-sm font-semibold text-blue-600 mb-2">Resultados Principales</h3>
-              <div className="space-y-1 text-sm">
-                <p className="flex justify-between">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-blue-600 mb-4">Resultados Principales</h3>
+              <div className="space-y-3 text-sm">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Edad Gestacional:</span>
                   <span className="font-medium">{result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">FP Concepción:</span>
                   <span className="font-medium">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">FP Parto:</span>
                   <span className="font-medium">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
@@ -314,18 +326,18 @@ export default function GestationalComplexCalculator() {
           </Card>
 
           <Card className="overflow-hidden">
-            <CardContent className="p-4">
-              <h3 className="text-sm font-semibold text-blue-600 mb-2">Fechas Administrativas</h3>
-              <div className="space-y-1 text-sm">
-                <p className="flex justify-between">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-blue-600 mb-4">Fechas Administrativas</h3>
+              <div className="space-y-3 text-sm">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Asignación Familiar:</span>
                   <span className="font-medium">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Inscripción Isapre:</span>
                   <span className="font-medium">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Licencia Prenatal:</span>
                   <span className="font-medium">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
@@ -334,34 +346,34 @@ export default function GestationalComplexCalculator() {
           </Card>
 
           <Card className="overflow-hidden">
-            <CardContent className="p-4">
-              <h3 className="text-sm font-semibold text-blue-600 mb-2">Fechas Clínicas</h3>
-              <div className="space-y-1 text-xs">
-                <p className="flex justify-between">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-blue-600 mb-4">Fechas Clínicas</h3>
+              <div className="space-y-3 text-sm">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Screening Ier Trim:</span>
                   <span className="font-medium">{result.screening.firstTrimester}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Screening II Trim:</span>
                   <span className="font-medium">{result.screening.secondTrimester}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Exámenes II Trim:</span>
                   <span className="font-medium">{result.screening.secondTrimesterExams}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">DTPa/Rhogam:</span>
                   <span className="font-medium">{result.screening.dtpaVaccine}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Exámenes III Trim:</span>
                   <span className="font-medium">{result.screening.thirdTrimesterExams}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Screening III Trim:</span>
                   <span className="font-medium">{result.screening.thirdTrimesterScreening}</span>
                 </p>
-                <p className="flex justify-between">
+                <p className="flex justify-between items-center">
                   <span className="text-gray-600">Cultivo SGB:</span>
                   <span className="font-medium">{result.screening.gbsTest}</span>
                 </p>
