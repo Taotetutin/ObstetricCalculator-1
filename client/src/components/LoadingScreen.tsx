@@ -1,26 +1,26 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect } from "react";
 
 export default function LoadingScreen() {
-  return (
-    <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
-      <div className="w-[300px] space-y-6">
-        {/* Logo skeleton */}
-        <div className="flex justify-center">
-          <Skeleton className="h-12 w-12 rounded-full bg-blue-200/60" />
-        </div>
-        
-        {/* Title skeleton */}
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-3/4 mx-auto bg-blue-100/60" />
-          <Skeleton className="h-4 w-1/2 mx-auto bg-blue-50/60" />
-        </div>
+  const [opacity, setOpacity] = useState(1);
 
-        {/* Loading bars */}
-        <div className="space-y-2">
-          <Skeleton className="h-2 w-full bg-blue-100/60" />
-          <Skeleton className="h-2 w-4/5 bg-blue-100/40" />
-          <Skeleton className="h-2 w-2/3 bg-blue-100/20" />
-        </div>
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpacity(0);
+    }, 1800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500"
+      style={{ opacity }}
+    >
+      <div className="max-w-lg w-full px-4">
+        <img
+          src="/a-dimly-lit-scene-with-two-doctors-and-a_hkwGmN5yQT6rqriux7-8jQ__SK5iPjDTIWGAz3rz3IASw.png"
+          alt="ObsteriX Legend Loading"
+          className="w-full h-auto"
+        />
       </div>
     </div>
   );
