@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, date, numeric, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, date, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
@@ -169,8 +169,18 @@ export const calculatorTypes = {
 export const patients = pgTable("patients", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  identification: text("identification"),
   lastPeriodDate: date("last_period_date").notNull(),
   dueDate: date("due_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const gestationalDates = pgTable("gestational_dates", {
+  id: serial("id").primaryKey(),
+  patientId: integer("patient_id").notNull(),
+  dateType: text("date_type").notNull(), // 'screening_1t', 'screening_2t', etc.
+  dateValue: date("date_value").notNull(),
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -194,6 +204,16 @@ export const calculationsRelations = {
   },
 };
 
+export const gestationalDatesRelations = {
+  patient: {
+    type: "many-to-one",
+    schema: "public",
+    columns: [gestationalDates.patientId],
+    referencedTable: patients,
+    referencedColumns: [patients.id],
+  },
+};
+
 export const insertPatientSchema = createInsertSchema(patients).omit({
   id: true,
   createdAt: true,
@@ -204,7 +224,14 @@ export const insertCalculationSchema = createInsertSchema(calculations).omit({
   createdAt: true
 });
 
+export const insertGestationalDateSchema = createInsertSchema(gestationalDates).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type Patient = typeof patients.$inferSelect;
 export type InsertPatient = z.infer<typeof insertPatientSchema>;
 export type Calculation = typeof calculations.$inferSelect;
 export type InsertCalculation = z.infer<typeof insertCalculationSchema>;
+export type GestationalDate = typeof gestationalDates.$inferSelect;
+export type InsertGestationalDate = z.infer<typeof insertGestationalDateSchema>;

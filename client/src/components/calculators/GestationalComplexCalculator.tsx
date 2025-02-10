@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format, addDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Search } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { type Patient } from "@shared/schema";
 
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
@@ -39,9 +42,40 @@ function getGestationalAge(startDate: Date, endDate: Date) {
 
 export default function GestationalComplexCalculator() {
   const [result, setResult] = useState<GestationalResult | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const queryClient = useQueryClient();
+
+  // Query para buscar pacientes
+  const { data: patients } = useQuery({
+    queryKey: ['/api/patients', searchTerm],
+    queryFn: async () => {
+      if (!searchTerm) return [];
+      const response = await fetch(`/api/patients/search?q=${encodeURIComponent(searchTerm)}`);
+      if (!response.ok) throw new Error('Error buscando pacientes');
+      return response.json() as Promise<Patient[]>;
+    },
+    enabled: searchTerm.length > 2
+  });
+
+  // Mutación para guardar paciente
+  const saveMutation = useMutation({
+    mutationFn: async (patient: { name: string; lastPeriodDate: Date }) => {
+      const response = await fetch('/api/patients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patient)
+      });
+      if (!response.ok) throw new Error('Error guardando paciente');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/patients'] });
+    }
+  });
 
   const form = useForm({
     defaultValues: {
+      name: '',
       lastMenstrualPeriod: new Date(),
     },
   });
@@ -74,9 +108,20 @@ export default function GestationalComplexCalculator() {
     };
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const result = calculateDates(data.lastMenstrualPeriod);
     setResult(result);
+
+    if (data.name) {
+      try {
+        await saveMutation.mutateAsync({
+          name: data.name,
+          lastPeriodDate: data.lastMenstrualPeriod
+        });
+      } catch (error) {
+        console.error('Error al guardar paciente:', error);
+      }
+    }
   };
 
   return (
@@ -87,8 +132,58 @@ export default function GestationalComplexCalculator() {
         </AlertDescription>
       </Alert>
 
+      <div className="mb-6">
+        <div className="flex gap-2 mb-4">
+          <Input
+            placeholder="Buscar paciente..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
+          />
+          <Button variant="outline" size="icon">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {patients && patients.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-2">
+                {patients.map((patient) => (
+                  <div
+                    key={patient.id}
+                    className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    onClick={() => {
+                      form.setValue('name', patient.name);
+                      form.setValue('lastMenstrualPeriod', new Date(patient.lastPeriodDate));
+                      const result = calculateDates(new Date(patient.lastPeriodDate));
+                      setResult(result);
+                    }}
+                  >
+                    <span className="font-medium">{patient.name}</span>
+                    <span className="text-sm text-gray-500">ID: {patient.id}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre del Paciente</FormLabel>
+                <Input {...field} placeholder="Ingrese el nombre" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="lastMenstrualPeriod"
@@ -127,7 +222,7 @@ export default function GestationalComplexCalculator() {
           />
 
           <Button type="submit" className="w-full">
-            Calcular Fechas
+            Calcular y Guardar
           </Button>
         </form>
       </Form>
