@@ -13,10 +13,10 @@ function Router() {
   const [location, setLocation] = useLocation();
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-white">
+    <div className="flex min-h-screen w-full">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-auto">
-        <main className="flex-1 p-4 md:p-6">
+      <div className="flex-1 flex flex-col min-h-screen">
+        <main className="flex-1 p-4 md:p-6 bg-gradient-to-br from-blue-50 to-white">
           {location !== "/" && (
             <Button
               variant="ghost"
@@ -33,7 +33,7 @@ function Router() {
             <Route component={NotFound} />
           </Switch>
         </main>
-        <footer className="py-4 text-center text-sm text-primary/80 bg-white/80 backdrop-blur-sm border-t px-6">
+        <footer className="py-4 text-center text-sm text-primary/80 bg-white border-t px-6">
           Todos los derechos reservados a MiMaternoFetal.cl
         </footer>
       </div>
