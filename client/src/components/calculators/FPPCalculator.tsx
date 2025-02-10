@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar } from "lucide-react";
 import { calculatorTypes } from "@shared/schema";
@@ -13,7 +13,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function FPPCalculator() {
-  const [result, setResult] = useState<Date | null>(null);
+  const [result, setResult] = useState<{
+    fpp: Date;
+    concepcion: Date;
+  } | null>(null);
 
   const form = useForm({
     resolver: zodResolver(calculatorTypes.fpp),
@@ -24,7 +27,12 @@ export default function FPPCalculator() {
 
   const onSubmit = async (data: { lastPeriodDate: Date }) => {
     const fpp = calculateFPP(data);
-    setResult(fpp);
+    const concepcion = subDays(data.lastPeriodDate, 14); // 14 días después de la FUR
+
+    setResult({
+      fpp,
+      concepcion
+    });
 
     try {
       await fetch("/api/calculations", {
@@ -33,7 +41,10 @@ export default function FPPCalculator() {
         body: JSON.stringify({
           calculatorType: "fpp",
           input: JSON.stringify(data),
-          result: JSON.stringify({ fpp: fpp.toISOString() }),
+          result: JSON.stringify({ 
+            fpp: fpp.toISOString(),
+            concepcion: concepcion.toISOString()
+          }),
         }),
       });
     } catch (error) {
@@ -91,12 +102,20 @@ export default function FPPCalculator() {
         <Card>
           <CardContent className="pt-6">
             <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-            <p>
-              Fecha Probable de Parto:{" "}
-              <span className="font-medium">
-                {format(result, "PPP", { locale: es })}
-              </span>
-            </p>
+            <div className="space-y-2">
+              <p>
+                Fecha Probable de Parto:{" "}
+                <span className="font-medium">
+                  {format(result.fpp, "PPP", { locale: es })}
+                </span>
+              </p>
+              <p>
+                Fecha Probable de Concepción:{" "}
+                <span className="font-medium">
+                  {format(result.concepcion, "PPP", { locale: es })}
+                </span>
+              </p>
+            </div>
           </CardContent>
         </Card>
       )}
