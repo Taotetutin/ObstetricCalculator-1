@@ -54,15 +54,6 @@ export default function LHRCalculator() {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-blue-700">
-          Lung-to-Head Ratio (LHR)
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Predictor de severidad en hernia diafragmática congénita
-        </p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -166,7 +157,7 @@ export default function LHRCalculator() {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+          <Button type="submit" className="w-full">
             Calcular
           </Button>
         </form>
@@ -175,9 +166,6 @@ export default function LHRCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">
-              Resultado:
-            </h3>
             <div className="space-y-2">
               <p>
                 LHR: <span className="font-medium">{result.lhr}</span>

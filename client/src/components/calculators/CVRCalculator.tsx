@@ -51,15 +51,6 @@ export default function CVRCalculator() {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-blue-700">
-          CPAM Volume Ratio (CVR)
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Predictor de riesgo en Malformación Adenomatoidea Quística Congénita
-        </p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -134,7 +125,7 @@ export default function CVRCalculator() {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+          <Button type="submit" className="w-full">
             Calcular
           </Button>
         </form>
@@ -143,9 +134,6 @@ export default function CVRCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">
-              Resultado:
-            </h3>
             <div className="space-y-2">
               <p>
                 Volumen de la lesión:{" "}
