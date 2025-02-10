@@ -5,6 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+// Agrupar calculadoras por categoría
+const calculatorGroups = {
+  "Cálculos Básicos": calculators.filter(c => ["fpp", "imc", "bishop"].includes(c.id)),
+  "Evaluación Fetal": calculators.filter(c => ["doppler", "liquido_amniotico", "peso_fetal"].includes(c.id)),
+  "Screening": calculators.filter(c => ["t21", "preeclampsia"].includes(c.id)),
+  "Otros": calculators.filter(c => !["fpp", "imc", "bishop", "doppler", "liquido_amniotico", "peso_fetal", "t21", "preeclampsia"].includes(c.id))
+};
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -12,33 +26,45 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       <Link href="/">
-        <div className="flex items-center gap-2 px-4 py-3 border-b">
+        <div className="flex items-center gap-2 px-3 py-2 border-b">
           <img 
             src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
             alt="MiMaternoFetal Logo"
-            className="h-12 w-auto"
+            className="h-8 w-auto"
           />
-          <span className="font-bold text-xl text-primary">ObsteriX Legend</span>
+          <span className="font-semibold text-lg text-primary">ObsteriX Legend</span>
         </div>
       </Link>
 
-      <ScrollArea className="flex-1">
-        <div className="p-3 space-y-1">
-          {calculators.map((calc) => (
-            <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-              <Button
-                variant={location === `/calculadora/${calc.id}` ? "secondary" : "ghost"}
-                className={cn(
-                  "w-full justify-start gap-2",
-                  location === `/calculadora/${calc.id}` && "bg-primary/10 text-primary hover:bg-primary/20"
-                )}
-              >
-                {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
-                <span className="truncate">{calc.name}</span>
-              </Button>
-            </Link>
+      <ScrollArea className="flex-1 px-2">
+        <Accordion type="multiple" className="w-full">
+          {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
+            <AccordionItem value={groupName} key={groupName} className="border-none">
+              <AccordionTrigger className="text-sm hover:no-underline hover:bg-accent px-2 rounded-md py-1">
+                {groupName}
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 pb-0">
+                <div className="space-y-0.5">
+                  {groupCalculators.map((calc) => (
+                    <Link key={calc.id} href={`/calculadora/${calc.id}`}>
+                      <Button
+                        variant="ghost"
+                        className={cn(
+                          "w-full justify-start gap-2 h-8 px-2 text-sm font-normal",
+                          location === `/calculadora/${calc.id}` && 
+                          "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
+                        )}
+                      >
+                        {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
+                        <span className="truncate">{calc.name}</span>
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </ScrollArea>
     </div>
   );
