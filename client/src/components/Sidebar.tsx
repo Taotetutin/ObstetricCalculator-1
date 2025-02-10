@@ -9,13 +9,13 @@ import { Menu } from "lucide-react";
 // Reorganizar calculadoras por categoría según la nueva especificación
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
-    ["gestacional", "mefi", "doppler"].includes(c.id)
+    ["gestacional", "mefi", "doppler", "gestacional_complex"].includes(c.id)
   ),
   "Evaluación y Riesgos": calculators.filter(c => 
     ["t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
   ),
   "Herramientas Especializadas": calculators.filter(c => 
-    !["gestacional", "mefi", "doppler", "t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
+    !["gestacional", "mefi", "doppler", "t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez", "gestacional_complex"].includes(c.id)
   )
 };
 
