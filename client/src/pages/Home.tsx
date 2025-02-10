@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Lock, FileText, Mail } from "lucide-react";
 
 export default function Home() {
   return (
@@ -28,6 +29,35 @@ export default function Home() {
             </p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Enlaces en el pie de página */}
+      <div className="mt-auto pt-8 pb-4 flex justify-center gap-8 text-sm text-blue-600">
+        <a 
+          href="http://obsterixpro.mimaternofetal.cl/politicaprivacidad.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+        >
+          <Lock className="w-4 h-4" />
+          Políticas de Privacidad
+        </a>
+        <a 
+          href="https://obsterixpro.mimaternofetal.cl/page6.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+        >
+          <FileText className="w-4 h-4" />
+          Términos y Condiciones
+        </a>
+        <a 
+          href="mailto:manuel.guerra@mimaternofetal.cl"
+          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+        >
+          <Mail className="w-4 h-4" />
+          Contacto
+        </a>
       </div>
     </div>
   );
