@@ -11,6 +11,7 @@ import {
   BarChart,
   Pill
 } from "lucide-react";
+
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
 import IMCCalculator from "./IMCCalculator";
@@ -35,7 +36,7 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
-    id: "gestacional",
+    id: "edad-gestacional",
     name: "Edad Gestacional",
     description: "Determina la edad gestacional actual y registra pacientes",
     icon: Baby,
