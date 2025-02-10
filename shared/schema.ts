@@ -14,9 +14,7 @@ export const calculatorTypes = {
   gestationalAge: z.object({
     lastPeriodDate: z.date().optional(),
     ultrasoundDate: z.date(),
-    // Medidas para primer trimestre (<14 semanas)
     crownRumpLength: z.number().min(10).max(100).optional(),
-    // Medidas para segundo y tercer trimestre
     dbp: z.number().min(10).max(120).optional(),
     femurLength: z.number().min(10).max(120).optional(),
     abdominalCircumference: z.number().min(50).max(500).optional(),
@@ -28,42 +26,33 @@ export const calculatorTypes = {
     q4: z.number().min(0).max(25),
   }),
   pesoFetal: z.object({
-    dbp: z.number().min(10).max(120),    // Rango típico en mm
-    cc: z.number().min(50).max(500),     // Rango típico en mm
-    ca: z.number().min(50).max(500),     // Rango típico en mm
-    lf: z.number().min(10).max(120),     // Rango típico en mm
+    dbp: z.number().min(10).max(120),    
+    cc: z.number().min(50).max(500),     
+    ca: z.number().min(50).max(500),     
+    lf: z.number().min(10).max(120),     
   }),
   curvaCrecimiento: z.object({
     semanasGestacion: z.number().min(20).max(42),
     pesoFetal: z.number().min(100).max(5000),
   }),
   preeclampsia: z.object({
-    // Maternal characteristics
     age: z.number().min(12).max(60),
     weight: z.number().min(35).max(200),
-    height: z.number().min(120).max(220), // Changed to cm
+    height: z.number().min(120).max(220), 
     ethnicity: z.enum(['caucasica', 'afro', 'sudasiatica', 'asiaticooriental', 'mixta']),
     familyHistory: z.boolean(),
     conceptionMethod: z.enum(['spontaneous', 'ovulation', 'ivf']),
     multiplePregnancy: z.boolean(),
-
-    // Medical history
     chronicHypertension: z.boolean(),
     diabetesType1: z.boolean(),
     diabetesType2: z.boolean(),
     lupusAPS: z.boolean(),
-
-    // Obstetric history
     nulliparous: z.boolean(),
     previousPreeclampsia: z.boolean(),
-
-    // Biophysical measurements
     meanArterialPressure: z.number().min(45).max(140),
     uterinePI: z.number().min(0).max(5).optional(),
     measurementDate: z.date(),
-    crownRumpLength: z.number().min(45).max(84), // CRL en mm según FMF
-
-    // Biochemical markers (optional)
+    crownRumpLength: z.number().min(45).max(84), 
     pappA: z.number().min(0).max(10).optional(),
     plgf: z.number().min(0).max(2000).optional(),
   }),
@@ -75,15 +64,11 @@ export const calculatorTypes = {
     estacion: z.number().min(0).max(3),
   }),
   doppler: z.object({
-    // Arteria umbilical
-    auPi: z.number().min(0).max(3),     // Índice de pulsatilidad
-    // Arteria cerebral media
-    acmPi: z.number().min(0).max(3),    // Índice de pulsatilidad
-    acmPsv: z.number().min(0).max(100), // Velocidad sistólica pico
-    // Ductus venoso
-    dvPi: z.number().min(0).max(3),     // Índice de pulsatilidad
-    dvWave: z.enum(['normal', 'ausente', 'reversa']), // Onda a
-    // Edad gestacional
+    auPi: z.number().min(0).max(3),     
+    acmPi: z.number().min(0).max(3),    
+    acmPsv: z.number().min(0).max(100), 
+    dvPi: z.number().min(0).max(3),     
+    dvWave: z.enum(['normal', 'ausente', 'reversa']), 
     semanasGestacion: z.number().min(20).max(40),
     diasGestacion: z.number().min(0).max(6),
   }),
@@ -132,23 +117,21 @@ export const calculatorTypes = {
     ue3: z.number().optional(),
   }),
   lhr: z.object({
-    // Medidas fetales
-    headCircumference: z.number().min(10).max(500),  // Circunferencia cefálica en mm
-    lungArea: z.number().min(1).max(1000),          // Área pulmonar en mm²
-    gestationalWeeks: z.number().min(20).max(40),   // Semanas de gestación
-    side: z.enum(['left', 'right']),               // Lado afectado
-    method: z.enum(['2D', '3D']),                  // Método de medición
+    headCircumference: z.number().min(10).max(500),  
+    lungArea: z.number().min(1).max(1000),          
+    gestationalWeeks: z.number().min(20).max(40),   
+    side: z.enum(['left', 'right']),               
+    method: z.enum(['2D', '3D']),                  
   }),
   cvr: z.object({
-    // Medidas de la lesión CPAM
-    length: z.number().min(1).max(100),    // Longitud en mm
-    height: z.number().min(1).max(100),    // Altura en mm
-    width: z.number().min(1).max(100),     // Ancho en mm
-    headCircumference: z.number().min(10).max(500), // Circunferencia cefálica en mm
+    length: z.number().min(1).max(100),    
+    height: z.number().min(1).max(100),    
+    width: z.number().min(1).max(100),     
+    headCircumference: z.number().min(10).max(500), 
   }),
   tallaFetal: z.object({
-    femurLength: z.number().min(10).max(120),      // Longitud del fémur en mm
-    gestationalAge: z.number().min(12).max(42),    // Edad gestacional en semanas
+    femurLength: z.number().min(10).max(120),      
+    gestationalAge: z.number().min(12).max(42),    
   }),
   mefi: z.object({
     fcb: z.string(),
@@ -159,25 +142,25 @@ export const calculatorTypes = {
     duracionRegistro: z.string().optional(),
   }),
   femurCorto: z.object({
-    femurLength: z.number().min(1).max(150),      // Longitud del fémur en mm
-    semanasGestacion: z.number().min(12).max(42),   // Semanas de gestación
-    diasGestacion: z.number().min(0).max(6),      // Días adicionales
-    biparietal: z.number().min(1).max(150).optional(),  // Diámetro biparietal en mm (opcional)
-    headCircumference: z.number().min(1).max(500).optional(), // Circunferencia cefálica en mm (opcional)
+    femurLength: z.number().min(1).max(150),      
+    semanasGestacion: z.number().min(12).max(42),   
+    diasGestacion: z.number().min(0).max(6),      
+    biparietal: z.number().min(1).max(150).optional(),  
+    headCircumference: z.number().min(1).max(500).optional(), 
   }),
   huesoNasal: z.object({
-    huesoNasalLength: z.number().min(0).max(20),    // Longitud del hueso nasal en mm
-    semanasGestacion: z.number().min(11).max(14),   // Semanas de gestación
-    diasGestacion: z.number().min(0).max(6),        // Días adicionales
-    dbp: z.number().min(0).max(100),                // Diámetro biparietal en mm
-    moms: z.number().min(0).max(10),                // Multiple of medians
+    huesoNasalLength: z.number().min(0).max(20),    
+    semanasGestacion: z.number().min(11).max(14),   
+    diasGestacion: z.number().min(0).max(6),        
+    dbp: z.number().min(0).max(100),                
+    moms: z.number().min(0).max(10),                
   }),
   pr: z.object({
-    prInterval: z.number().min(0).max(500),    // Intervalo PR en ms
-    semanasGestacion: z.number().min(16).max(40),   // Semanas de gestación
-    diasGestacion: z.number().min(0).max(6),        // Días adicionales
-    avInterval: z.number().min(0).max(500),         // Intervalo AV en ms
-    ductusVenosus: z.number().min(0).max(500),      // Ductus venosus en ms
+    prInterval: z.number().min(0).max(500),    
+    semanasGestacion: z.number().min(16).max(40),   
+    diasGestacion: z.number().min(0).max(6),        
+    avInterval: z.number().min(0).max(500),         
+    ductusVenosus: z.number().min(0).max(500),      
   }),
 } as const;
 
@@ -185,12 +168,26 @@ export const calculatorTypes = {
 export type CalculatorInput<T extends keyof typeof calculatorTypes> = z.infer<typeof calculatorTypes[T]>;
 
 // Database tables
+export const patients = pgTable("patients", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  lastPeriodDate: date("last_period_date").notNull(),
+  dueDate: date("due_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const calculations = pgTable("calculations", {
   id: serial("id").primaryKey(),
   calculatorType: text("calculator_type").notNull(),
-  input: text("input").notNull(), // JSON string of inputs
-  result: text("result").notNull(), // JSON string of results
+  input: text("input").notNull(),
+  result: text("result").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  patientId: serial("patient_id").references(() => patients.id),
+});
+
+export const insertPatientSchema = createInsertSchema(patients).omit({
+  id: true,
+  createdAt: true,
 });
 
 export const insertCalculationSchema = createInsertSchema(calculations).omit({
@@ -198,5 +195,7 @@ export const insertCalculationSchema = createInsertSchema(calculations).omit({
   createdAt: true
 });
 
+export type Patient = typeof patients.$inferSelect;
+export type InsertPatient = z.infer<typeof insertPatientSchema>;
 export type Calculation = typeof calculations.$inferSelect;
 export type InsertCalculation = z.infer<typeof insertCalculationSchema>;
