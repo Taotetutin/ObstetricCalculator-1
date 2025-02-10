@@ -22,8 +22,6 @@ const calculatorGroups = {
 
 export default function Sidebar() {
   const [location] = useLocation();
-
-  // Obtener todas las claves del objeto calculatorGroups para el defaultValue del Accordion
   const defaultExpandedSections = Object.keys(calculatorGroups);
 
   const SidebarContent = () => (
@@ -40,26 +38,25 @@ export default function Sidebar() {
       </Link>
 
       <ScrollArea className="flex-1">
-        <div className="p-2">
+        <div className="p-1">
           <Accordion 
             type="multiple" 
-            className="space-y-1"
             defaultValue={defaultExpandedSections}
           >
             {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-              <AccordionItem key={groupName} value={groupName} className="border-none">
-                <AccordionTrigger className="py-2 px-3 text-sm hover:no-underline hover:bg-accent rounded-md data-[state=open]:bg-muted">
+              <AccordionItem key={groupName} value={groupName} className="border-none px-1">
+                <AccordionTrigger className="py-1 px-2 text-sm hover:no-underline hover:bg-accent rounded-md data-[state=open]:bg-muted">
                   {groupName}
                 </AccordionTrigger>
-                <AccordionContent className="pb-0">
-                  <div className="flex flex-col gap-0.5 pl-2">
+                <AccordionContent>
+                  <div className="flex flex-col">
                     {groupCalculators.map((calc) => (
                       <Link key={calc.id} href={`/calculadora/${calc.id}`}>
                         <Button
                           variant="ghost"
                           size="sm"
                           className={cn(
-                            "w-full justify-start gap-2 text-sm font-normal",
+                            "w-full justify-start gap-2 text-sm font-normal h-7 px-2",
                             location === `/calculadora/${calc.id}` && 
                             "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
                           )}
