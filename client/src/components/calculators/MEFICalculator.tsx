@@ -134,12 +134,6 @@ export default function MEFICalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">
-          Monitoreo Electrónico Fetal Intraparto
-        </h2>
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-blue-700">

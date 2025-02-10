@@ -175,10 +175,6 @@ export default function PRCalculator() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">
-        Calculadora PR Fetal
-      </h1>
-
       <div className="mb-8">
         <canvas ref={chartRef} />
       </div>

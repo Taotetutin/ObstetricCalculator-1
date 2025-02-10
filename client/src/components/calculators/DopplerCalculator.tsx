@@ -25,7 +25,7 @@ type DopplerResult = {
     acmPsv: number;
   };
   cpr: number;
-  cprPercentile: number; // Added cprPercentile
+  cprPercentile: number; 
   evaluation: string;
   recommendations: string;
 };
@@ -67,10 +67,6 @@ export default function DopplerCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Doppler Fetal</h2>
-      </div>
-
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>

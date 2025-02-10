@@ -8,10 +8,6 @@ import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
 export default function T21Calculator() {
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Riesgo de Trisomía 21</h2>
-      </div>
-
       <Tabs defaultValue="age" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
           <TabsTrigger value="age" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
