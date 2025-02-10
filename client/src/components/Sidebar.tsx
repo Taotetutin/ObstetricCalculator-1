@@ -6,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
-// Reorganizar calculadoras por categoría de forma más intuitiva
+// Reorganizar calculadoras por categoría según la nueva especificación
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
-    ["fpp", "imc", "bishop", "peso_fetal"].includes(c.id)
+    ["gestacional", "mefi", "doppler"].includes(c.id)
   ),
-  "Evaluación y Diagnóstico": calculators.filter(c => 
-    ["doppler", "liquido_amniotico", "t21", "preeclampsia"].includes(c.id)
+  "Evaluación y Riesgos": calculators.filter(c => 
+    ["t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
   ),
   "Herramientas Especializadas": calculators.filter(c => 
-    !["fpp", "imc", "bishop", "doppler", "liquido_amniotico", "peso_fetal", "t21", "preeclampsia"].includes(c.id)
+    !["gestacional", "mefi", "doppler", "t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
   )
 };
 
