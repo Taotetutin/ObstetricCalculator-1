@@ -13,10 +13,10 @@ function Router() {
   const [location, setLocation] = useLocation();
 
   return (
-    <div className="grid grid-cols-[250px_1fr]">
+    <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex flex-col min-h-screen">
-        <main className="flex-1 bg-gradient-to-br from-blue-50 to-white p-4 md:p-6">
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 bg-gradient-to-br from-blue-50 to-white p-4 md:p-6 overflow-auto">
           {location !== "/" && (
             <Button
               variant="ghost"
