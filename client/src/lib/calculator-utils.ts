@@ -32,7 +32,8 @@ export function calculateGestationalAge(input: CalculatorInput<"gestationalAge">
   // Primer trimestre: CRL (hasta 14 semanas)
   if (input.crownRumpLength) {
     // Fórmula de Robinson
-    weeks = 8.052 + (0.1084 * input.crownRumpLength) + (0.001837 * Math.pow(input.crownRumpLength, 2));
+    const crl = input.crownRumpLength;
+    weeks = 5.2876 + (0.1584 * crl) - (0.00004 * Math.pow(crl, 2));
     method = "CRL";
   }
   // Segundo y tercer trimestre
@@ -41,14 +42,16 @@ export function calculateGestationalAge(input: CalculatorInput<"gestationalAge">
     const flCm = input.femurLength / 10;
 
     if (input.abdominalCircumference) {
-      // Si tenemos CA, asumimos >20 semanas y usamos Hadlock con DBP, FL y AC
+      // Si tenemos CA, asumimos >20 semanas
       const acCm = input.abdominalCircumference / 10;
-      weeks = 10.85 + (0.060 * Math.pow(dbpCm, 2)) + 
-             (0.6700 * flCm) + (0.1680 * acCm);
+      // Fórmula de Hadlock (1985) para >20 semanas
+      const lnAge = 2.695 + 0.0253 * dbpCm + 0.1458 * flCm + 0.0107 * acCm;
+      weeks = Math.exp(lnAge);
       method = "DBP+FL+AC (>20 semanas)";
     } else {
-      // Entre 14-20 semanas usamos DBP y FL
-      weeks = 9.57 + (0.524 * dbpCm) + (0.321 * flCm);
+      // Entre 14-20 semanas, usar Hadlock con DBP y FL
+      const lnAge = 2.45 + 0.0425 * dbpCm + 0.2164 * flCm;
+      weeks = Math.exp(lnAge);
       method = "DBP+FL (14-20 semanas)";
     }
   }
@@ -615,7 +618,7 @@ function calculateBasePrematurityRisk(cervicalLength: number) {
 // Added femur length percentile data (weeks 12-42)
 const FEMUR_LENGTH_PERCENTILES = {
   12: { p3: 6.2, p5: 6.5, p10: 6.9, p50: 8.3, p90: 9.7, p95: 10.1, p97: 10.4 },
-  13: { p3: 7.5, p5: 7.8, p10: 8.2, p50: 9.6, p90: 11.0, p95: 11.4, p97: 11.7 },
+  13: { p3:7.5, p5: 7.8, p10: 8.2, p50: 9.6, p90: 11.0, p95: 11.4, p97: 11.7 },
   14: { p3: 8.8, p5: 9.1, p10: 9.5, p50: 10.9, p90: 12.3, p95: 12.7, p97: 13.0 },
   15: { p3: 10.1, p5: 10.4, p10: 10.8, p50: 12.2, p90: 13.6, p95: 14.0, p97: 14.3 },
   16: { p3: 11.4, p5: 11.7, p10: 12.1, p50: 13.5, p90: 14.9, p95: 15.3, p97: 15.6 },
