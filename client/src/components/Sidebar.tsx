@@ -24,7 +24,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col mt-16">
+    <div className="flex h-full flex-col mt-24">
       <Link href="/">
         <div className="flex items-center gap-3 p-4 border-b">
           <img 
@@ -66,7 +66,6 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Added Links */}
       <div className="mt-auto p-4 border-t space-y-2">
         <a href="/link1" className="text-blue-600 hover:text-blue-800">Link 1</a>
         <a href="/link2" className="text-blue-600 hover:text-blue-800">Link 2</a>
