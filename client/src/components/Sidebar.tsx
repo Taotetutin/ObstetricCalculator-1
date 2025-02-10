@@ -36,35 +36,38 @@ export default function Sidebar() {
         </div>
       </Link>
 
-      <ScrollArea className="flex-1 px-2">
-        <Accordion type="multiple" className="w-full">
-          {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-            <AccordionItem value={groupName} key={groupName} className="border-none">
-              <AccordionTrigger className="text-sm hover:no-underline hover:bg-accent px-2 rounded-md py-1">
-                {groupName}
-              </AccordionTrigger>
-              <AccordionContent className="pt-1 pb-0">
-                <div className="space-y-0.5">
-                  {groupCalculators.map((calc) => (
-                    <Link key={calc.id} href={`/calculadora/${calc.id}`}>
-                      <Button
-                        variant="ghost"
-                        className={cn(
-                          "w-full justify-start gap-2 h-8 px-2 text-sm font-normal",
-                          location === `/calculadora/${calc.id}` && 
-                          "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
-                        )}
-                      >
-                        {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
-                        <span className="truncate">{calc.name}</span>
-                      </Button>
-                    </Link>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+      <ScrollArea className="flex-1">
+        <div className="p-2">
+          <Accordion type="multiple" className="space-y-1">
+            {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
+              <AccordionItem key={groupName} value={groupName} className="border-none">
+                <AccordionTrigger className="py-2 px-3 text-sm hover:no-underline hover:bg-accent rounded-md data-[state=open]:bg-muted">
+                  {groupName}
+                </AccordionTrigger>
+                <AccordionContent className="pb-0">
+                  <div className="flex flex-col gap-0.5 pl-2">
+                    {groupCalculators.map((calc) => (
+                      <Link key={calc.id} href={`/calculadora/${calc.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={cn(
+                            "w-full justify-start gap-2 text-sm font-normal",
+                            location === `/calculadora/${calc.id}` && 
+                            "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
+                          )}
+                        >
+                          {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
+                          <span className="truncate">{calc.name}</span>
+                        </Button>
+                      </Link>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </ScrollArea>
     </div>
   );
