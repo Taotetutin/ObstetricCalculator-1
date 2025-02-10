@@ -28,6 +28,7 @@ import MEFICalculator from "./MEFICalculator";
 import FemurCortoCalculator from "./FemurCortoCalculator";
 import HuesoNasalCalculator from "./HuesoNasalCalculator";
 import PRCalculator from "./PRCalculator";
+import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 
 export const calculators = [
   {
@@ -155,5 +156,12 @@ export const calculators = [
     description: "Evaluación del intervalo PR y conducción cardíaca fetal",
     icon: Heart,
     component: PRCalculator,
+  },
+  {
+    id: "riesgo-neonatal",
+    name: "Calculadora de Riesgo Neonatal",
+    description: "Evaluación de riesgos neonatales basados en edad gestacional",
+    icon: Baby,
+    component: RiesgoNeonatalCalculator,
   },
 ];
