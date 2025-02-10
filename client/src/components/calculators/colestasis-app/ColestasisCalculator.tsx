@@ -77,9 +77,11 @@ export default function ColestasisCalculator() {
         <div className="space-y-8">
           {/* Patient Data Section */}
           <section className="bg-blue-50 rounded-xl p-6">
-            <div className="flex items-center mb-4">
-              <Heart className="w-5 h-5 text-blue-600 mr-2" />
-              <h2 className="text-xl font-semibold text-blue-900">Datos de la Paciente</h2>
+            <div className="flex items-center justify-center mb-4">
+              <Heart className="w-12 h-12 text-blue-600 mr-3" />
+              <h1 className="text-3xl font-bold text-blue-900">
+                Cálculo de Riesgo Fetal en Colestasis
+              </h1>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               <div>

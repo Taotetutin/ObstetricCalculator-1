@@ -168,7 +168,7 @@ export const calculators = [
   },
   {
     id: "colestasis",
-    name: "Riesgo de Colestasis",
+    name: "Cálculo de Riesgo Fetal en Colestasis",
     description: "Evaluación del riesgo de colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
