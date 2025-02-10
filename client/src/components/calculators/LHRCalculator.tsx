@@ -53,12 +53,12 @@ export default function LHRCalculator() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-blue-700">
           Lung-to-Head Ratio (LHR)
-        </h2>
-        <p className="text-sm text-gray-600">
+        </h3>
+        <p className="text-sm text-gray-600 mb-4">
           Predictor de severidad en hernia diafragmática congénita
         </p>
       </div>
