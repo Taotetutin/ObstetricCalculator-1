@@ -9,6 +9,7 @@ import {
   Activity,
   Weight,
   BarChart,
+  Pill
 } from "lucide-react";
 import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -29,6 +30,7 @@ import FemurCortoCalculator from "./FemurCortoCalculator";
 import HuesoNasalCalculator from "./HuesoNasalCalculator";
 import PRCalculator from "./PRCalculator";
 import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
+import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 
 export const calculators = [
   {
@@ -163,5 +165,12 @@ export const calculators = [
     description: "Evaluación de riesgos neonatales basados en edad gestacional",
     icon: Baby,
     component: RiesgoNeonatalCalculator,
+  },
+  {
+    id: "colestasis",
+    name: "Riesgo de Colestasis",
+    description: "Evaluación del riesgo de colestasis intrahepática del embarazo",
+    icon: Pill,
+    component: ColestasisCalculator,
   },
 ];
