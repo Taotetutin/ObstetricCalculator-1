@@ -24,13 +24,13 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       <Link href="/">
-        <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-600 to-blue-500">
+        <div className="flex items-center gap-3 p-4 border-b">
           <img 
             src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
             alt="MiMaternoFetal Logo"
             className="h-8 w-auto"
           />
-          <span className="font-semibold text-lg text-white">ObsteriX Legend</span>
+          <span className="font-semibold text-lg text-blue-700">ObsteriX Legend</span>
         </div>
       </Link>
 
