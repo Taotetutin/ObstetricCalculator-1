@@ -24,7 +24,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col mt-16">
       <Link href="/">
         <div className="flex items-center gap-3 p-4 border-b">
           <img 
