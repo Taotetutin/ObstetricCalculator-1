@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Lock, FileText, Mail } from "lucide-react";
 
 // Reorganizar calculadoras por categoría según la nueva especificación
 const calculatorGroups = {
@@ -65,6 +65,35 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Enlaces en el pie del sidebar */}
+      <div className="mt-auto p-4 border-t space-y-2">
+        <a 
+          href="http://obsterixpro.mimaternofetal.cl/politicaprivacidad.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          <Lock className="w-4 h-4" />
+          Políticas de Privacidad
+        </a>
+        <a 
+          href="https://obsterixpro.mimaternofetal.cl/page6.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          <FileText className="w-4 h-4" />
+          Términos y Condiciones
+        </a>
+        <a 
+          href="mailto:manuel.guerra@mimaternofetal.cl"
+          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          <Mail className="w-4 h-4" />
+          Contacto
+        </a>
+      </div>
     </div>
   );
 
