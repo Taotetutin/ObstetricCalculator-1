@@ -12,8 +12,8 @@ import {
   Pill
 } from "lucide-react";
 
-import FPPCalculator from "./FPPCalculator";
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
+import FPPCalculator from "./FPPCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
 import BishopCalculator from "./BishopCalculator";

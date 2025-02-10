@@ -10,9 +10,6 @@ export default function Calculator() {
   const { id } = useParams();
   const calculator = calculators.find(c => c.id === id);
 
-  console.log("ID de calculadora:", id); // Debug log
-  console.log("Calculadora encontrada:", calculator); // Debug log
-
   if (!calculator) {
     return (
       <div className="container mx-auto py-6">
