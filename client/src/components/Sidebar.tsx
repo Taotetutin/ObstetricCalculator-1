@@ -15,8 +15,8 @@ export default function Sidebar() {
 
   return (
     <SidebarProvider defaultOpen>
-      <CollapsibleSidebar className="min-h-screen border-r bg-white">
-        <SidebarHeader className="border-b">
+      <CollapsibleSidebar className="min-h-screen border-r bg-white/80 backdrop-blur-sm shadow-lg">
+        <SidebarHeader className="border-b bg-gradient-to-r from-blue-50 to-blue-100">
           <Link href="/">
             <div className="flex items-center gap-2 px-4 py-3">
               <img 
