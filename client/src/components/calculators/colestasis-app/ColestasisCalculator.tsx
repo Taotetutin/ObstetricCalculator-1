@@ -48,7 +48,7 @@ export default function ColestasisCalculator() {
 
   const calculateRisk = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const riskFactors: RiskFactors = {
       bileAcids: parseFloat(formData.bileAcids),
       got: parseFloat(formData.got),
@@ -73,16 +73,16 @@ export default function ColestasisCalculator() {
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">
+          Cálculo de Riesgo Fetal en Colestasis
+        </h2>
+      </div>
+
       <form onSubmit={calculateRisk} className="bg-white rounded-2xl shadow-xl p-8">
         <div className="space-y-8">
           {/* Patient Data Section */}
           <section className="bg-blue-50 rounded-xl p-6">
-            <div className="flex items-center justify-center mb-4">
-              <Heart className="w-12 h-12 text-blue-600 mr-3" />
-              <h1 className="text-3xl font-bold text-blue-900">
-                Cálculo de Riesgo Fetal en Colestasis
-              </h1>
-            </div>
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-blue-700 mb-2">
