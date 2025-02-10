@@ -22,8 +22,10 @@ export default function RiesgoNeonatalCalculator() {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full transform hover:scale-[1.02] transition-transform duration-300">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Calculator className="w-8 h-8 text-blue-400" />
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <div className="relative">
+            <Calculator className="w-8 h-8 text-blue-400" />
+          </div>
           <h1 className="text-2xl font-bold text-gray-700">Calculadora de Riesgo Neonatal</h1>
         </div>
 
