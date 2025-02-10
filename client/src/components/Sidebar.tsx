@@ -26,7 +26,7 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       <Link href="/">
-        <div className="flex items-center gap-2 p-4 border-b">
+        <div className="flex items-center gap-2 p-4 border-b bg-gradient-to-r from-blue-50 via-blue-100/50 to-blue-50">
           <img 
             src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
             alt="MiMaternoFetal Logo"
@@ -37,26 +37,34 @@ export default function Sidebar() {
       </Link>
 
       <ScrollArea className="flex-1">
-        <div className="p-4">
-          <Accordion type="multiple" defaultValue={Object.keys(calculatorGroups)} className="space-y-2">
+        <div className="p-3">
+          <Accordion 
+            type="multiple" 
+            defaultValue={Object.keys(calculatorGroups)}
+            className="space-y-2"
+          >
             {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
-              <AccordionItem key={groupName} value={groupName}>
-                <AccordionTrigger className="hover:bg-accent/50 px-4 rounded-lg">
+              <AccordionItem 
+                key={groupName} 
+                value={groupName}
+                className="border border-blue-100 rounded-lg bg-white shadow-sm"
+              >
+                <AccordionTrigger className="px-4 py-3 hover:bg-blue-50/50 rounded-t-lg font-medium text-blue-900">
                   {groupName}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="flex flex-col gap-1 pl-2">
+                  <div className="flex flex-col gap-1 p-2">
                     {groupCalculators.map((calc) => (
                       <Link key={calc.id} href={`/calculadora/${calc.id}`}>
                         <Button
                           variant="ghost"
                           className={cn(
-                            "w-full justify-start gap-2 font-normal",
+                            "w-full justify-start gap-2 font-normal hover:bg-blue-50/50",
                             location === `/calculadora/${calc.id}` && 
-                            "bg-primary/10 text-primary hover:bg-primary/20 font-medium"
+                            "bg-blue-100/50 text-blue-900 hover:bg-blue-100/75 font-medium"
                           )}
                         >
-                          {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-primary/80" />}
+                          {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-blue-600/80" />}
                           <span className="truncate">{calc.name}</span>
                         </Button>
                       </Link>
@@ -76,7 +84,7 @@ export default function Sidebar() {
       {/* Móvil */}
       <Sheet>
         <SheetTrigger asChild className="md:hidden fixed top-4 left-4 z-50">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="bg-white shadow-md">
             <Menu className="h-4 w-4" />
           </Button>
         </SheetTrigger>
@@ -86,7 +94,7 @@ export default function Sidebar() {
       </Sheet>
 
       {/* Desktop */}
-      <div className="hidden md:block w-[280px] border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="hidden md:block w-[280px] border-r bg-gradient-to-b from-white to-blue-50/30 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <SidebarContent />
       </div>
     </>
