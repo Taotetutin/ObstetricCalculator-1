@@ -37,22 +37,19 @@ export function calculateGestationalAge(input: CalculatorInput<"gestationalAge">
   }
   // Segundo y tercer trimestre
   else if (input.dbp && input.femurLength) {
-    if (input.abdominalCircumference) {
-      // Fórmula de Hadlock con DBP, FL y AC
-      const dbpCm = input.dbp / 10;
-      const flCm = input.femurLength / 10;
-      const acCm = input.abdominalCircumference / 10;
+    const dbpCm = input.dbp / 10;
+    const flCm = input.femurLength / 10;
 
+    if (input.abdominalCircumference) {
+      // Si tenemos CA, asumimos >20 semanas y usamos Hadlock con DBP, FL y AC
+      const acCm = input.abdominalCircumference / 10;
       weeks = 10.85 + (0.060 * Math.pow(dbpCm, 2)) + 
              (0.6700 * flCm) + (0.1680 * acCm);
-      method = "DBP+FL+AC";
+      method = "DBP+FL+AC (>20 semanas)";
     } else {
-      // Fórmula simplificada con DBP y FL
-      const dbpCm = input.dbp / 10;
-      const flCm = input.femurLength / 10;
-
+      // Entre 14-20 semanas usamos DBP y FL
       weeks = 9.57 + (0.524 * dbpCm) + (0.321 * flCm);
-      method = "DBP+FL";
+      method = "DBP+FL (14-20 semanas)";
     }
   }
 

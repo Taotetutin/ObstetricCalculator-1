@@ -217,7 +217,7 @@ export default function GestationalAgeCalculator() {
                   name="abdominalCircumference"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Circunferencia Abdominal (mm)</FormLabel>
+                      <FormLabel>Circunferencia Abdominal (mm) - después de 20 semanas</FormLabel>
                       <Input
                         type="number"
                         step="0.1"
