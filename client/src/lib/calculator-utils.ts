@@ -13,13 +13,64 @@ export function calculateIMC(input: CalculatorInput<"imc">) {
 
 export function calculateGestationalAge(input: CalculatorInput<"gestationalAge">) {
   const today = new Date();
-  const diffTime = Math.abs(today.getTime() - input.lastPeriodDate.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  const weeks = Math.floor(diffDays / 7);
-  const days = diffDays % 7;
+  // Si se proporciona fecha de última regla, calcular desde ahí
+  if (input.lastPeriodDate) {
+    const diffTime = Math.abs(today.getTime() - input.lastPeriodDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return {
+      weeks: Math.floor(diffDays / 7),
+      days: diffDays % 7,
+      method: "FUR"
+    };
+  }
 
-  return { weeks, days };
+  // Calcular edad gestacional basada en medidas ecográficas
+  let weeks = 0;
+  let method = "";
+
+  // Primer trimestre: CRL (hasta 14 semanas)
+  if (input.crownRumpLength) {
+    // Fórmula de Robinson
+    weeks = 8.052 + (0.1084 * input.crownRumpLength) + (0.001837 * Math.pow(input.crownRumpLength, 2));
+    method = "CRL";
+  }
+  // Segundo y tercer trimestre
+  else if (input.dbp && input.femurLength) {
+    if (input.abdominalCircumference) {
+      // Fórmula de Hadlock con DBP, FL y AC
+      const dbpCm = input.dbp / 10;
+      const flCm = input.femurLength / 10;
+      const acCm = input.abdominalCircumference / 10;
+
+      weeks = 10.85 + (0.060 * Math.pow(dbpCm, 2)) + 
+             (0.6700 * flCm) + (0.1680 * acCm);
+      method = "DBP+FL+AC";
+    } else {
+      // Fórmula simplificada con DBP y FL
+      const dbpCm = input.dbp / 10;
+      const flCm = input.femurLength / 10;
+
+      weeks = 9.57 + (0.524 * dbpCm) + (0.321 * flCm);
+      method = "DBP+FL";
+    }
+  }
+
+  // Convertir semanas decimales a semanas y días
+  const wholePart = Math.floor(weeks);
+  const decimalPart = weeks - wholePart;
+  const days = Math.round(decimalPart * 7);
+
+  // Calcular la fecha estimada de última regla
+  const estimatedLMP = new Date(input.ultrasoundDate);
+  estimatedLMP.setDate(estimatedLMP.getDate() - (wholePart * 7 + days));
+
+  return {
+    weeks: wholePart,
+    days,
+    method,
+    estimatedLMP
+  };
 }
 
 export function calculateLiquidoAmniotico(input: CalculatorInput<"liquidoAmniotico">) {
@@ -514,7 +565,7 @@ export function calculatePrematurityRisk(input: {
   hasPreviousPretermBirth: boolean;
   hasMembraneRupture: boolean;
   hasCervicalSurgery: boolean;
-}) {
+}): { risk: number; category: string; recommendations: string } {
   const baseRisk = calculateBasePrematurityRisk(input.cervicalLength);
 
   const riskMultipliers = {

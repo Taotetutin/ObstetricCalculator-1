@@ -12,9 +12,14 @@ export const calculatorTypes = {
     height: z.number().min(1.0).max(2.5)
   }),
   gestationalAge: z.object({
-    lastPeriodDate: z.date(),
-    ultrasoundDate: z.date().optional(),
-    crownRumpLength: z.number().optional(),
+    lastPeriodDate: z.date().optional(),
+    ultrasoundDate: z.date(),
+    // Medidas para primer trimestre (<14 semanas)
+    crownRumpLength: z.number().min(10).max(100).optional(),
+    // Medidas para segundo y tercer trimestre
+    dbp: z.number().min(10).max(120).optional(),
+    femurLength: z.number().min(10).max(120).optional(),
+    abdominalCircumference: z.number().min(50).max(500).optional(),
   }),
   liquidoAmniotico: z.object({
     q1: z.number().min(0).max(25),
@@ -188,9 +193,9 @@ export const calculations = pgTable("calculations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const insertCalculationSchema = createInsertSchema(calculations).omit({ 
-  id: true, 
-  createdAt: true 
+export const insertCalculationSchema = createInsertSchema(calculations).omit({
+  id: true,
+  createdAt: true
 });
 
 export type Calculation = typeof calculations.$inferSelect;
