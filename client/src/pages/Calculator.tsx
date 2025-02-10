@@ -12,7 +12,7 @@ export default function Calculator() {
 
   if (!calculator) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="container mx-auto px-4 py-4 md:py-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -31,12 +31,12 @@ export default function Calculator() {
   const CalculatorComponent = calculator.component;
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="container mx-auto px-4 py-4 md:py-6">
+      <div className="max-w-2xl lg:max-w-4xl mx-auto">
         <Card className="shadow-lg bg-white/80 backdrop-blur-sm">
           <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
-            <CardTitle className="flex items-center gap-2 text-blue-700">
-              {calculator.icon && <calculator.icon className="w-6 h-6" />}
+            <CardTitle className="flex items-center gap-2 text-blue-700 text-lg md:text-xl">
+              {calculator.icon && <calculator.icon className="w-5 h-5 md:w-6 md:h-6" />}
               {calculator.name}
             </CardTitle>
           </CardHeader>
