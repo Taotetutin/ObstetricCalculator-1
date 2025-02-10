@@ -1,6 +1,7 @@
-import { pgTable, text, serial, date, numeric, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, date, numeric, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 
 // Calculator input/output types
 export const calculatorTypes = {
@@ -162,10 +163,7 @@ export const calculatorTypes = {
     avInterval: z.number().min(0).max(500),         
     ductusVenosus: z.number().min(0).max(500),      
   }),
-} as const;
-
-// Type helpers
-export type CalculatorInput<T extends keyof typeof calculatorTypes> = z.infer<typeof calculatorTypes[T]>;
+};
 
 // Database tables
 export const patients = pgTable("patients", {
@@ -182,8 +180,19 @@ export const calculations = pgTable("calculations", {
   input: text("input").notNull(),
   result: text("result").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  patientId: serial("patient_id").references(() => patients.id),
+  patientId: integer("patient_id"),  
 });
+
+// After defining the tables, add the foreign key reference
+export const calculationsRelations = {
+  patient: {
+    type: "many-to-one",
+    schema: "public",
+    columns: [calculations.patientId],
+    referencedTable: patients,
+    referencedColumns: [patients.id],
+  },
+};
 
 export const insertPatientSchema = createInsertSchema(patients).omit({
   id: true,

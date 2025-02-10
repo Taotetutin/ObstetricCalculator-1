@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCalculationSchema } from "@shared/schema";
+import { insertCalculationSchema, insertPatientSchema } from "@shared/schema";
 
 export function registerRoutes(app: Express): Server {
   // API routes for calculator operations
@@ -28,6 +28,32 @@ export function registerRoutes(app: Express): Server {
   app.get("/api/calculations/type/:type", async (req, res) => {
     const calculations = await storage.getCalculationsByType(req.params.type);
     res.json(calculations);
+  });
+
+  // API routes for patient operations
+  app.post("/api/patients", async (req, res) => {
+    try {
+      const patient = insertPatientSchema.parse(req.body);
+      const saved = await storage.savePatient(patient);
+      res.json(saved);
+    } catch (error) {
+      res.status(400).json({ error: String(error) });
+    }
+  });
+
+  app.get("/api/patients/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    const patient = await storage.getPatientById(id);
+    if (!patient) {
+      res.status(404).json({ error: "Patient not found" });
+      return;
+    }
+    res.json(patient);
+  });
+
+  app.get("/api/patients", async (req, res) => {
+    const patients = await storage.getAllPatients();
+    res.json(patients);
   });
 
   const httpServer = createServer(app);
