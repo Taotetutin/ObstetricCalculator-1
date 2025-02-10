@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
@@ -20,6 +21,7 @@ const calculatorGroups = {
 
 export default function Sidebar() {
   const [location] = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
@@ -70,15 +72,15 @@ export default function Sidebar() {
     <>
       {/* Móvil */}
       <div className="md:hidden">
-        <Button 
-          size="icon" 
-          className="fixed top-4 left-4 z-50 bg-white shadow-lg border-blue-100"
-          onClick={() => document.querySelector('[role="dialog"]')?.setAttribute('data-state', 'open')}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button 
+              size="icon" 
+              className="fixed top-4 left-4 z-50 bg-white shadow-lg border-blue-100"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
           <SheetContent side="left" className="w-80 p-0 bg-white border-r">
             <SidebarContent />
           </SheetContent>
