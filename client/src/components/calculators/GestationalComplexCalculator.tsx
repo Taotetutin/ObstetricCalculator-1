@@ -80,7 +80,7 @@ export default function GestationalComplexCalculator() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Alert>
         <AlertDescription>
           Calculadora gestacional completa para determinar fechas importantes del embarazo
@@ -133,71 +133,78 @@ export default function GestationalComplexCalculator() {
       </Form>
 
       {result && (
-        <div className="space-y-6">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold mb-4">Resultados Principales</h3>
-              <div className="space-y-2">
-                <p>
-                  <strong>Edad Gestacional Actual:</strong>{" "}
-                  {result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días
+        <div className="space-y-3">
+          <Card className="overflow-hidden">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-semibold text-blue-600 mb-2">Resultados Principales</h3>
+              <div className="space-y-1 text-sm">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Edad Gestacional:</span>
+                  <span className="font-medium">{result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días</span>
                 </p>
-                <p>
-                  <strong>Fecha Probable de Concepción:</strong>{" "}
-                  {format(result.conceptionDate, "PPP", { locale: es })}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">FP Concepción:</span>
+                  <span className="font-medium">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p>
-                  <strong>Fecha Probable de Parto:</strong>{" "}
-                  {format(result.dueDate, "PPP", { locale: es })}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold mb-4">Fechas Administrativas</h3>
-              <div className="space-y-2">
-                <p>
-                  <strong>Cert. Asignación Familiar:</strong>{" "}
-                  {format(result.week20, "PPP", { locale: es })}
-                </p>
-                <p>
-                  <strong>Cert. Inscripción Isapre:</strong>{" "}
-                  {format(result.week30, "PPP", { locale: es })}
-                </p>
-                <p>
-                  <strong>Licencia Médica Prenatal:</strong>{" "}
-                  {format(result.week34, "PPP", { locale: es })}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">FP Parto:</span>
+                  <span className="font-medium">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold mb-4">Fechas de Importancia Clínica</h3>
-              <div className="space-y-2">
-                <p>
-                  <strong>Screening Ier Trim.:</strong> {result.screening.firstTrimester}
+          <Card className="overflow-hidden">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-semibold text-blue-600 mb-2">Fechas Administrativas</h3>
+              <div className="space-y-1 text-sm">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Asignación Familiar:</span>
+                  <span className="font-medium">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p>
-                  <strong>Screening II Trim.:</strong> {result.screening.secondTrimester}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Inscripción Isapre:</span>
+                  <span className="font-medium">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p>
-                  <strong>Exámenes II Trim.:</strong> {result.screening.secondTrimesterExams}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Licencia Prenatal:</span>
+                  <span className="font-medium">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
                 </p>
-                <p>
-                  <strong>Vacuna DTPa y/o Rhogam:</strong> {result.screening.dtpaVaccine}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden">
+            <CardContent className="p-4">
+              <h3 className="text-sm font-semibold text-blue-600 mb-2">Fechas Clínicas</h3>
+              <div className="space-y-1 text-xs">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Screening Ier Trim:</span>
+                  <span className="font-medium">{result.screening.firstTrimester}</span>
                 </p>
-                <p>
-                  <strong>Exámenes III Trim.:</strong> {result.screening.thirdTrimesterExams}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Screening II Trim:</span>
+                  <span className="font-medium">{result.screening.secondTrimester}</span>
                 </p>
-                <p>
-                  <strong>Screening III Trim:</strong> {result.screening.thirdTrimesterScreening}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Exámenes II Trim:</span>
+                  <span className="font-medium">{result.screening.secondTrimesterExams}</span>
                 </p>
-                <p>
-                  <strong>Cultivo SGB:</strong> {result.screening.gbsTest}
+                <p className="flex justify-between">
+                  <span className="text-gray-600">DTPa/Rhogam:</span>
+                  <span className="font-medium">{result.screening.dtpaVaccine}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Exámenes III Trim:</span>
+                  <span className="font-medium">{result.screening.thirdTrimesterExams}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Screening III Trim:</span>
+                  <span className="font-medium">{result.screening.thirdTrimesterScreening}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Cultivo SGB:</span>
+                  <span className="font-medium">{result.screening.gbsTest}</span>
                 </p>
               </div>
             </CardContent>
