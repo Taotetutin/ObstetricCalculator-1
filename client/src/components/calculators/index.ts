@@ -38,7 +38,7 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 export const calculators = [
   {
     id: "calculadora-gestacional-compleja",
-    name: "Calculadora Gestacional Compleja",
+    name: "Calculadora Gestacional Avanzada",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
     icon: Calendar,
     component: GestationalComplexCalculator,
