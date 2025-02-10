@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
     <SidebarProvider defaultOpen>
-      <CollapsibleSidebar className="h-screen sticky top-0 border-r bg-white shadow-md">
+      <CollapsibleSidebar className="h-screen sticky top-0 border-r bg-white shadow-lg">
         <SidebarHeader className="border-b bg-gradient-to-r from-primary/5 to-primary/10">
           <Link href="/">
             <div className="flex items-center gap-2 px-4 py-3">
@@ -30,7 +30,7 @@ export default function Sidebar() {
           <SidebarTrigger className="absolute right-2 top-4" />
         </SidebarHeader>
 
-        <SidebarContent>
+        <SidebarContent className="overflow-y-auto">
           <nav className="space-y-1 p-2">
             {calculators.map((calc) => (
               <Link key={calc.id} href={`/calculadora/${calc.id}`}>
