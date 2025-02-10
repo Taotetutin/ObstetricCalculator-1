@@ -47,15 +47,6 @@ export default function FemurCortoCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-blue-700 mb-2">
-          Diagnóstico Certero de Fémur Corto
-        </h2>
-        <p className="text-gray-600">
-          Sistema de evaluación fetal avanzado
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>

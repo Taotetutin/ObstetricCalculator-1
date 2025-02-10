@@ -46,20 +46,20 @@ export default function PartoPrematuroCalculator() {
 
   function calculateRisk(data: FormData) {
     let riskScore = 0;
-    
+
     // Base risk from cervical length
     if (data.cervicalLength < 15) riskScore += 3;
     else if (data.cervicalLength < 25) riskScore += 2;
-    
+
     // Multiple gestation
     if (data.fetusCount > 1) riskScore += data.fetusCount;
-    
+
     // Other risk factors
     if (data.hasContractions) riskScore += 2;
     if (data.hasPreviousPretermBirth) riskScore += 3;
     if (data.hasMembraneRupture) riskScore += 3;
     if (data.hasCervicalSurgery) riskScore += 1;
-    
+
     // Risk categorization
     if (riskScore >= 8) return "Alto";
     if (riskScore >= 4) return "Moderado";
@@ -75,7 +75,6 @@ export default function PartoPrematuroCalculator() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Calculadora de Riesgo de Parto Prematuro</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
