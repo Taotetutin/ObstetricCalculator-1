@@ -15,8 +15,8 @@ export default function Sidebar() {
 
   return (
     <SidebarProvider defaultOpen>
-      <CollapsibleSidebar className="min-h-screen border-r bg-white/80 backdrop-blur-sm shadow-lg">
-        <SidebarHeader className="border-b bg-gradient-to-r from-blue-50 to-blue-100">
+      <CollapsibleSidebar className="min-h-screen border-r bg-white shadow-sm">
+        <SidebarHeader className="border-b bg-white">
           <Link href="/">
             <div className="flex items-center gap-2 px-4 py-3">
               <img 
@@ -24,7 +24,7 @@ export default function Sidebar() {
                 alt="MiMaternoFetal Logo"
                 className="h-12 w-auto"
               />
-              <span className="font-bold text-xl text-primary">ObsteriX Legend</span>
+              <span className="font-bold text-xl text-gray-900">ObsteriX Legend</span>
             </div>
           </Link>
           <SidebarTrigger className="absolute right-2 top-4" />
@@ -38,10 +38,10 @@ export default function Sidebar() {
                   variant={location === `/calculadora/${calc.id}` ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-start gap-2",
-                    location === `/calculadora/${calc.id}` && "bg-accent"
+                    location === `/calculadora/${calc.id}` && "bg-gray-100"
                   )}
                 >
-                  {calc.icon && <calc.icon className="w-4 h-4 shrink-0" />}
+                  {calc.icon && <calc.icon className="w-4 h-4 shrink-0 text-gray-600" />}
                   <span className="truncate">{calc.name}</span>
                 </Button>
               </Link>
