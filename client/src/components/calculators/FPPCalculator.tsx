@@ -43,10 +43,6 @@ export default function FPPCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Fecha Probable de Parto</h2>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

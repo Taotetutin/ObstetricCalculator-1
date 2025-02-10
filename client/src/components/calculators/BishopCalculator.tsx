@@ -94,10 +94,6 @@ export default function BishopCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Test de Bishop</h2>
-      </div>
-
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
