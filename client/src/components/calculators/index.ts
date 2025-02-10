@@ -64,7 +64,7 @@ export const calculators = [
   },
   {
     id: "pulmonary-predictor",
-    name: "Predictor de Disfunción Pulmonar",
+    name: "Predictor Disfunción Pulmonar",
     description: "Evaluación integral de patologías pulmonares fetales (LHR y CVR)",
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
