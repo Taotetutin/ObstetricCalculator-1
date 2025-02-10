@@ -2,10 +2,17 @@ import React from "react";
 
 export default function LoadingScreen() {
   return (
-    <img
-      src="/a-dimly-lit-scene-with-two-doctors-and-a_hkwGmN5yQT6rqriux7-8jQ__SK5iPjDTIWGAz3rz3IASw.png"
-      alt="ObsteriX Legend Loading"
-      className="fixed inset-0 w-full h-full object-contain z-50"
-    />
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+      <div className="text-center">
+        <img
+          src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
+          alt="ObsteriX Legend"
+          className="w-48 h-48 mx-auto animate-pulse"
+        />
+        <h1 className="mt-4 text-2xl font-bold text-blue-700">
+          Cargando ObsteriX Legend...
+        </h1>
+      </div>
+    </div>
   );
 }
