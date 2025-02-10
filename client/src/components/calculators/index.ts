@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
+import GestationalComplexCalculator from "./GestationalComplexCalculator";
 import FPPCalculator from "./FPPCalculator";
 import IMCCalculator from "./IMCCalculator";
 import LiquidoAmnioticoCalculator from "./LiquidoAmnioticoCalculator";
@@ -36,9 +37,16 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
-    id: "calculadora-gestacional",
-    name: "Calculadora Gestacional",
-    description: "Calculadora completa de edad gestacional con registro de pacientes",
+    id: "calculadora-gestacional-compleja",
+    name: "Calculadora Gestacional Compleja",
+    description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
+    icon: Calendar,
+    component: GestationalComplexCalculator,
+  },
+  {
+    id: "edad-gestacional",
+    name: "Edad Gestacional Simple",
+    description: "Calculadora básica de edad gestacional por biometría",
     icon: Baby,
     component: GestationalAgeCalculator,
   },
