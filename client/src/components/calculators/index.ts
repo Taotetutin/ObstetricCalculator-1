@@ -41,7 +41,6 @@ export const calculators = [
     icon: Baby,
     component: GestationalAgeCalculator,
   },
-  // Rest of the calculators remain unchanged
   {
     id: "fpp",
     name: "Fecha Probable de Parto",
