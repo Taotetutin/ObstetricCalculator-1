@@ -31,6 +31,15 @@ export default function Home() {
         </Card>
       </div>
 
+      {/* Imagen de la familia Obsterix */}
+      <div className="flex justify-center">
+        <img 
+          src="/Untitled_design__4_-removebg-preview-transformed.png"
+          alt="Familia ObsteriX"
+          className="max-w-full h-auto"
+        />
+      </div>
+
       {/* Enlaces en el pie de página */}
       <div className="mt-auto pt-8 pb-4 flex justify-center gap-8 text-sm text-blue-600">
         <a 
