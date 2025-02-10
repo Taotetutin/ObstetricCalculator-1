@@ -36,9 +36,9 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
-    id: "edad-gestacional",
-    name: "Edad Gestacional",
-    description: "Determina la edad gestacional actual y registra pacientes",
+    id: "calculadora-gestacional",
+    name: "Calculadora Gestacional",
+    description: "Calculadora completa de edad gestacional con registro de pacientes",
     icon: Baby,
     component: GestationalAgeCalculator,
   },
