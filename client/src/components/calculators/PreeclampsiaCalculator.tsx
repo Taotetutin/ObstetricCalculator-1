@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { InfoIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { CalculationHistory } from "@/components/CalculationHistory";
 
 const ethnicityOptions = [
   { value: 'caucasica', label: 'Caucásica' },
@@ -106,13 +107,16 @@ export default function PreeclampsiaCalculator() {
 
   return (
     <div className="space-y-6">
-      <Alert>
-        <InfoIcon className="h-4 w-4" />
-        <AlertDescription>
-          Esta calculadora utiliza el modelo de la Fetal Medicine Foundation para evaluar
-          el riesgo de preeclampsia en el primer trimestre.
-        </AlertDescription>
-      </Alert>
+      <div className="flex justify-between items-center">
+        <Alert>
+          <InfoIcon className="h-4 w-4" />
+          <AlertDescription>
+            Esta calculadora utiliza el modelo de la Fetal Medicine Foundation para evaluar
+            el riesgo de preeclampsia en el primer trimestre.
+          </AlertDescription>
+        </Alert>
+        <CalculationHistory calculatorType="preeclampsia" />
+      </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

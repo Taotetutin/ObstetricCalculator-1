@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
-// Reorganizar calculadoras por categoría según la nueva especificación
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
     ["gestacional", "mefi", "doppler", "gestacional_complex"].includes(c.id)
@@ -25,16 +24,17 @@ export default function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col mt-24">
-      <Link href="/">
-        <div className="flex items-center gap-3 p-4 border-b">
-          <img 
-            src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
-            alt="MiMaternoFetal Logo"
-            className="h-8 w-auto"
-          />
-          <span className="font-semibold text-lg text-blue-700">ObsteriX Legend</span>
-        </div>
-      </Link>
+      <div 
+        onClick={() => setIsOpen(false)}
+        className="flex items-center gap-3 p-4 border-b cursor-pointer"
+      >
+        <img 
+          src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
+          alt="MiMaternoFetal Logo"
+          className="h-8 w-auto"
+        />
+        <span className="font-semibold text-lg text-blue-700">ObsteriX Legend</span>
+      </div>
 
       <nav className="flex-1 overflow-y-auto">
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
@@ -45,20 +45,24 @@ export default function Sidebar() {
             <ul className="space-y-1 px-3">
               {groupCalculators.map((calc) => (
                 <li key={calc.id}>
-                  <Link href={`/calculadora/${calc.id}`}>
-                    <a className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md",
+                  <div
+                    onClick={() => {
+                      setIsOpen(false);
+                      window.location.href = `/calculadora/${calc.id}`;
+                    }}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
                       "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
                       "transition-colors duration-200",
                       location === `/calculadora/${calc.id}` && 
                       "bg-blue-100 text-blue-900 font-medium"
-                    )}>
-                      {calc.icon && (
-                        <calc.icon className="w-5 h-5 shrink-0 text-blue-600" />
-                      )}
-                      <span>{calc.name}</span>
-                    </a>
-                  </Link>
+                    )}
+                  >
+                    {calc.icon && (
+                      <calc.icon className="w-5 h-5 shrink-0 text-blue-600" />
+                    )}
+                    <span>{calc.name}</span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -67,9 +71,11 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-auto p-4 border-t space-y-2">
-        <a href="/link1" className="text-blue-600 hover:text-blue-800">Link 1</a>
-        <a href="/link2" className="text-blue-600 hover:text-blue-800">Link 2</a>
-        <a href="/link3" className="text-blue-600 hover:text-blue-800">Link 3</a>
+        <div onClick={() => setIsOpen(false)} className="space-y-2">
+          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 1</div>
+          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 2</div>
+          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 3</div>
+        </div>
       </div>
     </div>
   );
