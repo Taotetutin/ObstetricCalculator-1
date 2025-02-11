@@ -1,14 +1,31 @@
 import { patients, calculations, type Calculation, type InsertCalculation, type Patient, type InsertPatient } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 
 export interface IStorage {
+  // Existing methods
   saveCalculation(calculation: InsertCalculation): Promise<Calculation>;
   getCalculationById(id: number): Promise<Calculation | undefined>;
   getCalculationsByType(type: string): Promise<Calculation[]>;
   savePatient(patient: InsertPatient): Promise<Patient>;
   getPatientById(id: number): Promise<Patient | undefined>;
   getAllPatients(): Promise<Patient[]>;
+
+  // Methods for comparisons and history
+  getCalculationHistory(
+    patientId?: number,
+    type?: string,
+    limit?: number
+  ): Promise<Calculation[]>;
+
+  getCalculationsForComparison(
+    comparisonGroup: string
+  ): Promise<Calculation[]>;
+
+  updateCalculationNotes(
+    id: number,
+    notes: string
+  ): Promise<Calculation>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -38,6 +55,56 @@ export class DatabaseStorage implements IStorage {
 
   async getAllPatients(): Promise<Patient[]> {
     return await db.select().from(patients);
+  }
+
+  async getCalculationHistory(
+    patientId?: number,
+    type?: string,
+    limit: number = 50
+  ): Promise<Calculation[]> {
+    const conditions = [];
+
+    if (patientId) {
+      conditions.push(eq(calculations.patientId, patientId));
+    }
+
+    if (type) {
+      conditions.push(eq(calculations.calculatorType, type));
+    }
+
+    const query = db
+      .select()
+      .from(calculations)
+      .orderBy(desc(calculations.createdAt))
+      .limit(limit);
+
+    if (conditions.length > 0) {
+      return await query.where(and(...conditions));
+    }
+
+    return await query;
+  }
+
+  async getCalculationsForComparison(
+    comparisonGroup: string
+  ): Promise<Calculation[]> {
+    return await db
+      .select()
+      .from(calculations)
+      .where(eq(calculations.comparisonGroup, comparisonGroup))
+      .orderBy(desc(calculations.createdAt));
+  }
+
+  async updateCalculationNotes(
+    id: number,
+    notes: string
+  ): Promise<Calculation> {
+    const [updated] = await db
+      .update(calculations)
+      .set({ notes })
+      .where(eq(calculations.id, id))
+      .returning();
+    return updated;
   }
 }
 

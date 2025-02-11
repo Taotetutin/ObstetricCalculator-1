@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, date, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, date, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
@@ -188,10 +188,14 @@ export const gestationalDates = pgTable("gestational_dates", {
 export const calculations = pgTable("calculations", {
   id: serial("id").primaryKey(),
   calculatorType: text("calculator_type").notNull(),
+  // Keep as text for now, we'll migrate data safely later
   input: text("input").notNull(),
   result: text("result").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  patientId: integer("patient_id"),  
+  patientId: integer("patient_id"),
+  notes: text("notes"),
+  comparisonGroup: text("comparison_group"),
+  metadata: jsonb("metadata"),
 });
 
 // After defining the tables, add the foreign key reference
