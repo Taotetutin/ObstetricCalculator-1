@@ -19,6 +19,7 @@ import {
 import { InfoIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { CalculationHistory } from "@/components/CalculationHistory";
+import { Check } from "lucide-react";
 
 const ethnicityOptions = [
   { value: 'caucasica', label: 'Caucásica' },
@@ -235,7 +236,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">
                       Historia familiar de preeclampsia
                     </FormLabel>
@@ -251,7 +254,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Embarazo múltiple</FormLabel>
                   </FormItem>
                 )}
@@ -270,7 +275,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Hipertensión crónica</FormLabel>
                   </FormItem>
                 )}
@@ -284,7 +291,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Diabetes tipo I</FormLabel>
                   </FormItem>
                 )}
@@ -298,7 +307,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Diabetes tipo II</FormLabel>
                   </FormItem>
                 )}
@@ -312,7 +323,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">LES/SAF</FormLabel>
                   </FormItem>
                 )}
@@ -331,7 +344,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Nulípara</FormLabel>
                   </FormItem>
                 )}
@@ -345,7 +360,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                    />
+                    >
+                      {field.value && <Check className="h-4 w-4" />}
+                    </Checkbox>
                     <FormLabel className="font-normal">Preeclampsia previa</FormLabel>
                   </FormItem>
                 )}
