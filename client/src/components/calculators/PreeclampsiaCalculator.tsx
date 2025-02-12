@@ -235,8 +235,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">
                       Historia familiar de preeclampsia
@@ -253,8 +254,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Embarazo múltiple</FormLabel>
                   </FormItem>
@@ -274,8 +276,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Hipertensión crónica</FormLabel>
                   </FormItem>
@@ -290,8 +293,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Diabetes tipo I</FormLabel>
                   </FormItem>
@@ -306,8 +310,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Diabetes tipo II</FormLabel>
                   </FormItem>
@@ -322,8 +327,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">LES/SAF</FormLabel>
                   </FormItem>
@@ -343,8 +349,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Nulípara</FormLabel>
                   </FormItem>
@@ -359,8 +366,9 @@ export default function PreeclampsiaCalculator() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="flex items-center justify-center"
                     >
-                      {field.value && <span className="text-xs">X</span>}
+                      {field.value && <span className="text-[10px] font-bold">X</span>}
                     </Checkbox>
                     <FormLabel className="font-normal">Preeclampsia previa</FormLabel>
                   </FormItem>
