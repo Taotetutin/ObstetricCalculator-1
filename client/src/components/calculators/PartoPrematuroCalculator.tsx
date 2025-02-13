@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 
 const schema = z.object({
@@ -138,16 +138,17 @@ export default function PartoPrematuroCalculator() {
             control={form.control}
             name="hasContractions"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel>Presencia de contracciones</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="flex items-center justify-center"
+                >
+                  {field.value && <span className="text-[10px] font-bold">X</span>}
+                </Checkbox>
+                <FormLabel className="font-normal">
+                  Presencia de contracciones
+                </FormLabel>
               </FormItem>
             )}
           />
@@ -156,16 +157,17 @@ export default function PartoPrematuroCalculator() {
             control={form.control}
             name="hasPreviousPretermBirth"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel>Antecedente de parto prematuro previo</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="flex items-center justify-center"
+                >
+                  {field.value && <span className="text-[10px] font-bold">X</span>}
+                </Checkbox>
+                <FormLabel className="font-normal">
+                  Antecedente de parto prematuro previo
+                </FormLabel>
               </FormItem>
             )}
           />
@@ -174,16 +176,17 @@ export default function PartoPrematuroCalculator() {
             control={form.control}
             name="hasMembraneRupture"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel>Antecedente de rotura de membranas</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="flex items-center justify-center"
+                >
+                  {field.value && <span className="text-[10px] font-bold">X</span>}
+                </Checkbox>
+                <FormLabel className="font-normal">
+                  Antecedente de rotura de membranas
+                </FormLabel>
               </FormItem>
             )}
           />
@@ -192,16 +195,17 @@ export default function PartoPrematuroCalculator() {
             control={form.control}
             name="hasCervicalSurgery"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel>Antecedente de cirugía cervical</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="flex items-center justify-center"
+                >
+                  {field.value && <span className="text-[10px] font-bold">X</span>}
+                </Checkbox>
+                <FormLabel className="font-normal">
+                  Antecedente de cirugía cervical
+                </FormLabel>
               </FormItem>
             )}
           />

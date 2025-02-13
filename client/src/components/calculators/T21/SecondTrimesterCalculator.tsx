@@ -101,7 +101,10 @@ export default function SecondTrimesterCalculator() {
                     id="hasFirstTrimesterScreening"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                  />
+                    className="flex items-center justify-center"
+                  >
+                    {field.value && <span className="text-[10px] font-bold">X</span>}
+                  </Checkbox>
                   <FormLabel htmlFor="hasFirstTrimesterScreening" className="font-normal cursor-pointer">
                     Tiene screening de primer trimestre
                   </FormLabel>

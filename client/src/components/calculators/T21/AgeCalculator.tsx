@@ -131,7 +131,10 @@ export default function AgeCalculator() {
                   id="previousT21"
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                />
+                  className="flex items-center justify-center"
+                >
+                  {field.value && <span className="text-[10px] font-bold">X</span>}
+                </Checkbox>
                 <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
                   Antecedente de hijo con Trisomía 21
                 </FormLabel>
