@@ -129,10 +129,7 @@ export default function ThrombosisCalculator() {
                 {riskFactors
                   .filter(factor => factor.category === category)
                   .map(factor => (
-                    <div
-                      key={factor.id}
-                      className="flex items-center gap-2 p-3"
-                    >
+                    <div key={factor.id} className="flex items-center gap-2 p-3">
                       <div className="flex items-center gap-2">
                         <div className="relative">
                           <Checkbox
@@ -158,12 +155,14 @@ export default function ThrombosisCalculator() {
             </CardContent>
           </Card>
         ))}
+
         <Button
           onClick={handleCalculate}
           className="w-full bg-blue-600 hover:bg-blue-700"
         >
           Calcular Pauta
         </Button>
+
         {result && (
           <Card className="border-2 border-blue-100">
             <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
