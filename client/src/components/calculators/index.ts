@@ -36,13 +36,6 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
-    id: "gestacional",
-    name: "Edad Gestacional Dudosa",
-    description: "Calculadora de edad gestacional por biometría",
-    icon: Baby,
-    component: GestationalAgeCalculator,
-  },
-  {
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
@@ -64,18 +57,11 @@ export const calculators = [
     component: DopplerCalculator,
   },
   {
-    id: "pulmonary-predictor",
-    name: "Disfunción Pulmonar",
-    description: "Evaluación integral de patologías pulmonares fetales",
-    icon: Stethoscope,
-    component: PulmonaryPredictorCalculator,
-  },
-  {
-    id: "crecimiento-fetal",
-    name: "Crecimiento Fetal",
-    description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
-    icon: Activity,
-    component: CrecimientoFetalCalculator,
+    id: "gestacional",
+    name: "Edad Gestacional Dudosa",
+    description: "Calculadora de edad gestacional por biometría",
+    icon: Baby,
+    component: GestationalAgeCalculator,
   },
   {
     id: "fpp",
@@ -181,5 +167,19 @@ export const calculators = [
     description: "Evaluación del riesgo en colestasis intrahepática del embarazo",
     icon: Pill,
     component: ColestasisCalculator,
+  },
+  {
+    id: "crecimiento-fetal",
+    name: "Crecimiento Fetal",
+    description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
+    icon: Activity,
+    component: CrecimientoFetalCalculator,
+  },
+    {
+    id: "pulmonary-predictor",
+    name: "Disfunción Pulmonar",
+    description: "Evaluación integral de patologías pulmonares fetales",
+    icon: Stethoscope,
+    component: PulmonaryPredictorCalculator,
   }
 ];
