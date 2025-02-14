@@ -119,8 +119,8 @@ export default function ThrombosisCalculator() {
             <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
               <CardTitle className="text-lg font-semibold text-blue-700">
                 {category === 'preexisting' ? 'Factores de Riesgo Preexistentes' :
-                 category === 'obstetric' ? 'Factores de Riesgo Obstétricos' :
-                 'Factores de Riesgo Transitorios'}
+                  category === 'obstetric' ? 'Factores de Riesgo Obstétricos' :
+                    'Factores de Riesgo Transitorios'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -134,7 +134,9 @@ export default function ThrombosisCalculator() {
                         checked={selectedFactors.includes(factor.id)}
                         onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
                         className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
-                      />
+                      >
+                        {selectedFactors.includes(factor.id) && <span className="text-[10px] font-bold">X</span>}
+                      </Checkbox>
                       <label
                         htmlFor={factor.id}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
@@ -165,16 +167,16 @@ export default function ThrombosisCalculator() {
             <CardContent className="pt-6">
               <div className={`rounded-lg border p-6 ${
                 result.totalPoints >= 4 ? 'border-red-500 bg-red-50' :
-                result.totalPoints === 3 ? 'border-orange-500 bg-orange-50' :
-                result.totalPoints === 2 ? 'border-yellow-500 bg-yellow-50' :
-                'border-green-500 bg-green-50'
+                  result.totalPoints === 3 ? 'border-orange-500 bg-orange-50' :
+                    result.totalPoints === 2 ? 'border-yellow-500 bg-yellow-50' :
+                      'border-green-500 bg-green-50'
               }`}>
                 <div className="flex justify-between items-start mb-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                     result.totalPoints >= 4 ? 'bg-red-200 text-red-800' :
-                    result.totalPoints === 3 ? 'bg-orange-200 text-orange-800' :
-                    result.totalPoints === 2 ? 'bg-yellow-200 text-yellow-800' :
-                    'bg-green-200 text-green-800'
+                      result.totalPoints === 3 ? 'bg-orange-200 text-orange-800' :
+                        result.totalPoints === 2 ? 'bg-yellow-200 text-yellow-800' :
+                          'bg-green-200 text-green-800'
                   }`}>
                     {result.totalPoints} puntos
                   </span>
