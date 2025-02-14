@@ -36,18 +36,18 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
-    id: "gestacional",
-    name: "Edad Gestacional Dudosa",
-    description: "Calculadora de edad gestacional por biometría",
-    icon: Baby,
-    component: GestationalAgeCalculator,
-  },
-  {
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
     icon: Calendar,
     component: GestationalComplexCalculator,
+  },
+  {
+    id: "gestacional",
+    name: "Edad Gestacional Dudosa",
+    description: "Calculadora de edad gestacional por biometría",
+    icon: Baby,
+    component: GestationalAgeCalculator,
   },
   {
     id: "mefi",
