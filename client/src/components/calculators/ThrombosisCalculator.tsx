@@ -6,7 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { calculatorTypes } from "@shared/schema";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { Check } from "lucide-react";
 
 interface RiskFactor {
   id: string;
@@ -134,7 +133,6 @@ export default function ThrombosisCalculator() {
                         id={factor.id}
                         checked={selectedFactors.includes(factor.id)}
                         onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                        className="border-2 border-gray-300 bg-white data-[state=checked]:border-blue-500 data-[state=checked]:bg-white"
                       />
                       <label
                         htmlFor={factor.id}
