@@ -50,9 +50,8 @@ const riskFactors: RiskFactor[] = [
 ];
 
 interface Result {
-  riskLevel: 'bajo' | 'moderado' | 'alto';
   totalPoints: number;
-  recommendations: string[];
+  prophylaxisGuideline: string;
 }
 
 export default function ThrombosisCalculator() {
@@ -60,49 +59,27 @@ export default function ThrombosisCalculator() {
   const { toast } = useToast();
   const [selectedFactors, setSelectedFactors] = useState<string[]>([]);
 
-  const calculateRisk = (factors: string[]): Result => {
+  const calculateProphylaxis = (factors: string[]): Result => {
     const totalPoints = factors.reduce((sum, factorId) => {
       const factor = riskFactors.find(f => f.id === factorId);
       return sum + (factor?.points || 0);
     }, 0);
 
-    let riskLevel: 'bajo' | 'moderado' | 'alto';
-    let recommendations: string[] = [];
+    let prophylaxisGuideline: string;
 
     if (totalPoints >= 4) {
-      riskLevel = 'alto';
-      recommendations = [
-        "Profilaxis con HBPM durante todo el embarazo",
-        "Continuar profilaxis por 6 semanas postparto",
-        "Considerar medias de compresión graduada",
-        "Movilización temprana",
-        "Hidratación adecuada",
-        "Referir a especialista en trombosis"
-      ];
-    } else if (totalPoints >= 2) {
-      riskLevel = 'moderado';
-      recommendations = [
-        "Considerar profilaxis con HBPM desde el inicio del embarazo",
-        "Continuar profilaxis por al menos 10 días postparto",
-        "Medias de compresión graduada",
-        "Movilización temprana",
-        "Hidratación adecuada",
-        "Reevaluar si aparecen factores de riesgo adicionales"
-      ];
+      prophylaxisGuideline = "HBPM desde 1º trimestre y 6 semanas postparto";
+    } else if (totalPoints === 3) {
+      prophylaxisGuideline = "HBPM desde semana 28 y 6 semanas postparto";
+    } else if (totalPoints === 2) {
+      prophylaxisGuideline = "HBPM durante 10 días postparto";
     } else {
-      riskLevel = 'bajo';
-      recommendations = [
-        "No requiere profilaxis farmacológica rutinaria",
-        "Movilización temprana",
-        "Evitar deshidratación",
-        "Reevaluar si aparecen factores de riesgo adicionales"
-      ];
+      prophylaxisGuideline = "No precisa tromboprofilaxis";
     }
 
     return {
-      riskLevel,
       totalPoints,
-      recommendations
+      prophylaxisGuideline
     };
   };
 
@@ -117,8 +94,8 @@ export default function ThrombosisCalculator() {
   };
 
   const handleCalculate = async () => {
-    const riskResult = calculateRisk(selectedFactors);
-    setResult(riskResult);
+    const prophylaxisResult = calculateProphylaxis(selectedFactors);
+    setResult(prophylaxisResult);
 
     try {
       await fetch("/api/calculations", {
@@ -127,7 +104,7 @@ export default function ThrombosisCalculator() {
         body: JSON.stringify({
           calculatorType: "thrombosis",
           input: JSON.stringify(selectedFactors),
-          result: JSON.stringify(riskResult),
+          result: JSON.stringify(prophylaxisResult),
         }),
       });
     } catch (error) {
@@ -173,39 +150,34 @@ export default function ThrombosisCalculator() {
           onClick={handleCalculate}
           className="w-full bg-blue-600 hover:bg-blue-700"
         >
-          Calcular Riesgo
+          Calcular Pauta
         </Button>
 
         {result && (
           <Card>
             <CardContent className="pt-6">
               <div className={`rounded-lg border p-6 ${
-                result.riskLevel === 'alto' ? 'border-red-500 bg-red-50' :
-                result.riskLevel === 'moderado' ? 'border-yellow-500 bg-yellow-50' :
+                result.totalPoints >= 4 ? 'border-red-500 bg-red-50' :
+                result.totalPoints === 3 ? 'border-orange-500 bg-orange-50' :
+                result.totalPoints === 2 ? 'border-yellow-500 bg-yellow-50' :
                 'border-green-500 bg-green-50'
               }`}>
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-xl font-semibold">
-                    Riesgo {result.riskLevel.charAt(0).toUpperCase() + result.riskLevel.slice(1)}
+                    Pauta de Tromboprofilaxis
                   </h2>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    result.riskLevel === 'alto' ? 'bg-red-200 text-red-800' :
-                    result.riskLevel === 'moderado' ? 'bg-yellow-200 text-yellow-800' :
+                    result.totalPoints >= 4 ? 'bg-red-200 text-red-800' :
+                    result.totalPoints === 3 ? 'bg-orange-200 text-orange-800' :
+                    result.totalPoints === 2 ? 'bg-yellow-200 text-yellow-800' :
                     'bg-green-200 text-green-800'
                   }`}>
                     {result.totalPoints} puntos
                   </span>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-gray-900 mb-2">Recomendaciones:</h3>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {result.recommendations.map((recommendation, index) => (
-                        <li key={index} className="text-gray-700">{recommendation}</li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="mt-4">
+                  <p className="text-lg font-medium">{result.prophylaxisGuideline}</p>
                 </div>
               </div>
             </CardContent>
