@@ -8,13 +8,13 @@ import { Menu } from "lucide-react";
 
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
-    ["calculadora-gestacional-compleja", "mefi", "doppler", "gestacional"].includes(c.id)
+    ["calculadora-gestacional-compleja", "mefi", "doppler"].includes(c.id)
   ),
   "Evaluación y Riesgos": calculators.filter(c => 
     ["t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
   ),
   "Herramientas Especializadas": calculators.filter(c => 
-    !["calculadora-gestacional-compleja", "mefi", "doppler", "gestacional", "t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
+    !["calculadora-gestacional-compleja", "mefi", "doppler", "t21", "preeclampsia", "parto_prematuro", "colestasis", "prematurez"].includes(c.id)
   )
 };
 
