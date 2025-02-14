@@ -36,18 +36,18 @@ import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 
 export const calculators = [
   {
+    id: "gestacional",
+    name: "Edad Gestacional Dudosa",
+    description: "Calculadora de edad gestacional por biometría",
+    icon: Baby,
+    component: GestationalAgeCalculator,
+  },
+  {
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
     icon: Calendar,
     component: GestationalComplexCalculator,
-  },
-  {
-    id: "edad-gestacional",
-    name: "Edad Gestacional Dudosa",
-    description: "Calculadora de edad gestacional por biometría",
-    icon: Baby,
-    component: GestationalAgeCalculator,
   },
   {
     id: "mefi",
@@ -62,6 +62,13 @@ export const calculators = [
     description: "Evaluación de flujos Doppler fetales",
     icon: Heart,
     component: DopplerCalculator,
+  },
+  {
+    id: "pulmonary-predictor",
+    name: "Disfunción Pulmonar",
+    description: "Evaluación integral de patologías pulmonares fetales",
+    icon: Stethoscope,
+    component: PulmonaryPredictorCalculator,
   },
   {
     id: "crecimiento-fetal",
@@ -90,13 +97,6 @@ export const calculators = [
     description: "Evalúa el índice de líquido amniótico",
     icon: Droplet,
     component: LiquidoAmnioticoCalculator,
-  },
-  {
-    id: "pulmonary-predictor",
-    name: "Disfunción Pulmonar",
-    description: "Evaluación integral de patologías pulmonares fetales",
-    icon: Stethoscope,
-    component: PulmonaryPredictorCalculator,
   },
   {
     id: "bishop",
