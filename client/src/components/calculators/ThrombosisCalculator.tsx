@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { calculatorTypes } from "@shared/schema";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { Check } from "lucide-react";
 
 interface RiskFactor {
   id: string;
@@ -128,19 +129,28 @@ export default function ThrombosisCalculator() {
                 {riskFactors
                   .filter(factor => factor.category === category)
                   .map(factor => (
-                    <div key={factor.id} className="flex items-center space-x-2 rounded-lg p-2 hover:bg-blue-50">
-                      <Checkbox
-                        id={factor.id}
-                        checked={selectedFactors.includes(factor.id)}
-                        onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                        className="border-blue-200 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                      />
-                      <label
-                        htmlFor={factor.id}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                      >
-                        {factor.label} ({factor.points} {factor.points === 1 ? 'punto' : 'puntos'})
-                      </label>
+                    <div
+                      key={factor.id}
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                        selectedFactors.includes(factor.id)
+                          ? 'bg-blue-50 border border-blue-200'
+                          : 'hover:bg-blue-50/50 border border-transparent'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id={factor.id}
+                          checked={selectedFactors.includes(factor.id)}
+                          onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
+                          className="h-5 w-5 border-2 border-blue-200 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 rounded-sm"
+                        />
+                        <label
+                          htmlFor={factor.id}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
+                        >
+                          {factor.label} ({factor.points} {factor.points === 1 ? 'punto' : 'puntos'})
+                        </label>
+                      </div>
                     </div>
                   ))}
               </div>
