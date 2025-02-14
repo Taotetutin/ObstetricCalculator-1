@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useForm } from "react-hook-form";
 import { calculatorTypes } from "@shared/schema";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
@@ -116,26 +115,29 @@ export default function ThrombosisCalculator() {
     <div className="space-y-6">
       <div className="grid gap-6">
         {['preexisting', 'obstetric', 'transient'].map((category) => (
-          <Card key={category}>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold mb-4 text-blue-700">
+          <Card key={category} className="border-2 border-blue-100">
+            <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
+              <CardTitle className="text-lg font-semibold text-blue-700">
                 {category === 'preexisting' ? 'Factores de Riesgo Preexistentes' :
                  category === 'obstetric' ? 'Factores de Riesgo Obstétricos' :
                  'Factores de Riesgo Transitorios'}
-              </h3>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
                 {riskFactors
                   .filter(factor => factor.category === category)
                   .map(factor => (
-                    <div key={factor.id} className="flex items-center space-x-2">
+                    <div key={factor.id} className="flex items-center space-x-2 rounded-lg p-2 hover:bg-blue-50">
                       <Checkbox
                         id={factor.id}
                         checked={selectedFactors.includes(factor.id)}
                         onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
+                        className="border-blue-200 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                       />
                       <label
                         htmlFor={factor.id}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                       >
                         {factor.label} ({factor.points} {factor.points === 1 ? 'punto' : 'puntos'})
                       </label>
@@ -154,7 +156,12 @@ export default function ThrombosisCalculator() {
         </Button>
 
         {result && (
-          <Card>
+          <Card className="border-2 border-blue-100">
+            <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
+              <CardTitle className="text-lg font-semibold text-blue-700">
+                Pauta de Tromboprofilaxis
+              </CardTitle>
+            </CardHeader>
             <CardContent className="pt-6">
               <div className={`rounded-lg border p-6 ${
                 result.totalPoints >= 4 ? 'border-red-500 bg-red-50' :
@@ -163,9 +170,6 @@ export default function ThrombosisCalculator() {
                 'border-green-500 bg-green-50'
               }`}>
                 <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-semibold">
-                    Pauta de Tromboprofilaxis
-                  </h2>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                     result.totalPoints >= 4 ? 'bg-red-200 text-red-800' :
                     result.totalPoints === 3 ? 'bg-orange-200 text-orange-800' :
