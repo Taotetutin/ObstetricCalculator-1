@@ -138,12 +138,17 @@ export default function ThrombosisCalculator() {
                       }`}
                     >
                       <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id={factor.id}
-                          checked={selectedFactors.includes(factor.id)}
-                          onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                          className="h-5 w-5 border-2 border-blue-200 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 rounded-sm"
-                        />
+                        <div className="relative">
+                          <Checkbox
+                            id={factor.id}
+                            checked={selectedFactors.includes(factor.id)}
+                            onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
+                            className="h-5 w-5 border-2 border-blue-200 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          />
+                          {selectedFactors.includes(factor.id) && (
+                            <Check className="h-3 w-3 absolute top-1 left-1 text-white" />
+                          )}
+                        </div>
                         <label
                           htmlFor={factor.id}
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
