@@ -50,6 +50,20 @@ export const calculators = [
     component: GestationalAgeCalculator,
   },
   {
+    id: "mefi",
+    name: "Monitoreo Fetal Intraparto",
+    description: "Evaluación del registro cardiotocográfico intraparto",
+    icon: Activity,
+    component: MEFICalculator,
+  },
+  {
+    id: "doppler",
+    name: "Doppler Fetal",
+    description: "Evaluación de flujos Doppler fetales",
+    icon: Heart,
+    component: DopplerCalculator,
+  },
+  {
     id: "crecimiento-fetal",
     name: "Crecimiento Fetal",
     description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
@@ -92,13 +106,6 @@ export const calculators = [
     component: BishopCalculator,
   },
   {
-    id: "doppler",
-    name: "Doppler Fetal",
-    description: "Evaluación de flujos Doppler fetales",
-    icon: Heart,
-    component: DopplerCalculator,
-  },
-  {
     id: "peso-fetal",
     name: "Peso Fetal",
     description: "Estimación del peso fetal",
@@ -139,13 +146,6 @@ export const calculators = [
     description: "Control de ganancia de peso durante el embarazo",
     icon: Weight,
     component: WeightGainCalculator,
-  },
-  {
-    id: "mefi",
-    name: "Monitoreo Fetal Intraparto",
-    description: "Evaluación del registro cardiotocográfico intraparto",
-    icon: Activity,
-    component: MEFICalculator,
   },
   {
     id: "femur-corto",
