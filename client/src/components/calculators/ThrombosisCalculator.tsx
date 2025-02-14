@@ -133,9 +133,9 @@ export default function ThrombosisCalculator() {
                         id={factor.id}
                         checked={selectedFactors.includes(factor.id)}
                         onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                        className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
+                        className="h-4 w-4 border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 data-[state=checked]:text-white"
                       >
-                        {selectedFactors.includes(factor.id) && <span className="text-[10px] font-bold">X</span>}
+                        {selectedFactors.includes(factor.id) && <span className="text-[10px] font-bold text-white">X</span>}
                       </Checkbox>
                       <label
                         htmlFor={factor.id}
