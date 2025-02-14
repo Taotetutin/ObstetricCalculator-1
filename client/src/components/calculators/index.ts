@@ -9,7 +9,8 @@ import {
   Activity,
   Weight,
   BarChart,
-  Pill
+  Pill,
+  AlertTriangle
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -33,6 +34,7 @@ import PRCalculator from "./PRCalculator";
 import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
+import ThrombosisCalculator from "./ThrombosisCalculator";
 
 export const calculators = [
   {
@@ -55,6 +57,13 @@ export const calculators = [
     description: "Evaluación de flujos Doppler fetales",
     icon: Heart,
     component: DopplerCalculator,
+  },
+  {
+    id: "thrombosis",
+    name: "Riesgo Tromboembólico",
+    description: "Evaluación del riesgo tromboembólico durante embarazo y puerperio según RCOG",
+    icon: AlertTriangle,
+    component: ThrombosisCalculator,
   },
   {
     id: "gestacional",
@@ -175,7 +184,7 @@ export const calculators = [
     icon: Activity,
     component: CrecimientoFetalCalculator,
   },
-    {
+  {
     id: "pulmonary-predictor",
     name: "Disfunción Pulmonar",
     description: "Evaluación integral de patologías pulmonares fetales",
