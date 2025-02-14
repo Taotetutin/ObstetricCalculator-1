@@ -129,26 +129,19 @@ export default function ThrombosisCalculator() {
                 {riskFactors
                   .filter(factor => factor.category === category)
                   .map(factor => (
-                    <div key={factor.id} className="flex items-center gap-2 p-3">
-                      <div className="flex items-center gap-2">
-                        <div className="relative">
-                          <Checkbox
-                            id={factor.id}
-                            checked={selectedFactors.includes(factor.id)}
-                            onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                            className="h-5 w-5 border-2"
-                          />
-                          {selectedFactors.includes(factor.id) && (
-                            <Check className="h-3 w-3 absolute top-1 left-1 text-white" />
-                          )}
-                        </div>
-                        <label
-                          htmlFor={factor.id}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
-                        >
-                          {factor.label} ({factor.points} {factor.points === 1 ? 'punto' : 'puntos'})
-                        </label>
-                      </div>
+                    <div key={factor.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={factor.id}
+                        checked={selectedFactors.includes(factor.id)}
+                        onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
+                        className="border-2 border-gray-300 bg-white data-[state=checked]:border-blue-500 data-[state=checked]:bg-white"
+                      />
+                      <label
+                        htmlFor={factor.id}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
+                      >
+                        {factor.label} ({factor.points} {factor.points === 1 ? 'punto' : 'puntos'})
+                      </label>
                     </div>
                   ))}
               </div>
