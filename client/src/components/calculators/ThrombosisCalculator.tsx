@@ -131,13 +131,9 @@ export default function ThrombosisCalculator() {
                   .map(factor => (
                     <div
                       key={factor.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                        selectedFactors.includes(factor.id)
-                          ? 'bg-blue-50 border border-blue-200'
-                          : 'hover:bg-blue-50/50 border border-transparent'
-                      }`}
+                      className="flex items-center gap-3 p-3 rounded-lg"
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <div className="relative">
                           <Checkbox
                             id={factor.id}
