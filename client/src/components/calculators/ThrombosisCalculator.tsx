@@ -136,7 +136,7 @@ export default function ThrombosisCalculator() {
                             id={factor.id}
                             checked={selectedFactors.includes(factor.id)}
                             onCheckedChange={(checked) => handleFactorChange(factor.id, checked as boolean)}
-                            className="h-5 w-5 border-2" // Removed unnecessary styling
+                            className="h-5 w-5 border-2"
                           />
                           {selectedFactors.includes(factor.id) && (
                             <Check className="h-3 w-3 absolute top-1 left-1 text-white" />
