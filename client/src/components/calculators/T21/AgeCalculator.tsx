@@ -131,7 +131,7 @@ export default function AgeCalculator() {
                   id="previousT21"
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  className="flex items-center justify-center"
+                  className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
                 >
                   {field.value && <span className="text-[10px] font-bold">X</span>}
                 </Checkbox>
