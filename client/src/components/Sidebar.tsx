@@ -39,7 +39,9 @@ export default function Sidebar() {
           alt="MiMaternoFetal Logo"
           className="h-8 w-auto"
         />
-        <span className="text-lg">ObsteriX Legend</span>
+        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+          ObsteriX Legend
+        </span>
       </div>
 
       <nav className="flex-1 overflow-y-auto">
