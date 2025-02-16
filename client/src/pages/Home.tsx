@@ -46,7 +46,7 @@ export default function Home() {
       </div>
 
       {/* Imagen de lanzamiento a pantalla completa */}
-      <div className="flex-1 w-full h-[calc(100vh-20rem)] relative overflow-hidden">
+      <div className="flex-1 w-full h-[calc(100vh-12rem)] relative overflow-hidden bg-gradient-to-br from-blue-100 to-white">
         <img 
           src="/untitled6.png"
           alt="ObsteriX Legend"
