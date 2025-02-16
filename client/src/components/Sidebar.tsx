@@ -29,11 +29,8 @@ export default function Sidebar() {
   };
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col mt-24">
-      <div 
-        onClick={() => setIsOpen(false)}
-        className="flex items-center gap-3 p-4 border-b cursor-pointer"
-      >
+    <div className="flex h-full flex-col">
+      <div className="flex items-center gap-3 p-4 border-b">
         <img 
           src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
           alt="MiMaternoFetal Logo"
@@ -88,27 +85,29 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Móvil */}
-      <div className="md:hidden">
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button 
-              size="icon" 
-              className="fixed top-4 left-4 z-50 bg-white shadow-lg border-blue-100"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-80 p-0 bg-white border-r">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-      </div>
+      {/* Mobile */}
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild className="fixed top-4 left-4 z-50 md:hidden">
+          <Button 
+            size="icon" 
+            variant="outline"
+            className="bg-white shadow-lg hover:bg-blue-50"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-80 p-0 bg-white">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
 
       {/* Desktop */}
-      <div className="hidden md:block w-80 border-r bg-white">
+      <div className="hidden md:block fixed left-0 top-0 h-screen w-80 border-r bg-white">
         <SidebarContent />
       </div>
+
+      {/* Spacer for desktop layout */}
+      <div className="hidden md:block w-80" />
     </>
   );
 }
