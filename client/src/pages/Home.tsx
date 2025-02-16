@@ -40,8 +40,8 @@ export default function Home() {
       {/* Imagen de la familia Obsterix */}
       <div className="flex justify-center">
         <img 
-          src="/Untitled_design__4_-removebg-preview-transformed.png"
-          alt="Familia ObsteriX"
+          src="/Untitled (6).png"
+          alt="ObsteriX Legend"
           className="max-w-full h-auto"
         />
       </div>
