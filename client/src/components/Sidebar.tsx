@@ -30,7 +30,8 @@ export default function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-3 p-4 border-b">
+      {/* Logo section */}
+      <div className="flex-none h-20 flex items-center gap-3 p-4 border-b">
         <img 
           src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
           alt="MiMaternoFetal Logo"
@@ -39,7 +40,8 @@ export default function Sidebar() {
         <span className="font-semibold text-lg text-blue-700">ObsteriX Legend</span>
       </div>
 
-      <nav className="flex-1 overflow-y-auto">
+      {/* Navigation section */}
+      <nav className="flex-1 overflow-y-auto mt-4">
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
           <div key={groupName} className="py-2">
             <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
@@ -87,7 +89,7 @@ export default function Sidebar() {
     <>
       {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild className="fixed top-40 left-4 z-50 md:hidden">
+        <SheetTrigger asChild className="fixed top-4 left-4 z-50 md:hidden">
           <Button 
             size="icon" 
             variant="outline"
