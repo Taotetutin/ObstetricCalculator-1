@@ -19,10 +19,17 @@ import {
   Timer,
   Gauge,
   ThermometerSnowflake,
-  LineChart,
+  TrendingUp,
   Microscope,
-  Syringe,
-  Waves
+  ScrollText,
+  Waves,
+  CalendarCheck,
+  FlaskConical,
+  CircleDot,
+  Dna,
+  PersonStanding,
+  Hourglass,
+  AlarmClock
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -53,7 +60,7 @@ export const calculators = [
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
-    icon: Calendar,
+    icon: CalendarCheck,
     component: GestationalComplexCalculator,
   },
   {
@@ -74,28 +81,28 @@ export const calculators = [
     id: "thrombosis",
     name: "Riesgo Tromboembólico",
     description: "Evaluación del riesgo tromboembólico durante embarazo y puerperio según RCOG",
-    icon: AlertTriangle,
+    icon: FlaskConical,
     component: ThrombosisCalculator,
   },
   {
     id: "gestacional",
     name: "Edad Gestacional Dudosa",
     description: "Calculadora de edad gestacional por biometría",
-    icon: Timer,
+    icon: Hourglass,
     component: GestationalAgeCalculator,
   },
   {
     id: "fpp",
     name: "Fecha Probable de Parto",
     description: "Calcula la fecha probable de parto basada en la última menstruación",
-    icon: Calendar,
+    icon: AlarmClock,
     component: FPPCalculator,
   },
   {
     id: "imc",
     name: "Índice de Masa Corporal",
     description: "Calcula el IMC materno",
-    icon: Weight,
+    icon: PersonStanding,
     component: IMCCalculator,
   },
   {
@@ -109,7 +116,7 @@ export const calculators = [
     id: "bishop",
     name: "Bishop Score",
     description: "Evaluación del índice de Bishop",
-    icon: Gauge,
+    icon: CircleDot,
     component: BishopCalculator,
   },
   {
@@ -144,14 +151,14 @@ export const calculators = [
     id: "t21",
     name: "Riesgo de T21",
     description: "Cálculo del riesgo de trisomía 21",
-    icon: Brain,
+    icon: Dna,
     component: T21Calculator,
   },
   {
     id: "weight-gain",
     name: "Ganancia de Peso",
     description: "Control de ganancia de peso durante el embarazo",
-    icon: LineChart,
+    icon: TrendingUp,
     component: WeightGainCalculator,
   },
   {
@@ -193,7 +200,7 @@ export const calculators = [
     id: "crecimiento-fetal",
     name: "Crecimiento Fetal",
     description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
-    icon: LineChart,
+    icon: BarChart,
     component: CrecimientoFetalCalculator,
   },
   {
