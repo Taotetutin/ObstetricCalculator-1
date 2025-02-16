@@ -38,11 +38,11 @@ export default function Home() {
       </div>
 
       {/* Imagen de lanzamiento a pantalla completa */}
-      <div className="flex-1 w-full min-h-[50vh] relative">
+      <div className="flex-1 w-full h-[calc(100vh-20rem)] relative overflow-hidden">
         <img 
           src="/untitled6.png"
           alt="ObsteriX Legend"
-          className="w-full h-full object-contain absolute inset-0"
+          className="w-full h-full object-cover absolute inset-0"
         />
       </div>
 
