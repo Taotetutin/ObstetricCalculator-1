@@ -1,7 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Lock, FileText, Mail } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Home() {
+  const { user } = useAuth();
+
   return (
     <div className="flex flex-col h-full gap-8 max-w-4xl mx-auto">
       <div className="text-center space-y-4">
@@ -11,7 +14,7 @@ export default function Home() {
         <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100">
           <CardContent className="pt-6 space-y-4 text-lg text-blue-900/80">
             <p className="text-2xl font-semibold mb-6">
-              ¡Bienvenido a Obsterix Legend! 🌟
+              ¡Bienvenido {user?.name} a Obsterix Legend! 🌟
             </p>
             <p>
               La aplicación más completa y personalizada, creada pensando en ti y tus necesidades. 
