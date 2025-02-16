@@ -6,10 +6,13 @@ import { useState, useEffect } from "react";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Calculator from "@/pages/Calculator";
+import AuthPage from "@/pages/AuthPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
 import { Home as HomeIcon } from "lucide-react";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 function Router() {
   const [location, setLocation] = useLocation();
@@ -19,7 +22,7 @@ function Router() {
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <main className="flex-1 bg-gradient-to-br from-blue-50 to-white p-4 md:p-6 overflow-auto">
-          {location !== "/" && (
+          {location !== "/" && location !== "/auth" && (
             <Button
               variant="ghost"
               className="mb-4"
@@ -30,8 +33,9 @@ function Router() {
             </Button>
           )}
           <Switch>
-            <Route path="/" component={Home} />
-            <Route path="/calculadora/:id" component={Calculator} />
+            <Route path="/auth" component={AuthPage} />
+            <ProtectedRoute path="/" component={Home} />
+            <ProtectedRoute path="/calculadora/:id" component={Calculator} />
             <Route component={NotFound} />
           </Switch>
         </main>
@@ -54,7 +58,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isLoading ? <LoadingScreen /> : <Router />}
+      <AuthProvider>
+        {isLoading ? <LoadingScreen /> : <Router />}
+      </AuthProvider>
       <Toaster />
     </QueryClientProvider>
   );

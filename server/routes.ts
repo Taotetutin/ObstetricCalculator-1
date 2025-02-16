@@ -52,23 +52,9 @@ export function registerRoutes(app: Express): Server {
     res.json(patient);
   });
 
-  app.get("/api/patients/search", async (req, res) => {
-    const searchTerm = req.query.q as string;
-    if (!searchTerm) {
-      res.json([]);
-      return;
-    }
-    try {
-      const patients = await storage.searchPatients(searchTerm);
-      res.json(patients);
-    } catch (error) {
-      res.status(500).json({ error: String(error) });
-    }
-  });
-
   app.get("/api/patients", async (req, res) => {
     try {
-      const patients = await storage.getAllPatientsSortedByGestationalAge();
+      const patients = await storage.getAllPatients();
       res.json(patients);
     } catch (error) {
       res.status(500).json({ error: String(error) });

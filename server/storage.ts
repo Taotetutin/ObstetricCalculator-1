@@ -1,8 +1,21 @@
-import { patients, calculations, type Calculation, type InsertCalculation, type Patient, type InsertPatient } from "@shared/schema";
+import { patients, calculations, users, type Calculation, type InsertCalculation, type Patient, type InsertPatient, type User, type InsertUser } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
+
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
+  // User methods
+  createUser(user: InsertUser): Promise<User>;
+  getUser(id: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+
+  // Session store
+  sessionStore: session.Store;
+
   // Existing methods
   saveCalculation(calculation: InsertCalculation): Promise<Calculation>;
   getCalculationById(id: number): Promise<Calculation | undefined>;
@@ -10,25 +23,39 @@ export interface IStorage {
   savePatient(patient: InsertPatient): Promise<Patient>;
   getPatientById(id: number): Promise<Patient | undefined>;
   getAllPatients(): Promise<Patient[]>;
-
-  // Methods for comparisons and history
-  getCalculationHistory(
-    patientId?: number,
-    type?: string,
-    limit?: number
-  ): Promise<Calculation[]>;
-
-  getCalculationsForComparison(
-    comparisonGroup: string
-  ): Promise<Calculation[]>;
-
-  updateCalculationNotes(
-    id: number,
-    notes: string
-  ): Promise<Calculation>;
+  getCalculationHistory(patientId?: number, type?: string, limit?: number): Promise<Calculation[]>;
+  getCalculationsForComparison(comparisonGroup: string): Promise<Calculation[]>;
+  updateCalculationNotes(id: number, notes: string): Promise<Calculation>;
 }
 
 export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
+
+  constructor() {
+    this.sessionStore = new PostgresSessionStore({ 
+      pool, 
+      createTableIfMissing: true,
+      tableName: 'user_sessions'
+    });
+  }
+
+  // User methods implementation
+  async createUser(user: InsertUser): Promise<User> {
+    const [created] = await db.insert(users).values(user).returning();
+    return created;
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  // Existing methods remain unchanged
   async saveCalculation(calculation: InsertCalculation): Promise<Calculation> {
     const [saved] = await db.insert(calculations).values(calculation).returning();
     return saved;

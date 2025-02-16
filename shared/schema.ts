@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, date, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, date, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
@@ -164,6 +164,31 @@ export const calculatorTypes = {
     ductusVenosus: z.number().min(0).max(500),      
   }),
 };
+
+// Add users table
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  googleId: text("google_id").unique(),
+  role: text("role").default("user").notNull(),
+});
+
+// Add user schema and types
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  googleId: true,
+}).extend({
+  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  email: z.string().email("Email inválido"),
+});
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+
 
 // Database tables
 export const patients = pgTable("patients", {
