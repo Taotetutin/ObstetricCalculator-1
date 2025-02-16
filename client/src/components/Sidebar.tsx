@@ -31,7 +31,7 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       {/* Espacio para la franja azul */}
-      <div className="h-32"></div>  {/* Ajustado el espacio para la franja azul */}
+      <div className="h-32"></div>
 
       <div className="flex items-center gap-3 p-4 border-b">
         <img 
@@ -39,7 +39,7 @@ export default function Sidebar() {
           alt="MiMaternoFetal Logo"
           className="h-8 w-auto"
         />
-        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent border-b-2 border-blue-400">
           ObsteriX Legend
         </span>
       </div>
