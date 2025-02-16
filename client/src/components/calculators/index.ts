@@ -10,7 +10,19 @@ import {
   Weight,
   BarChart,
   Pill,
-  AlertTriangle
+  AlertTriangle,
+  Ruler,
+  HeartPulse,
+  Brain,
+  Bone,
+  BadgeAlert,
+  Timer,
+  Gauge,
+  ThermometerSnowflake,
+  LineChart,
+  Microscope,
+  Syringe,
+  Waves
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -48,14 +60,14 @@ export const calculators = [
     id: "mefi",
     name: "Monitoreo Fetal Intraparto",
     description: "Evaluación del registro cardiotocográfico intraparto",
-    icon: Activity,
+    icon: HeartPulse,
     component: MEFICalculator,
   },
   {
     id: "doppler",
     name: "Doppler Fetal",
     description: "Evaluación de flujos Doppler fetales",
-    icon: Heart,
+    icon: Waves,
     component: DopplerCalculator,
   },
   {
@@ -69,7 +81,7 @@ export const calculators = [
     id: "gestacional",
     name: "Edad Gestacional Dudosa",
     description: "Calculadora de edad gestacional por biometría",
-    icon: Baby,
+    icon: Timer,
     component: GestationalAgeCalculator,
   },
   {
@@ -83,7 +95,7 @@ export const calculators = [
     id: "imc",
     name: "Índice de Masa Corporal",
     description: "Calcula el IMC materno",
-    icon: Scale,
+    icon: Weight,
     component: IMCCalculator,
   },
   {
@@ -97,7 +109,7 @@ export const calculators = [
     id: "bishop",
     name: "Bishop Score",
     description: "Evaluación del índice de Bishop",
-    icon: BarChart,
+    icon: Gauge,
     component: BishopCalculator,
   },
   {
@@ -111,14 +123,14 @@ export const calculators = [
     id: "talla-fetal",
     name: "Talla Fetal",
     description: "Estimación de la talla fetal",
-    icon: Scale,
+    icon: Ruler,
     component: TallaFetalCalculator,
   },
   {
     id: "parto-prematuro",
     name: "Riesgo de Parto Prematuro",
     description: "Evaluación del riesgo de parto prematuro",
-    icon: Baby,
+    icon: BadgeAlert,
     component: PartoPrematuroCalculator,
   },
   {
@@ -132,28 +144,28 @@ export const calculators = [
     id: "t21",
     name: "Riesgo de T21",
     description: "Cálculo del riesgo de trisomía 21",
-    icon: Calculator,
+    icon: Brain,
     component: T21Calculator,
   },
   {
     id: "weight-gain",
     name: "Ganancia de Peso",
     description: "Control de ganancia de peso durante el embarazo",
-    icon: Weight,
+    icon: LineChart,
     component: WeightGainCalculator,
   },
   {
     id: "femur-corto",
     name: "Evaluación de Fémur Corto",
     description: "Análisis de la longitud del fémur fetal y sus percentiles",
-    icon: Scale,
+    icon: Bone,
     component: FemurCortoCalculator,
   },
   {
     id: "hueso-nasal",
     name: "Evaluación del Hueso Nasal",
     description: "Análisis del hueso nasal fetal y sus implicaciones",
-    icon: Scale,
+    icon: Microscope,
     component: HuesoNasalCalculator,
   },
   {
@@ -174,14 +186,14 @@ export const calculators = [
     id: "colestasis",
     name: "Riesgo Fetal en Colestasis",
     description: "Evaluación del riesgo en colestasis intrahepática del embarazo",
-    icon: Pill,
+    icon: ThermometerSnowflake,
     component: ColestasisCalculator,
   },
   {
     id: "crecimiento-fetal",
     name: "Crecimiento Fetal",
     description: "Evaluación integral del crecimiento fetal mediante percentiles OMS y curvas de crecimiento",
-    icon: Activity,
+    icon: LineChart,
     component: CrecimientoFetalCalculator,
   },
   {
