@@ -30,18 +30,19 @@ export default function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
-      {/* Logo section */}
-      <div className="flex-none h-20 flex items-center gap-3 p-4 border-b">
+      {/* Espacio para la franja azul */}
+      <div className="h-32"></div>  {/* Ajustado el espacio para la franja azul */}
+
+      <div className="flex items-center gap-3 p-4 border-b">
         <img 
           src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
           alt="MiMaternoFetal Logo"
           className="h-8 w-auto"
         />
-        <span className="font-semibold text-lg text-blue-700">ObsteriX Legend</span>
+        <span className="text-lg">ObsteriX Legend</span>
       </div>
 
-      {/* Navigation section */}
-      <nav className="flex-1 overflow-y-auto mt-4">
+      <nav className="flex-1 overflow-y-auto">
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
           <div key={groupName} className="py-2">
             <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
