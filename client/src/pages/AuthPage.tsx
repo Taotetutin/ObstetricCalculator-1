@@ -52,7 +52,7 @@ export default function AuthPage() {
             <h1 className="text-3xl font-bold text-blue-900">
               Bienvenido a ObsteriX Legend
             </h1>
-            <p className="text-blue-600 mt-2">
+            <p className="text-blue-600 mt-2 text-center">
               El poder de una leyenda en tus manos
             </p>
           </div>
