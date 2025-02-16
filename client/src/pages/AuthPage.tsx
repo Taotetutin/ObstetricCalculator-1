@@ -53,7 +53,7 @@ export default function AuthPage() {
               Bienvenido a ObsteriX Legend
             </h1>
             <p className="text-blue-600 mt-2">
-              La herramienta más completa para profesionales de la obstetricia
+              El poder de una leyenda en tus manos
             </p>
           </div>
 
