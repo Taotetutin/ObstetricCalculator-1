@@ -51,11 +51,9 @@ export default function Sidebar() {
             <ul className="space-y-1 px-3">
               {groupCalculators.map((calc) => (
                 <li key={calc.id}>
-                  <div
-                    onClick={() => {
-                      setIsOpen(false);
-                      window.location.href = `/calculadora/${calc.id}`;
-                    }}
+                  <Link 
+                    href={`/calculadora/${calc.id}`}
+                    onClick={() => setIsOpen(false)}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
                       "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
@@ -68,7 +66,7 @@ export default function Sidebar() {
                       <calc.icon className="w-5 h-5 shrink-0 text-blue-600" />
                     )}
                     <span>{calc.name}</span>
-                  </div>
+                  </Link>
                 </li>
               ))}
             </ul>
