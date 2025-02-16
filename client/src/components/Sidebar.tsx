@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
@@ -21,6 +22,11 @@ const calculatorGroups = {
 export default function Sidebar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { logoutMutation } = useAuth();
+
+  const handleLogout = () => {
+    logoutMutation.mutateAsync();
+  };
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col mt-24">
@@ -70,12 +76,14 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto p-4 border-t space-y-2">
-        <div onClick={() => setIsOpen(false)} className="space-y-2">
-          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 1</div>
-          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 2</div>
-          <div className="text-blue-600 hover:text-blue-800 cursor-pointer">Link 3</div>
-        </div>
+      <div className="mt-auto p-4 border-t">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="font-medium">Salir de la App</span>
+        </button>
       </div>
     </div>
   );
