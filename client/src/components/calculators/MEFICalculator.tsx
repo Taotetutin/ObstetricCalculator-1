@@ -11,6 +11,11 @@ interface Result {
   categoryClass: string;
   riskLevel: string;
   recommendations: string[];
+  ctgAnalysis?: {
+    confidence: number;
+    similarCases: number;
+    historicalOutcome?: string;
+  };
 }
 
 function calculateMEFI(data: {
@@ -106,6 +111,7 @@ export default function MEFICalculator() {
   });
 
   const [result, setResult] = React.useState<Result | null>(null);
+  const [ctgAnalysisLoading, setCtgAnalysisLoading] = React.useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -115,10 +121,11 @@ export default function MEFICalculator() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const mefiResult = calculateMEFI(formData);
-    setResult(mefiResult);
+    setCtgAnalysisLoading(true);
 
     try {
-      await fetch("/api/calculations", {
+      // Primero guardamos el cálculo básico
+      const calcResponse = await fetch("/api/calculations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -127,8 +134,32 @@ export default function MEFICalculator() {
           result: JSON.stringify(mefiResult),
         }),
       });
+
+      // Luego obtenemos el análisis CTG
+      const ctgResponse = await fetch("/api/mefi/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (ctgResponse.ok) {
+        const ctgAnalysis = await ctgResponse.json();
+        setResult({
+          ...mefiResult,
+          ctgAnalysis: {
+            confidence: ctgAnalysis.recommendationConfidence,
+            similarCases: ctgAnalysis.similarCasesCount,
+            historicalOutcome: ctgAnalysis.baseRecommendation,
+          }
+        });
+      } else {
+        setResult(mefiResult);
+      }
     } catch (error) {
-      console.error("Error saving calculation:", error);
+      console.error("Error en el análisis:", error);
+      setResult(mefiResult);
+    } finally {
+      setCtgAnalysisLoading(false);
     }
   };
 
@@ -212,8 +243,8 @@ export default function MEFICalculator() {
           </select>
         </div>
 
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-          Clasificar
+        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={ctgAnalysisLoading}>
+          {ctgAnalysisLoading ? 'Analizando...' : 'Clasificar'}
         </Button>
       </form>
 
@@ -243,6 +274,19 @@ export default function MEFICalculator() {
                     ))}
                   </ul>
                 </div>
+
+                {result.ctgAnalysis && (
+                  <div className="bg-white/50 rounded-lg p-4 border border-current/10">
+                    <h3 className="font-medium text-gray-900 mb-2">Análisis basado en datos históricos:</h3>
+                    <div className="space-y-2 text-sm">
+                      <p>Confianza del análisis: {Math.round(result.ctgAnalysis.confidence)}%</p>
+                      <p>Basado en {result.ctgAnalysis.similarCases} casos similares</p>
+                      {result.ctgAnalysis.historicalOutcome && (
+                        <p>Recomendación adicional: {result.ctgAnalysis.historicalOutcome}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Recomendaciones:</h3>

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCalculationSchema, insertPatientSchema } from "@shared/schema";
+import { insertCalculationSchema, insertPatientSchema, calculatorTypes } from "@shared/schema";
 import { desc } from "drizzle-orm";
 
 export function registerRoutes(app: Express): Server {
@@ -57,6 +57,18 @@ export function registerRoutes(app: Express): Server {
       const patients = await storage.getAllPatients();
       res.json(patients);
     } catch (error) {
+      res.status(500).json({ error: String(error) });
+    }
+  });
+
+  // Nueva ruta para el análisis MEFI con CTG
+  app.post("/api/mefi/analyze", async (req, res) => {
+    try {
+      const mefiInput = calculatorTypes.mefi.parse(req.body);
+      const analysis = await storage.analyzeMefiWithCtgData(mefiInput);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error in MEFI CTG analysis:", error);
       res.status(500).json({ error: String(error) });
     }
   });

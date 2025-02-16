@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, date, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, date, timestamp, jsonb, boolean, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
@@ -141,6 +141,12 @@ export const calculatorTypes = {
     desaceleraciones: z.string(),
     movimientos: z.string().optional(),
     duracionRegistro: z.string().optional(),
+    baseline: z.number().optional(),
+    shortTermVariability: z.number().optional(),
+    longTermVariability: z.number().optional(),
+    accelerations: z.number().optional(),
+    decelerations: z.number().optional(),
+    uterineActivity: z.number().optional(),
   }),
   femurCorto: z.object({
     femurLength: z.number().min(1).max(150),      
@@ -265,3 +271,58 @@ export type Calculation = typeof calculations.$inferSelect;
 export type InsertCalculation = z.infer<typeof insertCalculationSchema>;
 export type GestationalDate = typeof gestationalDates.$inferSelect;
 export type InsertGestationalDate = z.infer<typeof insertGestationalDateSchema>;
+
+// Add CTG data table
+export const ctgData = pgTable("ctg_data", {
+  id: serial("id").primaryKey(),
+  fileName: text("file_name").notNull(),
+  date: text("date").notNull(),
+  segFile: text("seg_file").notNull(),
+  b: decimal("b", { precision: 6, scale: 1 }).notNull(),
+  e: decimal("e", { precision: 6, scale: 1 }).notNull(),
+  lbe: decimal("lbe", { precision: 5, scale: 1 }).notNull(),
+  lb: decimal("lb", { precision: 5, scale: 1 }).notNull(),
+  ac: decimal("ac", { precision: 4, scale: 1 }).notNull(),
+  fm: decimal("fm", { precision: 5, scale: 1 }).notNull(),
+  uc: decimal("uc", { precision: 4, scale: 1 }).notNull(),
+  astv: decimal("astv", { precision: 4, scale: 1 }).notNull(),
+  mstv: decimal("mstv", { precision: 3, scale: 1 }).notNull(),
+  altv: decimal("altv", { precision: 4, scale: 1 }).notNull(),
+  mltv: decimal("mltv", { precision: 4, scale: 1 }).notNull(),
+  dl: decimal("dl", { precision: 4, scale: 1 }).notNull(),
+  ds: decimal("ds", { precision: 3, scale: 1 }).notNull(),
+  dp: decimal("dp", { precision: 3, scale: 1 }).notNull(),
+  dr: decimal("dr", { precision: 3, scale: 1 }).notNull(),
+  width: decimal("width", { precision: 5, scale: 1 }).notNull(),
+  min: decimal("min", { precision: 5, scale: 1 }).notNull(),
+  max: decimal("max", { precision: 5, scale: 1 }).notNull(),
+  nmax: decimal("nmax", { precision: 4, scale: 1 }).notNull(),
+  nzeros: decimal("nzeros", { precision: 4, scale: 1 }).notNull(),
+  mode: decimal("mode", { precision: 5, scale: 1 }).notNull(),
+  mean: decimal("mean", { precision: 5, scale: 1 }).notNull(),
+  median: decimal("median", { precision: 5, scale: 1 }).notNull(),
+  variance: decimal("variance", { precision: 5, scale: 1 }).notNull(),
+  tendency: decimal("tendency", { precision: 4, scale: 1 }).notNull(),
+  a: decimal("a", { precision: 3, scale: 1 }).notNull(),
+  b_class: decimal("b_class", { precision: 3, scale: 1 }).notNull(),
+  c: decimal("c", { precision: 3, scale: 1 }).notNull(),
+  d: decimal("d", { precision: 3, scale: 1 }).notNull(),
+  e_class: decimal("e_class", { precision: 3, scale: 1 }).notNull(),
+  ad: decimal("ad", { precision: 3, scale: 1 }).notNull(),
+  de: decimal("de", { precision: 3, scale: 1 }).notNull(),
+  ld: decimal("ld", { precision: 3, scale: 1 }).notNull(),
+  fs: decimal("fs", { precision: 3, scale: 1 }).notNull(),
+  susp: decimal("susp", { precision: 3, scale: 1 }).notNull(),
+  class: decimal("class", { precision: 4, scale: 1 }).notNull(),
+  nsp: decimal("nsp", { precision: 3, scale: 1 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Add schemas and types
+export const insertCtgDataSchema = createInsertSchema(ctgData).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type CtgData = typeof ctgData.$inferSelect;
+export type InsertCtgData = z.infer<typeof insertCtgDataSchema>;
