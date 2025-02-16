@@ -88,14 +88,14 @@ export const calculators = [
     id: "gestacional",
     name: "Edad Gestacional Dudosa",
     description: "Calculadora de edad gestacional por biometría",
-    icon: Hourglass,
+    icon: Timer,
     component: GestationalAgeCalculator,
   },
   {
     id: "fpp",
     name: "Fecha Probable de Parto",
     description: "Calcula la fecha probable de parto basada en la última menstruación",
-    icon: AlarmClock,
+    icon: Calendar,
     component: FPPCalculator,
   },
   {
@@ -123,7 +123,7 @@ export const calculators = [
     id: "peso-fetal",
     name: "Peso Fetal",
     description: "Estimación del peso fetal",
-    icon: Weight,
+    icon: Scale,
     component: PesoFetalCalculator,
   },
   {
@@ -137,7 +137,7 @@ export const calculators = [
     id: "parto-prematuro",
     name: "Riesgo de Parto Prematuro",
     description: "Evaluación del riesgo de parto prematuro",
-    icon: BadgeAlert,
+    icon: AlertTriangle,
     component: PartoPrematuroCalculator,
   },
   {
