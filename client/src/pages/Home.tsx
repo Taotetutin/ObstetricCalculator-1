@@ -37,12 +37,12 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Imagen de la familia Obsterix */}
-      <div className="flex justify-center">
+      {/* Imagen de lanzamiento a pantalla completa */}
+      <div className="flex-1 w-full min-h-[50vh] relative">
         <img 
           src="/untitled6.png"
           alt="ObsteriX Legend"
-          className="max-w-full h-auto"
+          className="w-full h-full object-contain absolute inset-0"
         />
       </div>
 
