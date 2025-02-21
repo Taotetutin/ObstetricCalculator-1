@@ -270,25 +270,14 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn(
-        "h-7 w-7 flex items-center justify-center cursor-pointer",
-        "opacity-100", 
-        "hover:bg-accent hover:text-accent-foreground",
-        className
-      )}
+      className={cn("h-8 w-8", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <Home 
-        className={cn(
-          "h-5 w-5 transition-transform duration-200",
-          state === "expanded" ? "rotate-180" : "rotate-0"
-        )} 
-        aria-hidden="true"
-      />
+      <Home className="h-6 w-6" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
