@@ -3,7 +3,7 @@ import { Home } from "lucide-react"
 
 export const SidebarTrigger = () => {
   return (
-    <button className="fixed top-4 left-4 bg-white p-2 rounded-lg shadow-md">
+    <button style={{ padding: "8px", borderRadius: "8px", backgroundColor: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
       <Home />
     </button>
   )
