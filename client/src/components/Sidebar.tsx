@@ -96,12 +96,12 @@ export default function Sidebar() {
           <Button 
             size="icon" 
             variant="outline"
-            className="bg-white shadow-lg hover:bg-blue-50 p-1"
+            className="bg-white shadow-lg hover:bg-blue-50 p-2 h-12 w-12"
           >
             <img 
               src="/menu-icon.png" 
               alt="Menu Toggle"
-              className="h-6 w-6"
+              className="h-8 w-8"
             />
           </Button>
         </SheetTrigger>
