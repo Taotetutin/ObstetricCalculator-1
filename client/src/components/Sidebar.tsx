@@ -92,7 +92,7 @@ export default function Sidebar() {
     <>
       {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild className="fixed top-36 left-4 z-50 md:hidden">
+        <SheetTrigger asChild className="fixed top-4 left-4 z-50 md:hidden">
           <Button 
             size="icon" 
             variant="outline"
