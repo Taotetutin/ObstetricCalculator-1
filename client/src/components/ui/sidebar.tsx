@@ -262,7 +262,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
 
   return (
     <Button
@@ -272,7 +272,7 @@ const SidebarTrigger = React.forwardRef<
       size="icon"
       className={cn(
         "h-7 w-7 flex items-center justify-center cursor-pointer",
-        "!opacity-100", 
+        "opacity-100", 
         "hover:bg-accent hover:text-accent-foreground",
         className
       )}
@@ -282,7 +282,13 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <Menu className="h-5 w-5" aria-hidden="true" /> 
+      <Menu 
+        className={cn(
+          "h-5 w-5 transition-transform duration-200",
+          state === "expanded" ? "rotate-180" : "rotate-0"
+        )} 
+        aria-hidden="true"
+      />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
