@@ -115,14 +115,23 @@ export default function GestationalAgeCalculator() {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="crl">
-                <TabsList className="grid w-full grid-cols-3 bg-blue-50">
-                  <TabsTrigger value="crl" className="data-[state=active]:bg-blue-200">
+                <TabsList className="grid w-full grid-cols-3 gap-2 p-1 bg-blue-50 rounded-lg">
+                  <TabsTrigger 
+                    value="crl" 
+                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
+                  >
                     ≤14 sem
                   </TabsTrigger>
-                  <TabsTrigger value="segundo" className="data-[state=active]:bg-blue-200">
+                  <TabsTrigger 
+                    value="segundo" 
+                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
+                  >
                     14-20 sem
                   </TabsTrigger>
-                  <TabsTrigger value="tercer" className="data-[state=active]:bg-blue-200">
+                  <TabsTrigger 
+                    value="tercer" 
+                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
+                  >
                     &gt;20 sem
                   </TabsTrigger>
                 </TabsList>
