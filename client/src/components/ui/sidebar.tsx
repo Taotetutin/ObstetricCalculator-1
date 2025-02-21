@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { Home3D } from "lucide-react" 
+import { Home } from "lucide-react" 
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -282,7 +282,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <Home3D 
+      <Home 
         className={cn(
           "h-5 w-5 transition-transform duration-200",
           state === "expanded" ? "rotate-180" : "rotate-0"
