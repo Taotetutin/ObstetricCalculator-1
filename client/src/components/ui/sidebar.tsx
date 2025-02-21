@@ -1,35 +1,13 @@
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { VariantProps, cva } from "class-variance-authority"
-import { Home } from "lucide-react" 
+import { Home } from "lucide-react"
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
-const SidebarTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithoutRef<"button">
->(({ className, ...props }, ref) => (
-  <button
-    ref={ref}
-    className={cn("p-2 rounded-md hover:bg-gray-100", className)}
-    {...props}
-  >
-    <Home className="h-6 w-6" />
-  </button>
-))
-SidebarTrigger.displayName = "SidebarTrigger"
+export const SidebarTrigger = () => {
+  return (
+    <button className="fixed top-4 left-4 bg-white p-2 rounded-lg shadow-md">
+      <Home />
+    </button>
+  )
+}
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
