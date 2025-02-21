@@ -99,7 +99,7 @@ export default function Sidebar() {
             className="bg-white shadow-lg hover:bg-blue-50 p-1"
           >
             <img 
-              src="/attached_assets/background_removed_image_90GUl7OBRMCyn8pLmdsN9w.png" 
+              src="/menu-icon.png" 
               alt="Menu Toggle"
               className="h-6 w-6"
             />
