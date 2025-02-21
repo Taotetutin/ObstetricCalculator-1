@@ -17,6 +17,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+const SidebarTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentPropsWithoutRef<"button">
+>(({ className, ...props }, ref) => (
+  <button
+    ref={ref}
+    className={cn("p-2 rounded-md hover:bg-gray-100", className)}
+    {...props}
+  >
+    <Home className="h-6 w-6" />
+  </button>
+))
+SidebarTrigger.displayName = "SidebarTrigger"
+
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = "16rem"
@@ -257,23 +271,6 @@ const Sidebar = React.forwardRef<
   }
 )
 Sidebar.displayName = "Sidebar"
-
-const SidebarTrigger = React.forwardRef<
-  React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
->(({ className, onClick, ...props }, ref) => (
-  <Button
-    ref={ref}
-    variant="ghost"
-    size="sm"
-    className={cn("flex items-center justify-center p-2", className)}
-    onClick={onClick}
-    {...props}
-  >
-    <Home className="h-5 w-5" />
-  </Button>
-))
-SidebarTrigger.displayName = "SidebarTrigger"
 
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
