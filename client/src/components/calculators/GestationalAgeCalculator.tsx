@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Calendar as CalendarIcon, UserPlus, Calculator } from "lucide-react";
+import { Calendar as CalendarIcon, UserPlus, Calculator, Search } from "lucide-react";
 import { calculatorTypes, insertPatientSchema } from "@shared/schema";
 import { calculateGestationalAge } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -95,14 +95,18 @@ export default function GestationalAgeCalculator() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="calculator" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="calculator" className="flex flex-col items-center gap-1 py-2">
             <Calculator className="h-4 w-4" />
-            <span>Calculadora</span>
+            <span>Calcular</span>
           </TabsTrigger>
           <TabsTrigger value="register" className="flex flex-col items-center gap-1 py-2">
             <UserPlus className="h-4 w-4" />
-            <span>Registro</span>
+            <span>Registrar</span>
+          </TabsTrigger>
+          <TabsTrigger value="search" className="flex flex-col items-center gap-1 py-2">
+            <Search className="h-4 w-4" />
+            <span>Buscar</span>
           </TabsTrigger>
         </TabsList>
 
@@ -116,20 +120,20 @@ export default function GestationalAgeCalculator() {
             <CardContent>
               <Tabs defaultValue="crl">
                 <TabsList className="grid w-full grid-cols-3 gap-2 p-1 bg-blue-50 rounded-lg">
-                  <TabsTrigger 
-                    value="crl" 
+                  <TabsTrigger
+                    value="crl"
                     className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
                   >
                     ≤14 sem
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="segundo" 
+                  <TabsTrigger
+                    value="segundo"
                     className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
                   >
                     14-20 sem
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="tercer" 
+                  <TabsTrigger
+                    value="tercer"
                     className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
                   >
                     &gt;20 sem
@@ -193,7 +197,9 @@ export default function GestationalAgeCalculator() {
                               step="0.1"
                               className="border-blue-200 focus:border-blue-400"
                               {...field}
-                              onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                              onChange={(e) =>
+                                field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                              }
                             />
                             <FormMessage />
                           </FormItem>
@@ -512,6 +518,9 @@ export default function GestationalAgeCalculator() {
               </Form>
             </CardContent>
           </Card>
+        </TabsContent>
+        <TabsContent value="search">
+          {/* Add Search Content Here */}
         </TabsContent>
       </Tabs>
     </div>
