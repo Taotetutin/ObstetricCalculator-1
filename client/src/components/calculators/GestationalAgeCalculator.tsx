@@ -96,13 +96,13 @@ export default function GestationalAgeCalculator() {
     <div className="space-y-6">
       <Tabs defaultValue="calculator" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="calculator" className="flex items-center gap-2">
+          <TabsTrigger value="calculator" className="flex flex-col items-center gap-1 py-2">
             <Calculator className="h-4 w-4" />
-            Calculadora
+            <span>Calculadora</span>
           </TabsTrigger>
-          <TabsTrigger value="register" className="flex items-center gap-2">
+          <TabsTrigger value="register" className="flex flex-col items-center gap-1 py-2">
             <UserPlus className="h-4 w-4" />
-            Registro
+            <span>Registro</span>
           </TabsTrigger>
         </TabsList>
 
