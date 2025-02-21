@@ -1,10 +1,13 @@
 import * as React from "react"
-import { Home } from "lucide-react"
 
 export const SidebarTrigger = () => {
   return (
     <button style={{ padding: "8px", borderRadius: "8px", backgroundColor: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
-      <Home />
+      <img 
+        src="/attached_assets/background_removed_image_90GUl7OBRMCyn8pLmdsN9w.png" 
+        alt="Menu" 
+        style={{ width: "24px", height: "24px" }}
+      />
     </button>
   )
 }
