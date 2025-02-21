@@ -95,18 +95,24 @@ export default function GestationalAgeCalculator() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="calculator" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="calculator" className="flex flex-col items-center gap-1 py-2">
-            <Calculator className="h-4 w-4" />
-            <span>Calcular</span>
+        <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
+          <TabsTrigger value="calculator" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <Calculator className="w-4 h-4" />
+              <span>Calcular</span>
+            </div>
           </TabsTrigger>
-          <TabsTrigger value="register" className="flex flex-col items-center gap-1 py-2">
-            <UserPlus className="h-4 w-4" />
-            <span>Registrar</span>
+          <TabsTrigger value="register" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <UserPlus className="w-4 h-4" />
+              <span>Registrar</span>
+            </div>
           </TabsTrigger>
-          <TabsTrigger value="search" className="flex flex-col items-center gap-1 py-2">
-            <Search className="h-4 w-4" />
-            <span>Buscar</span>
+          <TabsTrigger value="search" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              <span>Buscar</span>
+            </div>
           </TabsTrigger>
         </TabsList>
 
