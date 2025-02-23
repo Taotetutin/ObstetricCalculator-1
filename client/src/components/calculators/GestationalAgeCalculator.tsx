@@ -8,17 +8,11 @@ import { calculatorTypes, insertPatientSchema } from "@shared/schema";
 import { calculateGestationalAge } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-
-// Generar arrays para los selectores
-const years = Array.from({ length: 126 }, (_, i) => 1900 + i);
-const months = Array.from({ length: 12 }, (_, i) => i);
-const days = Array.from({ length: 31 }, (_, i) => i + 1);
+import { WheelDatePicker } from "@/components/ui/date-wheel-picker";
 
 type Result = {
   weeks: number;
@@ -36,9 +30,6 @@ export default function GestationalAgeCalculator() {
     resolver: zodResolver(calculatorTypes.gestationalAge),
     defaultValues: {
       ultrasoundDate: today,
-      selectedDay: today.getDate(),
-      selectedMonth: today.getMonth(),
-      selectedYear: today.getFullYear(),
       crownRumpLength: undefined,
       dbp: undefined,
       femurLength: undefined,
@@ -47,10 +38,8 @@ export default function GestationalAgeCalculator() {
   });
 
   const onCalculatorSubmit = async (data: any) => {
-    const selectedDate = new Date(data.selectedYear, data.selectedMonth, data.selectedDay);
-
     // Validar que la fecha sea válida
-    if (selectedDate > new Date() || selectedDate < new Date("1900-01-01")) {
+    if (data.ultrasoundDate > new Date() || data.ultrasoundDate < new Date("1900-01-01")) {
       toast({
         title: "Error en la fecha",
         description: "Por favor seleccione una fecha válida",
@@ -59,13 +48,7 @@ export default function GestationalAgeCalculator() {
       return;
     }
 
-    // Actualizar el objeto data con la fecha completa
-    const calculationData = {
-      ...data,
-      ultrasoundDate: selectedDate,
-    };
-
-    const gestationalAge = calculateGestationalAge(calculationData);
+    const gestationalAge = calculateGestationalAge(data);
     setResult(gestationalAge);
 
     try {
@@ -74,7 +57,7 @@ export default function GestationalAgeCalculator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           calculatorType: "gestationalAge",
-          input: JSON.stringify(calculationData),
+          input: JSON.stringify(data),
           result: JSON.stringify(gestationalAge),
         }),
       });
@@ -83,10 +66,18 @@ export default function GestationalAgeCalculator() {
     }
   };
 
+  const patientForm = useForm({
+    resolver: zodResolver(insertPatientSchema),
+    defaultValues: {
+      name: "",
+      lastPeriodDate: today,
+      dueDate: new Date(),
+    },
+  });
+
   const onPatientSubmit = async (data: any) => {
     try {
-      const selectedDate = new Date(data.selectedYear, data.selectedMonth, data.selectedDay);
-      if (selectedDate > new Date() || selectedDate < new Date("1900-01-01")) {
+      if (data.lastPeriodDate > new Date() || data.lastPeriodDate < new Date("1900-01-01")) {
         toast({
           title: "Error en la fecha",
           description: "Por favor seleccione una fecha válida",
@@ -94,11 +85,11 @@ export default function GestationalAgeCalculator() {
         });
         return;
       }
-      const updatedData = {...data, lastPeriodDate: selectedDate}
+
       const response = await fetch("/api/patients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
@@ -118,18 +109,6 @@ export default function GestationalAgeCalculator() {
       });
     }
   };
-
-  const patientForm = useForm({
-    resolver: zodResolver(insertPatientSchema),
-    defaultValues: {
-      name: "",
-      lastPeriodDate: new Date(),
-      dueDate: new Date(),
-      selectedDay: today.getDate(),
-      selectedMonth: today.getMonth(),
-      selectedYear: today.getFullYear(),
-    },
-  });
 
   return (
     <div className="space-y-6">
@@ -165,92 +144,20 @@ export default function GestationalAgeCalculator() {
             <CardContent>
               <Form {...calculatorForm}>
                 <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
-                  <div className="space-y-2">
-                    <FormLabel>Fecha de la ecografía</FormLabel>
-                    <div className="grid grid-cols-3 gap-2">
-                      <FormField
-                        control={calculatorForm.control}
-                        name="selectedDay"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Día" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {days.map((day) => (
-                                  <SelectItem 
-                                    key={day} 
-                                    value={day.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {day}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={calculatorForm.control}
-                        name="selectedMonth"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Mes" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {months.map((month) => (
-                                  <SelectItem 
-                                    key={month} 
-                                    value={month.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={calculatorForm.control}
-                        name="selectedYear"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Año" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {years.map((year) => (
-                                  <SelectItem 
-                                    key={year} 
-                                    value={year.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {year}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
+                  <FormField
+                    control={calculatorForm.control}
+                    name="ultrasoundDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fecha de la ecografía</FormLabel>
+                        <WheelDatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={calculatorForm.control}
@@ -306,92 +213,20 @@ export default function GestationalAgeCalculator() {
                     )}
                   />
 
-                  <div className="space-y-2">
-                    <FormLabel>Fecha de Última Regla</FormLabel>
-                    <div className="grid grid-cols-3 gap-2">
-                      <FormField
-                        control={patientForm.control}
-                        name="selectedDay"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Día" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {days.map((day) => (
-                                  <SelectItem 
-                                    key={day} 
-                                    value={day.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {day}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={patientForm.control}
-                        name="selectedMonth"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Mes" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {months.map((month) => (
-                                  <SelectItem 
-                                    key={month} 
-                                    value={month.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={patientForm.control}
-                        name="selectedYear"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select
-                              value={field.value.toString()}
-                              onValueChange={(value) => field.onChange(parseInt(value))}
-                            >
-                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
-                                <SelectValue placeholder="Año" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
-                                {years.map((year) => (
-                                  <SelectItem 
-                                    key={year} 
-                                    value={year.toString()}
-                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
-                                  >
-                                    {year}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
+                  <FormField
+                    control={patientForm.control}
+                    name="lastPeriodDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fecha de Última Regla</FormLabel>
+                        <WheelDatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
                     Registrar Paciente
@@ -401,6 +236,7 @@ export default function GestationalAgeCalculator() {
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="search">
           {/* Add Search Content Here */}
         </TabsContent>
