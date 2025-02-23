@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Calendar as CalendarIcon, UserPlus, Calculator, Search } from "lucide-react";
+import { Calendar as CalendarIcon, Baby, Calculator, Search } from "lucide-react";
 import { calculatorTypes, insertPatientSchema } from "@shared/schema";
 import { calculateGestationalAge } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -104,13 +104,13 @@ export default function GestationalAgeCalculator() {
           </TabsTrigger>
           <TabsTrigger value="register" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
-              <UserPlus className="w-4 h-4" />
+              <Baby className="w-4 h-4" />
               <span>Registrar</span>
             </div>
           </TabsTrigger>
           <TabsTrigger value="search" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
-              <Search className="w-4 h-4" />
+              <Baby className="w-4 h-4" />
               <span>Buscar</span>
             </div>
           </TabsTrigger>
