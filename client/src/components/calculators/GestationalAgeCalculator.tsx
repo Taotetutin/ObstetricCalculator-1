@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { WheelDatePicker } from "@/components/ui/date-wheel-picker";
+import { RollerDatePicker } from "@/components/ui/roller-date-picker";
 
 type Result = {
   weeks: number;
@@ -152,7 +152,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Fecha de la ecografía</FormLabel>
-                        <WheelDatePicker
+                        <RollerDatePicker
                           value={field.value}
                           onChange={field.onChange}
                           minYear={1900}
@@ -253,7 +253,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Fecha de Última Regla</FormLabel>
-                        <WheelDatePicker
+                        <RollerDatePicker
                           value={field.value}
                           onChange={field.onChange}
                           minYear={1900}
