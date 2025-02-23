@@ -164,12 +164,16 @@ export default function GestationalAgeCalculator() {
                               value={field.value.toString()}
                               onValueChange={(value) => field.onChange(parseInt(value))}
                             >
-                              <SelectTrigger className="border-blue-200">
+                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                                 <SelectValue placeholder="Día" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                                 {days.map((day) => (
-                                  <SelectItem key={day} value={day.toString()}>
+                                  <SelectItem 
+                                    key={day} 
+                                    value={day.toString()}
+                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                                  >
                                     {day}
                                   </SelectItem>
                                 ))}
@@ -187,12 +191,16 @@ export default function GestationalAgeCalculator() {
                               value={field.value.toString()}
                               onValueChange={(value) => field.onChange(parseInt(value))}
                             >
-                              <SelectTrigger className="border-blue-200">
+                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                                 <SelectValue placeholder="Mes" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                                 {months.map((month) => (
-                                  <SelectItem key={month} value={month.toString()}>
+                                  <SelectItem 
+                                    key={month} 
+                                    value={month.toString()}
+                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                                  >
                                     {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
                                   </SelectItem>
                                 ))}
@@ -210,12 +218,16 @@ export default function GestationalAgeCalculator() {
                               value={field.value.toString()}
                               onValueChange={(value) => field.onChange(parseInt(value))}
                             >
-                              <SelectTrigger className="border-blue-200">
+                              <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                                 <SelectValue placeholder="Año" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                                 {years.map((year) => (
-                                  <SelectItem key={year} value={year.toString()}>
+                                  <SelectItem 
+                                    key={year} 
+                                    value={year.toString()}
+                                    className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                                  >
                                     {year}
                                   </SelectItem>
                                 ))}
@@ -276,12 +288,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Día" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {days.map((day) => (
-                              <SelectItem key={day} value={day.toString()}>
+                              <SelectItem 
+                                key={day} 
+                                value={day.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {day}
                               </SelectItem>
                             ))}
@@ -299,12 +315,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Mes" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {months.map((month) => (
-                              <SelectItem key={month} value={month.toString()}>
+                              <SelectItem 
+                                key={month} 
+                                value={month.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
                               </SelectItem>
                             ))}
@@ -322,12 +342,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Año" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {years.map((year) => (
-                              <SelectItem key={year} value={year.toString()}>
+                              <SelectItem 
+                                key={year} 
+                                value={year.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {year}
                               </SelectItem>
                             ))}
@@ -406,12 +430,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Día" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {days.map((day) => (
-                              <SelectItem key={day} value={day.toString()}>
+                              <SelectItem 
+                                key={day} 
+                                value={day.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {day}
                               </SelectItem>
                             ))}
@@ -429,12 +457,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Mes" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {months.map((month) => (
-                              <SelectItem key={month} value={month.toString()}>
+                              <SelectItem 
+                                key={month} 
+                                value={month.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
                               </SelectItem>
                             ))}
@@ -452,12 +484,16 @@ export default function GestationalAgeCalculator() {
                           value={field.value.toString()}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
-                          <SelectTrigger className="border-blue-200">
+                          <SelectTrigger className="h-12 border-blue-200 text-center flex justify-center items-center bg-gradient-to-b from-white to-blue-50">
                             <SelectValue placeholder="Año" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="max-h-[300px] overflow-y-auto bg-white shadow-lg">
                             {years.map((year) => (
-                              <SelectItem key={year} value={year.toString()}>
+                              <SelectItem 
+                                key={year} 
+                                value={year.toString()}
+                                className="h-10 flex items-center justify-center text-center hover:bg-blue-50 data-[state=checked]:bg-blue-100"
+                              >
                                 {year}
                               </SelectItem>
                             ))}
