@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { RollerDatePicker } from "@/components/ui/roller-date-picker";
+import { DateRoller } from "@/components/ui/wheel-roller";
 
 type Result = {
   weeks: number;
@@ -38,7 +38,6 @@ export default function GestationalAgeCalculator() {
   });
 
   const onCalculatorSubmit = async (data: any) => {
-    // Validar que la fecha sea válida
     if (data.ultrasoundDate > new Date() || data.ultrasoundDate < new Date("1900-01-01")) {
       toast({
         title: "Error en la fecha",
@@ -152,7 +151,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Fecha de la ecografía</FormLabel>
-                        <RollerDatePicker
+                        <DateRoller
                           value={field.value}
                           onChange={field.onChange}
                           minYear={1900}
@@ -182,7 +181,6 @@ export default function GestationalAgeCalculator() {
                       </FormItem>
                     )}
                   />
-
                   <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
                     Calcular
                   </Button>
@@ -253,7 +251,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Fecha de Última Regla</FormLabel>
-                        <RollerDatePicker
+                        <DateRoller
                           value={field.value}
                           onChange={field.onChange}
                           minYear={1900}
