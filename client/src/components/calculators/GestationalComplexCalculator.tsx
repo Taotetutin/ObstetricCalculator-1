@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { format, addDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarIcon, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Patient } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DateRoller } from "@/components/ui/wheel-roller";
 
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
@@ -46,7 +45,6 @@ export default function GestationalComplexCalculator() {
   const [searchTerm, setSearchTerm] = useState("");
   const queryClient = useQueryClient();
 
-  // Query para buscar pacientes
   const { data: searchResults } = useQuery({
     queryKey: ['/api/patients', searchTerm],
     queryFn: async () => {
@@ -58,7 +56,6 @@ export default function GestationalComplexCalculator() {
     enabled: searchTerm.length > 2
   });
 
-  // Query para obtener todos los pacientes ordenados
   const { data: allPatients } = useQuery({
     queryKey: ['/api/patients'],
     queryFn: async () => {
@@ -68,13 +65,12 @@ export default function GestationalComplexCalculator() {
     }
   });
 
-  // Mutación para guardar paciente
   const saveMutation = useMutation({
-    mutationFn: async (patient: { 
+    mutationFn: async (patient: {
       firstName: string;
       lastName: string;
       identification: string;
-      lastPeriodDate: Date 
+      lastPeriodDate: Date
     }) => {
       const response = await fetch('/api/patients', {
         method: 'POST',
@@ -179,32 +175,12 @@ export default function GestationalComplexCalculator() {
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel className="text-base">Fecha de Última Regla (FUR)</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className="w-full justify-start text-left font-normal"
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {field.value ? (
-                                  format(field.value, "PPP", { locale: es })
-                                ) : (
-                                  <span>Seleccione una fecha</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() || date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
+                          <DateRoller
+                            value={field.value}
+                            onChange={field.onChange}
+                            minYear={1900}
+                            maxYear={2025}
+                          />
                           <FormMessage />
                         </FormItem>
                       )}
@@ -268,32 +244,12 @@ export default function GestationalComplexCalculator() {
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel className="text-base">Fecha de Última Regla (FUR)</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className="w-full justify-start text-left font-normal"
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {field.value ? (
-                                  format(field.value, "PPP", { locale: es })
-                                ) : (
-                                  <span>Seleccione una fecha</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() || date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
+                          <DateRoller
+                            value={field.value}
+                            onChange={field.onChange}
+                            minYear={1900}
+                            maxYear={2025}
+                          />
                           <FormMessage />
                         </FormItem>
                       )}

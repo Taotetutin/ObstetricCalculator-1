@@ -3,14 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { Calendar } from "lucide-react";
 import { calculatorTypes } from "@shared/schema";
 import { calculateFPP } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Card, CardContent } from "@/components/ui/card";
+import { DateRoller } from "@/components/ui/wheel-roller";
 
 export default function FPPCalculator() {
   const [result, setResult] = useState<{
@@ -62,32 +60,12 @@ export default function FPPCalculator() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Fecha de última menstruación</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal"
-                    >
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: es })
-                      ) : (
-                        <span>Seleccione una fecha</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <CalendarComponent
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <DateRoller
+                  value={field.value}
+                  onChange={field.onChange}
+                  minYear={1900}
+                  maxYear={2025}
+                />
                 <FormMessage />
               </FormItem>
             )}
