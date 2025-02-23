@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { format } from "date-fns";
+import { format, setYear, setMonth, setDate } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar as CalendarIcon, UserPlus, Calculator, Search } from "lucide-react";
 import { calculatorTypes, insertPatientSchema } from "@shared/schema";
 import { calculateGestationalAge } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+
+// Generar arrays para los selectores
+const years = Array.from({ length: 126 }, (_, i) => 1900 + i);
+const months = Array.from({ length: 12 }, (_, i) => i);
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
 type Result = {
   weeks: number;
@@ -26,11 +30,15 @@ type Result = {
 export default function GestationalAgeCalculator() {
   const [result, setResult] = useState<Result | null>(null);
   const { toast } = useToast();
+  const today = new Date();
 
   const calculatorForm = useForm({
     resolver: zodResolver(calculatorTypes.gestationalAge),
     defaultValues: {
-      ultrasoundDate: new Date(),
+      ultrasoundDate: today,
+      selectedDay: today.getDate(),
+      selectedMonth: today.getMonth(),
+      selectedYear: today.getFullYear(),
       crownRumpLength: undefined,
       dbp: undefined,
       femurLength: undefined,
@@ -38,17 +46,26 @@ export default function GestationalAgeCalculator() {
     },
   });
 
-  const patientForm = useForm({
-    resolver: zodResolver(insertPatientSchema),
-    defaultValues: {
-      name: "",
-      lastPeriodDate: new Date(),
-      dueDate: new Date(),
-    },
-  });
-
   const onCalculatorSubmit = async (data: any) => {
-    const gestationalAge = calculateGestationalAge(data);
+    const selectedDate = new Date(data.selectedYear, data.selectedMonth, data.selectedDay);
+
+    // Validar que la fecha sea válida
+    if (selectedDate > new Date() || selectedDate < new Date("1900-01-01")) {
+      toast({
+        title: "Error en la fecha",
+        description: "Por favor seleccione una fecha válida",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Actualizar el objeto data con la fecha completa
+    const calculationData = {
+      ...data,
+      ultrasoundDate: selectedDate,
+    };
+
+    const gestationalAge = calculateGestationalAge(calculationData);
     setResult(gestationalAge);
 
     try {
@@ -57,7 +74,7 @@ export default function GestationalAgeCalculator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           calculatorType: "gestationalAge",
-          input: JSON.stringify(data),
+          input: JSON.stringify(calculationData),
           result: JSON.stringify(gestationalAge),
         }),
       });
@@ -92,6 +109,15 @@ export default function GestationalAgeCalculator() {
     }
   };
 
+  const patientForm = useForm({
+    resolver: zodResolver(insertPatientSchema),
+    defaultValues: {
+      name: "",
+      lastPeriodDate: new Date(),
+      dueDate: new Date(),
+    },
+  });
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="calculator" className="w-full">
@@ -124,337 +150,392 @@ export default function GestationalAgeCalculator() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="crl">
-                <TabsList className="grid w-full grid-cols-3 gap-2 p-1 bg-blue-50 rounded-lg">
-                  <TabsTrigger
-                    value="crl"
-                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
-                  >
-                    ≤14 sem
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="segundo"
-                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
-                  >
-                    14-20 sem
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="tercer"
-                    className="px-4 py-2 rounded-md data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors duration-200 hover:bg-blue-100"
-                  >
-                    &gt;20 sem
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="crl">
-                  <Alert className="mb-4 bg-blue-50 border-blue-200">
-                    <AlertDescription>
-                      Para cálculo en primer trimestre (≤14 semanas)
-                    </AlertDescription>
-                  </Alert>
-
-                  <Form {...calculatorForm}>
-                    <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
+              <Form {...calculatorForm}>
+                <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
+                  <div className="space-y-2">
+                    <FormLabel>Fecha de la ecografía</FormLabel>
+                    <div className="grid grid-cols-3 gap-2">
                       <FormField
                         control={calculatorForm.control}
-                        name="ultrasoundDate"
+                        name="selectedDay"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Fecha de la ecografía</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50"
-                                >
-                                  <CalendarIcon className="mr-2 h-4 w-4" />
-                                  {field.value ? (
-                                    format(field.value, "PPP", { locale: es })
-                                  ) : (
-                                    <span>Seleccione una fecha</span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() || date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
+                            <Select
+                              value={field.value.toString()}
+                              onValueChange={(value) => field.onChange(parseInt(value))}
+                            >
+                              <SelectTrigger className="border-blue-200">
+                                <SelectValue placeholder="Día" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {days.map((day) => (
+                                  <SelectItem key={day} value={day.toString()}>
+                                    {day}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </FormItem>
                         )}
                       />
-
                       <FormField
                         control={calculatorForm.control}
-                        name="crownRumpLength"
+                        name="selectedMonth"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
-                            <Input
-                              type="number"
-                              step="0.1"
-                              className="border-blue-200 focus:border-blue-400"
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                              }
-                            />
-                            <FormMessage />
+                            <Select
+                              value={field.value.toString()}
+                              onValueChange={(value) => field.onChange(parseInt(value))}
+                            >
+                              <SelectTrigger className="border-blue-200">
+                                <SelectValue placeholder="Mes" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {months.map((month) => (
+                                  <SelectItem key={month} value={month.toString()}>
+                                    {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </FormItem>
                         )}
                       />
-
-                      <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                        Calcular
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
-
-                <TabsContent value="segundo">
-                  <Alert className="mb-4 bg-blue-50 border-blue-200">
-                    <AlertDescription>
-                      Para cálculo entre 14-20 semanas. Se requieren DBP y FL.
-                    </AlertDescription>
-                  </Alert>
-                  <Form {...calculatorForm}>
-                    <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
                       <FormField
                         control={calculatorForm.control}
-                        name="ultrasoundDate"
+                        name="selectedYear"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Fecha de la ecografía</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50"
-                                >
-                                  <CalendarIcon className="mr-2 h-4 w-4" />
-                                  {field.value ? (
-                                    format(field.value, "PPP", { locale: es })
-                                  ) : (
-                                    <span>Seleccione una fecha</span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() || date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
+                            <Select
+                              value={field.value.toString()}
+                              onValueChange={(value) => field.onChange(parseInt(value))}
+                            >
+                              <SelectTrigger className="border-blue-200">
+                                <SelectValue placeholder="Año" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {years.map((year) => (
+                                  <SelectItem key={year} value={year.toString()}>
+                                    {year}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </FormItem>
                         )}
                       />
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={calculatorForm.control}
-                          name="dbp"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Diámetro Biparietal (mm)</FormLabel>
-                              <Input
-                                type="number"
-                                step="0.1"
-                                className="border-blue-200 focus:border-blue-400"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                                }
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={calculatorForm.control}
-                          name="femurLength"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Longitud Femoral (mm)</FormLabel>
-                              <Input
-                                type="number"
-                                step="0.1"
-                                className="border-blue-200 focus:border-blue-400"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                                }
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                        Calcular
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
-
-                <TabsContent value="tercer">
-                  <Alert className="mb-4 bg-blue-50 border-blue-200">
-                    <AlertDescription>
-                      Para cálculo después de 20 semanas. Se requieren las tres medidas.
-                    </AlertDescription>
-                  </Alert>
-                  <Form {...calculatorForm}>
-                    <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
-                      <FormField
-                        control={calculatorForm.control}
-                        name="ultrasoundDate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Fecha de la ecografía</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50"
-                                >
-                                  <CalendarIcon className="mr-2 h-4 w-4" />
-                                  {field.value ? (
-                                    format(field.value, "PPP", { locale: es })
-                                  ) : (
-                                    <span>Seleccione una fecha</span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() || date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={calculatorForm.control}
-                          name="dbp"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Diámetro Biparietal (mm)</FormLabel>
-                              <Input
-                                type="number"
-                                step="0.1"
-                                className="border-blue-200 focus:border-blue-400"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                                }
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={calculatorForm.control}
-                          name="femurLength"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Longitud Femoral (mm)</FormLabel>
-                              <Input
-                                type="number"
-                                step="0.1"
-                                className="border-blue-200 focus:border-blue-400"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                                }
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <FormField
-                        control={calculatorForm.control}
-                        name="abdominalCircumference"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Circunferencia Abdominal (mm)</FormLabel>
-                            <Input
-                              type="number"
-                              step="0.1"
-                              className="border-blue-200 focus:border-blue-400"
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
-                              }
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                        Calcular
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
-              </Tabs>
-
-              {result && (
-                <Card className="mt-6 border-2 border-blue-100">
-                  <CardContent className="pt-6">
-                    <h3 className="text-lg font-semibold mb-2 text-blue-600">Resultado:</h3>
-                    <div className="space-y-2">
-                      <p>
-                        Edad Gestacional:{" "}
-                        <span className="font-medium text-blue-700">
-                          {result.weeks} semanas y {result.days} días
-                        </span>
-                      </p>
-                      <p>
-                        Método: <span className="font-medium text-blue-700">{result.method}</span>
-                      </p>
-                      {result.estimatedLMP && (
-                        <p>
-                          FUR estimada:{" "}
-                          <span className="font-medium text-blue-700">
-                            {format(result.estimatedLMP, "PPP", { locale: es })}
-                          </span>
-                        </p>
-                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
+
+                  <FormField
+                    control={calculatorForm.control}
+                    name="crownRumpLength"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
+                        <Input
+                          type="number"
+                          step="0.1"
+                          className="border-blue-200 focus:border-blue-400"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                    Calcular
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </TabsContent>
 
+        <TabsContent value="segundo">
+          <Alert className="mb-4 bg-blue-50 border-blue-200">
+            <AlertDescription>
+              Para cálculo entre 14-20 semanas. Se requieren DBP y FL.
+            </AlertDescription>
+          </Alert>
+          <Form {...calculatorForm}>
+            <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <FormLabel>Fecha de la ecografía</FormLabel>
+                <div className="grid grid-cols-3 gap-2">
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedDay"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Día" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {days.map((day) => (
+                              <SelectItem key={day} value={day.toString()}>
+                                {day}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedMonth"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Mes" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {months.map((month) => (
+                              <SelectItem key={month} value={month.toString()}>
+                                {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Año" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year.toString()}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={calculatorForm.control}
+                  name="dbp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diámetro Biparietal (mm)</FormLabel>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        className="border-blue-200 focus:border-blue-400"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                        }
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={calculatorForm.control}
+                  name="femurLength"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Longitud Femoral (mm)</FormLabel>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        className="border-blue-200 focus:border-blue-400"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                        }
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                Calcular
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
+
+        <TabsContent value="tercer">
+          <Alert className="mb-4 bg-blue-50 border-blue-200">
+            <AlertDescription>
+              Para cálculo después de 20 semanas. Se requieren las tres medidas.
+            </AlertDescription>
+          </Alert>
+          <Form {...calculatorForm}>
+            <form onSubmit={calculatorForm.handleSubmit(onCalculatorSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <FormLabel>Fecha de la ecografía</FormLabel>
+                <div className="grid grid-cols-3 gap-2">
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedDay"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Día" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {days.map((day) => (
+                              <SelectItem key={day} value={day.toString()}>
+                                {day}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedMonth"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Mes" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {months.map((month) => (
+                              <SelectItem key={month} value={month.toString()}>
+                                {format(new Date(2000, month, 1), 'MMMM', { locale: es })}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={calculatorForm.control}
+                    name="selectedYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) => field.onChange(parseInt(value))}
+                        >
+                          <SelectTrigger className="border-blue-200">
+                            <SelectValue placeholder="Año" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year.toString()}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={calculatorForm.control}
+                  name="dbp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diámetro Biparietal (mm)</FormLabel>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        className="border-blue-200 focus:border-blue-400"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                        }
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={calculatorForm.control}
+                  name="femurLength"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Longitud Femoral (mm)</FormLabel>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        className="border-blue-200 focus:border-blue-400"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                        }
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={calculatorForm.control}
+                name="abdominalCircumference"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Circunferencia Abdominal (mm)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      className="border-blue-200 focus:border-blue-400"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                      }
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                Calcular
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
         <TabsContent value="register">
           <Card className="border-2 border-blue-100">
             <CardHeader>
