@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
@@ -98,11 +98,7 @@ export default function Sidebar() {
             variant="outline"
             className="bg-white shadow-lg hover:bg-blue-50 p-2 h-14 w-14"
           >
-            <img 
-              src="/ctg-menu-icon.png" 
-              alt="Menu Toggle"
-              className="h-10 w-10"
-            />
+            <Menu className="h-10 w-10 text-blue-600" />
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-80 p-0 bg-white">
