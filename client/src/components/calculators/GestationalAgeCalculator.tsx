@@ -69,9 +69,11 @@ export default function GestationalAgeCalculator() {
   const patientForm = useForm({
     resolver: zodResolver(insertPatientSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
+      identification: "",
       lastPeriodDate: today,
-      dueDate: new Date(),
+      dueDate: today,
     },
   });
 
@@ -153,6 +155,8 @@ export default function GestationalAgeCalculator() {
                         <WheelDatePicker
                           value={field.value}
                           onChange={field.onChange}
+                          minYear={1900}
+                          maxYear={2025}
                         />
                         <FormMessage />
                       </FormItem>
@@ -200,10 +204,40 @@ export default function GestationalAgeCalculator() {
                 <form onSubmit={patientForm.handleSubmit(onPatientSubmit)} className="space-y-4">
                   <FormField
                     control={patientForm.control}
-                    name="name"
+                    name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nombre del Paciente</FormLabel>
+                        <FormLabel>Nombre</FormLabel>
+                        <Input
+                          className="border-blue-200 focus:border-blue-400"
+                          {...field}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={patientForm.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Apellido</FormLabel>
+                        <Input
+                          className="border-blue-200 focus:border-blue-400"
+                          {...field}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={patientForm.control}
+                    name="identification"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Identificación</FormLabel>
                         <Input
                           className="border-blue-200 focus:border-blue-400"
                           {...field}
@@ -222,6 +256,8 @@ export default function GestationalAgeCalculator() {
                         <WheelDatePicker
                           value={field.value}
                           onChange={field.onChange}
+                          minYear={1900}
+                          maxYear={2025}
                         />
                         <FormMessage />
                       </FormItem>
