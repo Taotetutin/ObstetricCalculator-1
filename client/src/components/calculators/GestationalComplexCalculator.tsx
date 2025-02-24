@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format, addDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { Search } from "lucide-react";
+import { Search, Calculator, UserPlus } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -158,9 +158,24 @@ export default function GestationalComplexCalculator() {
 
       <Tabs defaultValue="calculator">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="calculator">Calculadora</TabsTrigger>
-          <TabsTrigger value="register">Registrar Paciente</TabsTrigger>
-          <TabsTrigger value="search">Buscar Paciente</TabsTrigger>
+          <TabsTrigger value="calculator" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <Calculator className="w-4 h-4" />
+              <span>Calcular</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="register" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <UserPlus className="w-4 h-4" />
+              <span>Registrar</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="search" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              <span>Buscar</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
 
         <div className="mt-8">
