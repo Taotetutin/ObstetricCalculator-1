@@ -11,7 +11,6 @@ import { InfoIcon } from "lucide-react";
 
 type TallaFetalInput = {
   femurLength: number;
-  gestationalAge: number;
 };
 
 export default function TallaFetalCalculator() {
@@ -25,7 +24,6 @@ export default function TallaFetalCalculator() {
     resolver: zodResolver(calculatorTypes.tallaFetal),
     defaultValues: {
       femurLength: 0,
-      gestationalAge: 0,
     },
   });
 
@@ -34,16 +32,14 @@ export default function TallaFetalCalculator() {
     return femurLength * 0.78 + 7.15;
   };
 
-  const getPercentileAndRecommendation = (height: number, gestationalAge: number): { percentile: string; recommendation: string } => {
-    // Valores aproximados de percentiles por edad gestacional
-    const p50 = gestationalAge * 1.2; // Valor aproximado del percentil 50
-
-    if (height < p50 * 0.9) {
+  const getPercentileAndRecommendation = (height: number): { percentile: string; recommendation: string } => {
+    // Valores aproximados simplificados basados solo en la altura calculada
+    if (height < 30) {
       return {
         percentile: "< p10",
         recommendation: "Talla fetal por debajo del percentil 10. Se recomienda seguimiento ecográfico."
       };
-    } else if (height > p50 * 1.1) {
+    } else if (height > 55) {
       return {
         percentile: "> p90",
         recommendation: "Talla fetal por encima del percentil 90. Control habitual."
@@ -57,7 +53,7 @@ export default function TallaFetalCalculator() {
 
   const onSubmit = async (data: TallaFetalInput) => {
     const height = calculateFetalHeight(data.femurLength);
-    const { percentile, recommendation } = getPercentileAndRecommendation(height, data.gestationalAge);
+    const { percentile, recommendation } = getPercentileAndRecommendation(height);
 
     const resultado = {
       height: parseFloat(height.toFixed(1)),
@@ -103,23 +99,6 @@ export default function TallaFetalCalculator() {
                 <Input
                   type="number"
                   step="0.1"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="gestationalAge"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Edad Gestacional (semanas)</FormLabel>
-                <Input
-                  type="number"
-                  step="1"
                   {...field}
                   onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />
