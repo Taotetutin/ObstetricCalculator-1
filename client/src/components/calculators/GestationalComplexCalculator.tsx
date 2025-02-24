@@ -149,15 +149,15 @@ export default function GestationalComplexCalculator() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Alert className="mb-6">
+    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
+      <Alert className="mb-4">
         <AlertDescription>
           Calculadora gestacional completa para determinar fechas importantes del embarazo
         </AlertDescription>
       </Alert>
 
-      <Tabs defaultValue="calculator" className="flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
+      <Tabs defaultValue="calculator" className="flex-1 flex flex-col overflow-hidden">
+        <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="calculator" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
               <Calculator className="w-4 h-4" />
@@ -178,65 +178,150 @@ export default function GestationalComplexCalculator() {
           </TabsTrigger>
         </TabsList>
 
-        <div className="flex-1 flex flex-col space-y-6">
-          <TabsContent value="calculator" className="flex-1">
-            <Card className="h-full">
-              <CardContent className="p-6">
-                <Form {...calculatorForm}>
-                  <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-6">
-                    <FormField
-                      control={calculatorForm.control}
-                      name="lastMenstrualPeriod"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel className="text-lg font-medium mb-4">Fecha de Última Regla (FUR)</FormLabel>
-                          <div className="bg-gray-50 p-6 rounded-lg">
-                            <DateRoller
-                              value={field.value}
-                              onChange={field.onChange}
-                              minYear={1900}
-                              maxYear={2025}
-                            />
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <Button type="submit" className="w-full text-lg py-6">
-                      Calcular Fechas
-                    </Button>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="register" className="flex-1">
-            <Card className="h-full">
-              <CardContent className="p-6">
-                <Form {...patientForm}>
-                  <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex-1 flex overflow-hidden">
+          <TabsContent value="calculator" className="flex-1 h-full">
+            <div className="h-full grid md:grid-cols-2 gap-4">
+              <Card className="overflow-auto">
+                <CardContent className="p-4">
+                  <Form {...calculatorForm}>
+                    <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-4">
                       <FormField
-                        control={patientForm.control}
-                        name="lastName"
+                        control={calculatorForm.control}
+                        name="lastMenstrualPeriod"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg">Apellidos</FormLabel>
-                            <Input {...field} placeholder="Ingrese apellidos" className="h-12 text-lg" />
+                            <FormLabel className="text-base font-medium">Fecha de Última Regla (FUR)</FormLabel>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <DateRoller
+                                value={field.value}
+                                onChange={field.onChange}
+                                minYear={1900}
+                                maxYear={2025}
+                              />
+                            </div>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
 
+                      <Button type="submit" className="w-full py-4">
+                        Calcular Fechas
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+
+              {result && (
+                <div className="overflow-auto">
+                  <div className="space-y-4">
+                    <Card className="border-2 border-blue-100">
+                      <CardContent className="p-4">
+                        <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Resultados Principales</h3>
+                        <div className="space-y-2 text-sm">
+                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                            <span className="font-medium">Edad Gestacional:</span>
+                            <span className="text-blue-700">{result.gestationalAge.weeks}s {result.gestationalAge.days}d</span>
+                          </p>
+                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                            <span className="font-medium">FP Concepción:</span>
+                            <span className="text-blue-700">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
+                          </p>
+                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                            <span className="font-medium">FP Parto:</span>
+                            <span className="text-blue-700">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <Card className="border-2 border-blue-100">
+                        <CardContent className="p-4">
+                          <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Fechas Administrativas</h3>
+                          <div className="space-y-2 text-sm">
+                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                              <span className="font-medium">As. Familiar:</span>
+                              <span className="text-blue-700">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                              <span className="font-medium">Isapre:</span>
+                              <span className="text-blue-700">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                              <span className="font-medium">Prenatal:</span>
+                              <span className="text-blue-700">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-2 border-blue-100">
+                        <CardContent className="p-4">
+                          <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Fechas Clínicas</h3>
+                          <div className="space-y-1.5 text-xs">
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">Screen I:</span>
+                              <span className="text-blue-700">{result.screening.firstTrimester}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">Screen II:</span>
+                              <span className="text-blue-700">{result.screening.secondTrimester}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">Ex II:</span>
+                              <span className="text-blue-700">{result.screening.secondTrimesterExams}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">DTPa:</span>
+                              <span className="text-blue-700">{result.screening.dtpaVaccine}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">Ex III:</span>
+                              <span className="text-blue-700">{result.screening.thirdTrimesterExams}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">Screen III:</span>
+                              <span className="text-blue-700">{result.screening.thirdTrimesterScreening}</span>
+                            </p>
+                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
+                              <span className="font-medium">SGB:</span>
+                              <span className="text-blue-700">{result.screening.gbsTest}</span>
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="register" className="flex-1 h-full overflow-auto">
+            <Card>
+              <CardContent className="p-4">
+                <Form {...patientForm}>
+                  <form onSubmit={patientForm.handleSubmit(onSavePatient)} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <FormField
+                        control={patientForm.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Apellidos</FormLabel>
+                            <Input {...field} className="h-9" placeholder="Ingrese apellidos" />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <FormField
                         control={patientForm.control}
                         name="firstName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg">Nombres</FormLabel>
-                            <Input {...field} placeholder="Ingrese nombres" className="h-12 text-lg" />
+                            <FormLabel>Nombres</FormLabel>
+                            <Input {...field} className="h-9" placeholder="Ingrese nombres" />
                             <FormMessage />
                           </FormItem>
                         )}
@@ -248,8 +333,8 @@ export default function GestationalComplexCalculator() {
                       name="identification"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-lg">Número de ID</FormLabel>
-                          <Input {...field} placeholder="Ingrese número de identificación" className="h-12 text-lg" />
+                          <FormLabel>Número de ID</FormLabel>
+                          <Input {...field} className="h-9" placeholder="Ingrese número de identificación" />
                           <FormMessage />
                         </FormItem>
                       )}
@@ -259,9 +344,9 @@ export default function GestationalComplexCalculator() {
                       control={patientForm.control}
                       name="lastMenstrualPeriod"
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel className="text-lg">Fecha de Última Regla (FUR)</FormLabel>
-                          <div className="bg-gray-50 p-6 rounded-lg">
+                        <FormItem>
+                          <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
+                          <div className="bg-gray-50 p-4 rounded-lg">
                             <DateRoller
                               value={field.value}
                               onChange={field.onChange}
@@ -274,7 +359,7 @@ export default function GestationalComplexCalculator() {
                       )}
                     />
 
-                    <Button type="submit" className="w-full text-lg py-6">
+                    <Button type="submit" className="w-full py-4">
                       Registrar
                     </Button>
                   </form>
@@ -283,45 +368,45 @@ export default function GestationalComplexCalculator() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="search" className="flex-1">
+          <TabsContent value="search" className="flex-1 h-full overflow-hidden">
             <Card className="h-full">
-              <CardContent className="p-6">
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <Input
-                      placeholder="Buscar por apellido o ID..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="flex-1 h-12 text-lg"
-                    />
-                    <Button variant="outline" size="icon" className="h-12 w-12">
-                      <Search className="h-6 w-6" />
-                    </Button>
-                  </div>
+              <CardContent className="p-4 h-full flex flex-col">
+                <div className="flex gap-2 mb-4">
+                  <Input
+                    placeholder="Buscar por apellido o ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-9"
+                  />
+                  <Button variant="outline" size="icon" className="h-9 w-9">
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </div>
 
-                  <div className="space-y-4 overflow-auto max-h-[calc(100vh-24rem)]">
-                    <h3 className="font-semibold text-lg text-gray-500">Registros</h3>
-                    <div className="space-y-3">
+                <div className="flex-1 overflow-auto">
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-sm text-gray-500">Registros</h3>
+                    <div className="space-y-2">
                       {(searchTerm ? searchResults : allPatients)?.map((patient) => {
                         const gestationalAge = getGestationalAge(new Date(patient.lastPeriodDate), new Date());
                         return (
                           <div
                             key={patient.id}
-                            className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg border cursor-pointer transition-colors"
+                            className="flex justify-between items-center p-2 hover:bg-gray-50 rounded border cursor-pointer"
                             onClick={() => {
                               const result = calculateDates(new Date(patient.lastPeriodDate));
                               setResult(result);
                             }}
                           >
-                            <div className="space-y-1">
-                              <div className="font-medium text-lg">
+                            <div>
+                              <div className="font-medium">
                                 {patient.lastName}, {patient.firstName}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-xs text-gray-500">
                                 ID: {patient.identification}
                               </div>
                             </div>
-                            <div className="text-lg text-blue-600 font-medium">
+                            <div className="text-sm text-blue-600 font-medium">
                               {gestationalAge.weeks}s {gestationalAge.days}d
                             </div>
                           </div>
@@ -334,88 +419,6 @@ export default function GestationalComplexCalculator() {
             </Card>
           </TabsContent>
         </div>
-
-        {result && (
-          <div className="mt-6 space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="md:col-span-2 border-2 border-blue-100 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Resultados Principales</h3>
-                  <div className="grid gap-4 text-base">
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">Edad Gestacional:</span>
-                      <span className="text-blue-700 font-semibold">{result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">FP Concepción:</span>
-                      <span className="text-blue-700">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">FP Parto:</span>
-                      <span className="text-blue-700">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-blue-100 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Fechas Administrativas</h3>
-                  <div className="space-y-3 text-base">
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">Asignación Familiar:</span>
-                      <span className="text-blue-700">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">Inscripción Isapre:</span>
-                      <span className="text-blue-700">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                      <span className="font-medium text-gray-700">Licencia Prenatal:</span>
-                      <span className="text-blue-700">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-blue-100 shadow-sm">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Fechas Clínicas</h3>
-                  <div className="space-y-3 text-sm">
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Screening Ier Trim:</span>
-                      <span className="text-blue-700">{result.screening.firstTrimester}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Screening II Trim:</span>
-                      <span className="text-blue-700">{result.screening.secondTrimester}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Exámenes II Trim:</span>
-                      <span className="text-blue-700">{result.screening.secondTrimesterExams}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">DTPa/Rhogam:</span>
-                      <span className="text-blue-700">{result.screening.dtpaVaccine}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Exámenes III Trim:</span>
-                      <span className="text-blue-700">{result.screening.thirdTrimesterExams}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Screening III Trim:</span>
-                      <span className="text-blue-700">{result.screening.thirdTrimesterScreening}</span>
-                    </p>
-                    <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                      <span className="font-medium text-gray-700">Cultivo SGB:</span>
-                      <span className="text-blue-700">{result.screening.gbsTest}</span>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        )}
       </Tabs>
     </div>
   );
