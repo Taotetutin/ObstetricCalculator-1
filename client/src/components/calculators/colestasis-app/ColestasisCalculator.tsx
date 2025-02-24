@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Calculator, Heart, AlertTriangle, Stethoscope } from 'lucide-react';
 import { calculateRiskLevel, type RiskFactors, type RiskAssessment } from './utils/riskCalculator';
 import { RiskResult } from './components/RiskResult';
@@ -22,31 +22,6 @@ export default function ColestasisCalculator() {
 
   const [result, setResult] = useState<RiskAssessment | null>(null);
 
-  useEffect(() => {
-    populateSelects();
-  }, []);
-
-  const populateSelects = () => {
-    const ageSelect = document.getElementById('age') as HTMLSelectElement;
-    const weeksSelect = document.getElementById('gestationalWeeks') as HTMLSelectElement;
-
-    if (ageSelect && weeksSelect) {
-      for (let i = 14; i <= 50; i++) {
-        const option = document.createElement('option');
-        option.value = i.toString();
-        option.textContent = i.toString();
-        ageSelect.appendChild(option);
-      }
-
-      for (let i = 20; i <= 40; i++) {
-        const option = document.createElement('option');
-        option.value = i.toString();
-        option.textContent = i.toString();
-        weeksSelect.appendChild(option);
-      }
-    }
-  };
-
   const calculateRisk = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -60,7 +35,7 @@ export default function ColestasisCalculator() {
       meconium: formData.meconium,
       earlyOnset: formData.earlyOnset,
       noTreatmentResponse: formData.noTreatmentResponse,
-      gestationalWeeks: parseInt(formData.gestationalWeeks)
+      gestationalWeeks: formData.gestationalWeeks
     };
 
     const assessment = calculateRiskLevel(riskFactors);
@@ -79,6 +54,9 @@ export default function ColestasisCalculator() {
       gestationalDays: value.days
     }));
   };
+
+  // Generar array de edades de 14 a 50
+  const ages = Array.from({ length: 37 }, (_, i) => i + 14);
 
   return (
     <div className="space-y-6">
@@ -106,6 +84,9 @@ export default function ColestasisCalculator() {
                   required
                 >
                   <option value="">Seleccionar</option>
+                  {ages.map(age => (
+                    <option key={age} value={age}>{age}</option>
+                  ))}
                 </select>
               </div>
 
