@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Calculator, Heart, AlertTriangle, Stethoscope } from 'lucide-react';
 import { calculateRiskLevel, type RiskFactors, type RiskAssessment } from './utils/riskCalculator';
 import { RiskResult } from './components/RiskResult';
+import { GestationWheelRoller } from "@/components/ui/gestation-wheel-roller";
 
 export default function ColestasisCalculator() {
   const [formData, setFormData] = useState({
     age: '',
-    gestationalWeeks: '',
-    gestationalDays: '0',
+    gestationalWeeks: 20,
+    gestationalDays: 0,
     bileAcids: '',
     totalBilirubin: '',
     got: '',
@@ -71,6 +72,14 @@ export default function ColestasisCalculator() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleGestationChange = (value: { weeks: number; days: number }) => {
+    setFormData(prev => ({
+      ...prev,
+      gestationalWeeks: value.weeks,
+      gestationalDays: value.days
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -83,7 +92,7 @@ export default function ColestasisCalculator() {
         <div className="space-y-8">
           {/* Patient Data Section */}
           <section className="bg-blue-50 rounded-xl p-6">
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-blue-700 mb-2">
                   Edad
@@ -102,34 +111,12 @@ export default function ColestasisCalculator() {
 
               <div>
                 <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Semanas de Gestación
+                  Edad Gestacional
                 </label>
-                <select
-                  id="gestationalWeeks"
-                  name="gestationalWeeks"
-                  value={formData.gestationalWeeks}
-                  onChange={handleInputChange}
-                  className="w-full rounded-lg border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">Seleccionar</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Días Adicionales
-                </label>
-                <select
-                  name="gestationalDays"
-                  value={formData.gestationalDays}
-                  onChange={handleInputChange}
-                  className="w-full rounded-lg border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-                >
-                  {[0,1,2,3,4,5,6].map(day => (
-                    <option key={day} value={day}>{day}</option>
-                  ))}
-                </select>
+                <GestationWheelRoller
+                  value={{ weeks: formData.gestationalWeeks, days: formData.gestationalDays }}
+                  onChange={handleGestationChange}
+                />
               </div>
             </div>
           </section>
