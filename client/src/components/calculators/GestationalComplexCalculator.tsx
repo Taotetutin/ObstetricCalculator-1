@@ -333,82 +333,84 @@ export default function GestationalComplexCalculator() {
       </Tabs>
 
       {result && (
-        <div className="space-y-4 mt-6">
-          <Card className="overflow-hidden">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-blue-600 mb-4">Resultados Principales</h3>
-              <div className="space-y-3 text-sm">
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Edad Gestacional:</span>
-                  <span className="font-medium">{result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">FP Concepción:</span>
-                  <span className="font-medium">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">FP Parto:</span>
-                  <span className="font-medium">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="space-y-6 mt-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="md:col-span-2 border-2 border-blue-100 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Resultados Principales</h3>
+                <div className="grid gap-4 text-base">
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">Edad Gestacional:</span>
+                    <span className="text-blue-700 font-semibold">{result.gestationalAge.weeks} semanas y {result.gestationalAge.days} días</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">FP Concepción:</span>
+                    <span className="text-blue-700">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">FP Parto:</span>
+                    <span className="text-blue-700">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="overflow-hidden">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-blue-600 mb-4">Fechas Administrativas</h3>
-              <div className="space-y-3 text-sm">
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Asignación Familiar:</span>
-                  <span className="font-medium">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Inscripción Isapre:</span>
-                  <span className="font-medium">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Licencia Prenatal:</span>
-                  <span className="font-medium">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            <Card className="border-2 border-blue-100 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Fechas Administrativas</h3>
+                <div className="space-y-3 text-base">
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">Asignación Familiar:</span>
+                    <span className="text-blue-700">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">Inscripción Isapre:</span>
+                    <span className="text-blue-700">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <span className="font-medium text-gray-700">Licencia Prenatal:</span>
+                    <span className="text-blue-700">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="overflow-hidden">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-blue-600 mb-4">Fechas Clínicas</h3>
-              <div className="space-y-3 text-sm">
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Screening Ier Trim:</span>
-                  <span className="font-medium">{result.screening.firstTrimester}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Screening II Trim:</span>
-                  <span className="font-medium">{result.screening.secondTrimester}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Exámenes II Trim:</span>
-                  <span className="font-medium">{result.screening.secondTrimesterExams}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">DTPa/Rhogam:</span>
-                  <span className="font-medium">{result.screening.dtpaVaccine}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Exámenes III Trim:</span>
-                  <span className="font-medium">{result.screening.thirdTrimesterExams}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Screening III Trim:</span>
-                  <span className="font-medium">{result.screening.thirdTrimesterScreening}</span>
-                </p>
-                <p className="flex justify-between items-center">
-                  <span className="text-gray-600">Cultivo SGB:</span>
-                  <span className="font-medium">{result.screening.gbsTest}</span>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            <Card className="border-2 border-blue-100 shadow-sm">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-blue-600 mb-4 border-b pb-2">Fechas Clínicas</h3>
+                <div className="space-y-3 text-sm">
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Screening Ier Trim:</span>
+                    <span className="text-blue-700">{result.screening.firstTrimester}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Screening II Trim:</span>
+                    <span className="text-blue-700">{result.screening.secondTrimester}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Exámenes II Trim:</span>
+                    <span className="text-blue-700">{result.screening.secondTrimesterExams}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">DTPa/Rhogam:</span>
+                    <span className="text-blue-700">{result.screening.dtpaVaccine}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Exámenes III Trim:</span>
+                    <span className="text-blue-700">{result.screening.thirdTrimesterExams}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Screening III Trim:</span>
+                    <span className="text-blue-700">{result.screening.thirdTrimesterScreening}</span>
+                  </p>
+                  <p className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span className="font-medium text-gray-700">Cultivo SGB:</span>
+                    <span className="text-blue-700">{result.screening.gbsTest}</span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
     </div>
