@@ -32,40 +32,47 @@ export function WheelRoller({
         y: currentOffset,
         transition: { 
           type: "spring", 
-          stiffness: 400,
-          damping: 40,
-          mass: 1
+          stiffness: 300, // Reduced stiffness for smoother movement
+          damping: 30,
+          mass: 0.8
         }
       });
     }
   }, [currentOffset, isDragging, controls]);
 
+  const handleDragStart = (event: TouchEvent | MouseEvent) => {
+    event.preventDefault(); // Prevent page scroll
+    setIsDragging(true);
+  };
+
   const handleDragEnd = (event: any, info: PanInfo) => {
     setIsDragging(false);
     const velocity = info.velocity.y;
     const offset = info.offset.y;
-    
+
+    // Adjust sensitivity for more precise control
     let targetIndex = Math.round((-currentOffset - offset) / itemHeight);
-    
-    // Add momentum effect based on velocity
-    if (Math.abs(velocity) > 500) {
-      targetIndex += Math.sign(velocity) * Math.floor(Math.abs(velocity) / 1000);
+
+    // Add momentum effect with reduced sensitivity
+    if (Math.abs(velocity) > 300) {
+      targetIndex += Math.sign(velocity) * Math.floor(Math.abs(velocity) / 1500);
     }
-    
+
     // Clamp target index
     targetIndex = Math.max(0, Math.min(options.length - 1, targetIndex));
-    
+
     onChange(options[targetIndex]);
   };
 
   return (
     <div
       ref={containerRef}
-      className="relative overflow-hidden rounded-lg"
+      className="relative overflow-hidden rounded-lg touch-none"
       style={{
         height: containerHeight,
         perspective: "1000px",
       }}
+      onTouchMove={(e) => e.preventDefault()} // Prevent page scroll on touch devices
     >
       {/* Gradiente superior e inferior */}
       <div
@@ -74,10 +81,10 @@ export function WheelRoller({
           background: "linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.5) 80%, rgba(255,255,255,0.95) 100%)",
         }}
       />
-      
-      {/* Línea de selección central */}
+
+      {/* Línea de selección central con mayor contraste */}
       <div
-        className="absolute left-0 right-0 border-t border-b border-blue-200/50 z-20"
+        className="absolute left-0 right-0 border-t-2 border-b-2 border-blue-300/70 z-20"
         style={{
           top: "50%",
           transform: "translateY(-50%)",
@@ -91,25 +98,27 @@ export function WheelRoller({
           top: -((options.length - 1) * itemHeight),
           bottom: 0,
         }}
-        dragElastic={0.1}
+        dragElastic={0.05} // Reduced elasticity for more precise control
         dragMomentum={true}
-        onDragStart={() => setIsDragging(true)}
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{
           y: currentOffset,
+          touchAction: "none", // Prevent touch scrolling
         }}
+        className="cursor-grab active:cursor-grabbing"
       >
         {options.map((option, index) => {
           const isSelected = option === value;
           const offset = index * itemHeight;
           const distanceFromCenter = Math.abs(currentIndex - index);
           const scale = isSelected ? 1.1 : 1 - (distanceFromCenter * 0.1);
-          
+
           return (
             <div
               key={option}
-              className={`absolute left-0 right-0 flex items-center justify-center transition-all duration-200 ${
+              className={`absolute left-0 right-0 flex items-center justify-center transition-all duration-200 select-none ${
                 isSelected ? "text-blue-600 font-medium" : "text-gray-600"
               }`}
               style={{
