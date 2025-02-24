@@ -77,14 +77,18 @@ export function calculateLiquidoAmniotico(input: CalculatorInput<"liquidoAmnioti
   const ila = input.q1 + input.q2 + input.q3 + input.q4;
 
   let categoria = "";
-  if (ila < 5) {
-    categoria = "Oligohidramnios severo";
-  } else if (ila < 8) {
+  if (ila < 2) {
+    categoria = "Oligohidroamnios Severo";
+  } else if (ila < 5) {
     categoria = "Oligohidramnios";
-  } else if (ila <= 18) {
+  } else if (ila < 8) {
+    categoria = "Límite inferior de la Normalidad";
+  } else if (ila < 18) {
     categoria = "Normal";
-  } else if (ila <= 24) {
-    categoria = "Polihidramnios leve";
+  } else if (ila < 24.5) {
+    categoria = "Límite superior de la normalidad";
+  } else if (ila < 30) {
+    categoria = "Polihidramnios moderado";
   } else {
     categoria = "Polihidramnios severo";
   }
@@ -612,8 +616,7 @@ function calculateBasePrematurityRisk(cervicalLength: number) {
   if (cervicalLength <= 5) return maxRisk;
   if (cervicalLength >= 50) return minRisk;
 
-  return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));
-}
+  return minRisk + (maxRisk - minRisk) * Math.exp(-decayRate * (cervicalLength - 5));}
 
 // Added femur length percentile data (weeks 12-42)
 const FEMUR_LENGTH_PERCENTILES = {
