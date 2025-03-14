@@ -1,9 +1,11 @@
-import { useState } from "react";
+import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calculator, Baby, Stethoscope } from "lucide-react";
-import AgeCalculator from "./T21/AgeCalculator";
+import { Calculator, Baby, Dna } from "lucide-react";
+import { TrisomyRisk } from "@/types/trisomy";
+import { calculateFirstTrimesterRisk, calculateSecondTrimesterRisk } from "@/utils/riskCalculator";
 import FirstTrimesterCalculator from "./T21/FirstTrimesterCalculator";
 import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
+import AgeCalculator from "./T21/AgeCalculator";
 
 export default function T21Calculator() {
   return (
@@ -24,17 +26,20 @@ export default function T21Calculator() {
           </TabsTrigger>
           <TabsTrigger value="second" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
-              <Stethoscope className="w-4 h-4" />
+              <Dna className="w-4 h-4" />
               <span>Segundo Trimestre</span>
             </div>
           </TabsTrigger>
         </TabsList>
+
         <TabsContent value="age" className="mt-6">
           <AgeCalculator />
         </TabsContent>
+
         <TabsContent value="first" className="mt-6">
           <FirstTrimesterCalculator />
         </TabsContent>
+
         <TabsContent value="second" className="mt-6">
           <SecondTrimesterCalculator />
         </TabsContent>
