@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calculator, Baby, Activity, TestTube } from 'lucide-react';
-import { calculateBaselineRisk, calculateFirstTrimesterRisk, calculateSecondTrimesterRisk, interpretRisk } from '@/utils/trisomyCalculator';
-import type { MarkerValues, RiskResults } from '@/types/trisomy';
+import { calculateBaselineRisk, calculateFirstTrimesterRisk, calculateSecondTrimesterRisk, interpretRisk } from '../utils/trisomyCalculator';
+import type { MarkerValues, RiskResults } from '../types/trisomy';
 
 interface CalculatorProps {
   onCalculate: (results: RiskResults) => void;
