@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Calculator, Baby, Activity, TestTube } from 'lucide-react';
+import { calculateBaselineRisk, calculateFirstTrimesterRisk, calculateSecondTrimesterRisk, interpretRisk } from '@/utils/trisomyCalculator';
 import type { MarkerValues, RiskResults } from '@/types/trisomy';
-import { calculateBaselineRisk, calculateFirstTrimesterRisk, calculateSecondTrimesterRisk, interpretRisk } from '@/utils/riskCalculators';
 
 interface CalculatorProps {
-  onCalculate?: (results: RiskResults) => void;
+  onCalculate: (results: RiskResults) => void;
 }
 
 export default function TrisomyCalculator({ onCalculate }: CalculatorProps) {
@@ -40,13 +40,11 @@ export default function TrisomyCalculator({ onCalculate }: CalculatorProps) {
       parseFloat(values.hCG)
     );
 
-    if (onCalculate) {
-      onCalculate({
-        baselineRisk: interpretRisk(baselineRisk),
-        firstTrimesterRisk: interpretRisk(firstTrimesterRisk),
-        secondTrimesterRisk: interpretRisk(secondTrimesterRisk)
-      });
-    }
+    onCalculate({
+      baselineRisk: interpretRisk(baselineRisk),
+      firstTrimesterRisk: interpretRisk(firstTrimesterRisk),
+      secondTrimesterRisk: interpretRisk(secondTrimesterRisk)
+    });
   };
 
   return (
