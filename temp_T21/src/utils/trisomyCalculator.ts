@@ -17,20 +17,20 @@ export const calculateFirstTrimesterRisk = (
   freeBetaHCG: number
 ): number => {
   let riskMultiplier = 1;
-
+  
   // NT adjustment
   if (nt > 3.5) riskMultiplier *= 20;
   else if (nt > 3.0) riskMultiplier *= 10;
   else if (nt > 2.5) riskMultiplier *= 3;
-
+  
   // PAPP-A adjustment (MoM - Multiple of Median)
   if (pappA < 0.4) riskMultiplier *= 3;
   else if (pappA > 2.5) riskMultiplier *= 0.5;
-
+  
   // Free β-hCG adjustment (MoM)
   if (freeBetaHCG > 2.5) riskMultiplier *= 2;
   else if (freeBetaHCG < 0.4) riskMultiplier *= 0.5;
-
+  
   return baselineRisk * riskMultiplier;
 };
 
@@ -42,19 +42,19 @@ export const calculateSecondTrimesterRisk = (
   hCG: number
 ): number => {
   let riskMultiplier = 1;
-
+  
   // AFP adjustment (MoM)
   if (afp < 0.5) riskMultiplier *= 2;
-
+  
   // uE3 adjustment (MoM)
   if (uE3 < 0.5) riskMultiplier *= 2;
-
+  
   // Inhibin A adjustment (MoM)
   if (inhibinA > 2.0) riskMultiplier *= 1.5;
-
+  
   // hCG adjustment (MoM)
   if (hCG > 2.5) riskMultiplier *= 2;
-
+  
   return baselineRisk * riskMultiplier;
 };
 
@@ -80,9 +80,3 @@ export const interpretRisk = (risk: number): TrisomyRisk => {
     recommendation
   };
 };
-
-interface TrisomyRisk {
-  value: number;
-  interpretation: string;
-  recommendation: string;
-}
