@@ -1,8 +1,15 @@
-import { RiskResult } from '@/types/trisomy';
+import { RiskResult as TrisomyRisk } from '@/types/trisomy';
 
-const baseAgeRisk = (age: number): number => {
-  const baseRisk = Math.exp(-0.1 * (age - 35));
-  return 1 / (290 * baseRisk);
+export const calculateBaselineRisk = (maternalAge: number): number => {
+  // Risk calculation based on maternal age
+  // Values based on established medical research
+  if (maternalAge < 20) return 1/1500;
+  if (maternalAge < 25) return 1/1350;
+  if (maternalAge < 30) return 1/900;
+  if (maternalAge < 35) return 1/400;
+  if (maternalAge < 40) return 1/100;
+  if (maternalAge < 45) return 1/30;
+  return 1/10;
 };
 
 export const calculateAgeBasedRisk = (age: number, previousT21: boolean): number => {
@@ -11,100 +18,78 @@ export const calculateAgeBasedRisk = (age: number, previousT21: boolean): number
   return risk;
 };
 
-export const calculateBaselineRisk = (age: number): number => {
-  return baseAgeRisk(age);
+const baseAgeRisk = (age: number): number => {
+  const baseRisk = Math.exp(-0.1 * (age - 35));
+  return 1 / (290 * baseRisk);
 };
 
-export const calculateFirstTrimesterRisk = (data: {
-  maternalAge: number;
-  previousT21: boolean;
-  crl: number;
-  heartRate: number;
-  nuchalTranslucency: number;
-  nasalBone: 'normal' | 'absent' | 'hypoplastic';
-  tricuspidRegurgitation: 'normal' | 'abnormal';
-  ductusVenosus: 'normal' | 'abnormal';
-  pappA: number;
-  freeBetaHCG: number;
-  lhrNuchalTranslucency: number;
-  lhrDuctusVenosus: number;
-  lhrTricuspidFlow: number;
-}): number => {
-  let risk = baseAgeRisk(data.maternalAge);
+export const calculateFirstTrimesterRisk = (
+  baselineRisk: number,
+  nt: number,
+  pappA: number,
+  freeBetaHCG: number
+): number => {
+  let riskMultiplier = 1;
 
-  // Ajustar por historia previa
-  if (data.previousT21) risk *= 2.5;
+  // NT adjustment
+  if (nt > 3.5) riskMultiplier *= 20;
+  else if (nt > 3.0) riskMultiplier *= 10;
+  else if (nt > 2.5) riskMultiplier *= 3;
 
-  // Ajustar por marcadores bioquímicos
-  if (data.pappA < 0.4) risk *= 3;
-  if (data.freeBetaHCG > 2.5) risk *= 2;
+  // PAPP-A adjustment (MoM - Multiple of Median)
+  if (pappA < 0.4) riskMultiplier *= 3;
+  else if (pappA > 2.5) riskMultiplier *= 0.5;
 
-  // Ajustar por marcadores ecográficos
-  if (data.nuchalTranslucency > 3) risk *= 5;
-  if (data.nasalBone === 'absent') risk *= 3;
-  if (data.tricuspidRegurgitation === 'abnormal') risk *= 2;
-  if (data.ductusVenosus === 'abnormal') risk *= 2;
+  // Free β-hCG adjustment (MoM)
+  if (freeBetaHCG > 2.5) riskMultiplier *= 2;
+  else if (freeBetaHCG < 0.4) riskMultiplier *= 0.5;
 
-  // Ajustar por LHR
-  if (data.lhrNuchalTranslucency > 1.5) risk *= 2;
-  if (data.lhrDuctusVenosus > 1.5) risk *= 2;
-  if (data.lhrTricuspidFlow > 1.5) risk *= 2;
-
-  return risk;
+  return baselineRisk * riskMultiplier;
 };
 
-export const calculateSecondTrimesterRisk = (data: {
-  baselineRisk: number;
-  previousT21: boolean;
-  nasalBone: string;
-  cardiacFocus: string;
-  ventriculomegaly: string;
-  nuchalFold: string;
-  shortFemur: string;
-  aberrantSubclavian: string;
-  hyperechogenicBowel: string;
-  pyelectasis: string;
-}): number => {
-  let risk = 1 / data.baselineRisk;
+export const calculateSecondTrimesterRisk = (
+  baselineRisk: number,
+  afp: number,
+  uE3: number,
+  inhibinA: number,
+  hCG: number
+): number => {
+  let riskMultiplier = 1;
 
-  // Ajustar por historia previa
-  if (data.previousT21) risk *= 2.5;
+  // AFP adjustment (MoM)
+  if (afp < 0.5) riskMultiplier *= 2;
 
-  // Ajustar por hallazgos ecográficos
-  if (data.nasalBone === 'absent') risk *= 2.5;
-  if (data.cardiacFocus === 'present') risk *= 2;
-  if (data.ventriculomegaly === 'present') risk *= 2.5;
-  if (data.nuchalFold === 'increased') risk *= 3;
-  if (data.shortFemur === 'short') risk *= 2.2;
-  if (data.aberrantSubclavian === 'present') risk *= 2;
-  if (data.hyperechogenicBowel === 'present') risk *= 2.5;
-  if (data.pyelectasis === 'present') risk *= 1.8;
+  // uE3 adjustment (MoM)
+  if (uE3 < 0.5) riskMultiplier *= 2;
 
-  return risk;
+  // Inhibin A adjustment (MoM)
+  if (inhibinA > 2.0) riskMultiplier *= 1.5;
+
+  // hCG adjustment (MoM)
+  if (hCG > 2.5) riskMultiplier *= 2;
+
+  return baselineRisk * riskMultiplier;
 };
 
-export const interpretRisk = (risk: number): RiskResult => {
-  const interpretation = risk > (1/100) 
-    ? "Alto Riesgo" 
-    : risk > (1/1000) 
-      ? "Riesgo Intermedio" 
-      : "Bajo Riesgo";
+export const interpretRisk = (risk: number): TrisomyRisk => {
+  const value = risk;
+  let interpretation: string;
+  let recommendation: string;
 
-  const details = [];
-  if (risk > (1/100)) {
-    details.push("Se recomienda evaluación genética");
-    details.push("Considerar amniocentesis o biopsia de vellosidades coriónicas");
-  } else if (risk > (1/1000)) {
-    details.push("Se sugiere seguimiento ecográfico detallado");
-    details.push("Considerar screening adicional");
+  if (risk < 1/1000) {
+    interpretation = "Riesgo Bajo";
+    recommendation = "Continuar con controles prenatales de rutina.";
+  } else if (risk < 1/300) {
+    interpretation = "Riesgo Moderado";
+    recommendation = "Considerar pruebas diagnósticas adicionales como NIPT.";
   } else {
-    details.push("Continuar control prenatal de rutina");
+    interpretation = "Riesgo Alto";
+    recommendation = "Se recomienda evaluación por especialista y considerar amniocentesis.";
   }
 
   return {
-    risk,
+    value,
     interpretation,
-    details,
-    recommendations: []
+    recommendation
   };
 };
