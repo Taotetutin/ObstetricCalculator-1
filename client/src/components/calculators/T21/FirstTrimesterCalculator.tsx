@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Baby } from 'lucide-react';
-import { calculateFirstTrimesterRisk } from '@/utils/riskCalculator';
+import { calculateFirstTrimesterRisk } from '../utils/riskCalculators';
 import RiskDisplay from './RiskDisplay';
 
 interface FirstTrimesterMarkers {
@@ -56,13 +56,13 @@ export default function FirstTrimesterCalculator() {
 
     const calculatedRisk = calculateFirstTrimesterRisk({
       maternalAge: parseInt(markers.maternalAge),
+      previousT21: markers.previousT21,
       crl: parseFloat(markers.crl),
       heartRate: parseInt(markers.heartRate),
       nuchalTranslucency: parseFloat(markers.nuchalTranslucency),
       nasalBone: markers.nasalBone as 'normal' | 'absent' | 'hypoplastic',
       tricuspidRegurgitation: markers.tricuspidRegurgitation as 'normal' | 'abnormal',
       ductusVenosus: markers.ductusVenosus as 'normal' | 'abnormal',
-      previousT21: markers.previousT21,
       pappA: parseFloat(markers.pappA),
       freeBetaHCG: parseFloat(markers.freeBetaHCG),
       lhrNuchalTranslucency: parseFloat(markers.lhrNuchalTranslucency),
@@ -73,194 +73,219 @@ export default function FirstTrimesterCalculator() {
   };
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Edad Materna (años)
-            </label>
-            <input
-              type="number"
-              required
-              min="15"
-              max="50"
-              value={markers.maternalAge}
-              onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Longitud Cráneo-Caudal (mm)
-            </label>
-            <input
-              type="number"
-              required
-              min="45"
-              max="84"
-              step="0.1"
-              value={markers.crl}
-              onChange={(e) => handleCrlChange(e.target.value)}
-              className={`w-full px-4 py-2 rounded-lg border ${
-                crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-200 focus:border-blue-500'
-              } focus:ring-2 focus:ring-blue-200 outline-none transition`}
-            />
-            {crlError && <p className="mt-1 text-sm text-red-600">{crlError}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              PAPP-A (MoM)
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              min="0.1"
-              max="3"
-              value={markers.pappA}
-              onChange={(e) => setMarkers({ ...markers, pappA: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              β-hCG libre (MoM)
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              min="0.1"
-              max="5"
-              value={markers.freeBetaHCG}
-              onChange={(e) => setMarkers({ ...markers, freeBetaHCG: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Translucencia Nucal (mm)
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              min="0.5"
-              max="6.5"
-              value={markers.nuchalTranslucency}
-              onChange={(e) => setMarkers({ ...markers, nuchalTranslucency: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              LHR Translucencia Nucal
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={markers.lhrNuchalTranslucency}
-              onChange={(e) => setMarkers({ ...markers, lhrNuchalTranslucency: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Hueso Nasal
-            </label>
-            <select
-              value={markers.nasalBone}
-              onChange={(e) => setMarkers({ ...markers, nasalBone: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            >
-              <option value="normal">Normal</option>
-              <option value="absent">Ausente</option>
-              <option value="hypoplastic">Hipoplásico</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Ductus Venoso
-            </label>
-            <select
-              value={markers.ductusVenosus}
-              onChange={(e) => setMarkers({ ...markers, ductusVenosus: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            >
-              <option value="normal">Normal</option>
-              <option value="reversed">Reverso</option>
-              <option value="absent">Ausente</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              LHR Ductus Venoso
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={markers.lhrDuctusVenosus}
-              onChange={(e) => setMarkers({ ...markers, lhrDuctusVenosus: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              Flujo Tricuspídeo
-            </label>
-            <select
-              value={markers.tricuspidRegurgitation}
-              onChange={(e) => setMarkers({ ...markers, tricuspidRegurgitation: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            >
-              <option value="normal">Normal</option>
-              <option value="abnormal">Regurgitación</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              LHR Flujo Tricuspídeo
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={markers.lhrTricuspidFlow}
-              onChange={(e) => setMarkers({ ...markers, lhrTricuspidFlow: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-            />
-          </div>
+    <div className="space-y-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Baby className="w-6 h-6 text-blue-600" />
+          <h2 className="text-2xl font-semibold text-blue-900">Marcadores Primer Trimestre</h2>
         </div>
 
-        <div>
-          <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
-            <input
-              type="checkbox"
-              checked={markers.previousT21}
-              onChange={(e) => setMarkers({ ...markers, previousT21: e.target.checked })}
-              className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
-            />
-            Antecedente de hijo con Trisomía 21
-          </label>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Edad Materna (años)
+              </label>
+              <input
+                type="number"
+                required
+                min="15"
+                max="50"
+                value={markers.maternalAge}
+                onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                placeholder="Ingrese edad materna"
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={!!crlError}
-          className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02] shadow-lg ${
-            crlError ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          Calcular Riesgo
-        </button>
-      </form>
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Longitud Cráneo-Caudal (mm)
+              </label>
+              <input
+                type="number"
+                required
+                min="45"
+                max="84"
+                step="0.1"
+                value={markers.crl}
+                onChange={(e) => handleCrlChange(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border ${
+                  crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-200 focus:border-blue-500'
+                } focus:ring-2 focus:ring-blue-200 outline-none transition`}
+                placeholder="CRL entre 45-84 mm"
+              />
+              {crlError && (
+                <p className="mt-1 text-sm text-red-600">{crlError}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                PAPP-A (MoM)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.1"
+                max="3"
+                value={markers.pappA}
+                onChange={(e) => setMarkers({ ...markers, pappA: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                β-hCG libre (MoM)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.1"
+                max="5"
+                value={markers.freeBetaHCG}
+                onChange={(e) => setMarkers({ ...markers, freeBetaHCG: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Translucencia Nucal (mm)
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                min="0.5"
+                max="6.5"
+                value={markers.nuchalTranslucency}
+                onChange={(e) => setMarkers({ ...markers, nuchalTranslucency: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                LHR Translucencia Nucal
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={markers.lhrNuchalTranslucency}
+                onChange={(e) => setMarkers({ ...markers, lhrNuchalTranslucency: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Hueso Nasal
+              </label>
+              <select
+                value={markers.nasalBone}
+                onChange={(e) => setMarkers({ ...markers, nasalBone: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              >
+                <option value="normal">Normal</option>
+                <option value="absent">Ausente</option>
+                <option value="hypoplastic">Hipoplásico</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Ductus Venoso
+              </label>
+              <select
+                value={markers.ductusVenosus}
+                onChange={(e) => setMarkers({ ...markers, ductusVenosus: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              >
+                <option value="normal">Normal</option>
+                <option value="reversed">Reverso</option>
+                <option value="absent">Ausente</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                LHR Ductus Venoso
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={markers.lhrDuctusVenosus}
+                onChange={(e) => setMarkers({ ...markers, lhrDuctusVenosus: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Flujo Tricuspídeo
+              </label>
+              <select
+                value={markers.tricuspidRegurgitation}
+                onChange={(e) => setMarkers({ ...markers, tricuspidRegurgitation: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              >
+                <option value="normal">Normal</option>
+                <option value="abnormal">Regurgitación</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                LHR Flujo Tricuspídeo
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={markers.lhrTricuspidFlow}
+                onChange={(e) => setMarkers({ ...markers, lhrTricuspidFlow: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-800 mb-1">
+                Frecuencia Cardíaca (lpm)
+              </label>
+              <input
+                type="number"
+                min="100"
+                max="200"
+                value={markers.heartRate}
+                onChange={(e) => setMarkers({ ...markers, heartRate: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                placeholder="Latidos por minuto"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
+              <input
+                type="checkbox"
+                checked={markers.previousT21}
+                onChange={(e) => setMarkers({ ...markers, previousT21: e.target.checked })}
+                className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+              />
+              Antecedente de hijo con Trisomía 21
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!!crlError}
+            className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02] shadow-lg ${
+              crlError ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            Calcular Riesgo
+          </button>
+        </form>
+      </div>
 
       {risk !== null && (
         <RiskDisplay
