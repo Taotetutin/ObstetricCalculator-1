@@ -20,6 +20,52 @@ export const TrisomyRiskSchema = z.object({
 
 export type TrisomyRisk = z.infer<typeof TrisomyRiskSchema>;
 
+
+export const ExtendedTrisomyRiskSchema = z.object({
+  maternalAge: z.string(),
+  gestationalWeeks: z.string(),
+  gestationalDays: z.string().default('0'),
+  bileAcids: z.string(),
+  totalBilirubin: z.string(),
+  got: z.string(),
+  gpt: z.string(),
+  pappA: z.string(),
+  freeBetaHCG: z.string(),
+  nuchalTranslucency: z.string(),
+  heartRate: z.string(),
+  crownRumpLength: z.string(),
+  nasalBone: z.string().default('normal'),
+  tricuspidRegurgitation: z.string().default('normal'),
+  ductusVenosus: z.string().default('normal'),
+  previousT21: z.boolean().default(false)
+});
+
+export type ExtendedTrisomyRisk = z.infer<typeof ExtendedTrisomyRiskSchema>;
+
+export interface MarkerValues {
+  maternalAge: string;
+  gestationalAge: string;
+  nuchalTranslucency: string;
+  pappA: string;
+  freeBetaHCG: string;
+  afp: string;
+  uE3: string;
+  inhibinA: string;
+  hCG: string;
+}
+
+export interface RiskResults {
+  baselineRisk: RiskInterpretation;
+  firstTrimesterRisk: RiskInterpretation;
+  secondTrimesterRisk: RiskInterpretation;
+}
+
+export interface RiskInterpretation {
+  risk: number;
+  interpretation: string;
+  details: string[];
+}
+
 export interface RiskResult {
   risk: number;
   interpretation: string;

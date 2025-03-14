@@ -1,49 +1,48 @@
-import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calculator, Baby, Dna } from "lucide-react";
-import { TrisomyRisk } from "@/types/trisomy";
-import { calculateFirstTrimesterRisk, calculateSecondTrimesterRisk } from "@/utils/riskCalculator";
-import FirstTrimesterCalculator from "./T21/FirstTrimesterCalculator";
-import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
-import AgeCalculator from "./T21/AgeCalculator";
+import React from 'react';
+import { Calculator, Baby, Activity } from 'lucide-react';
+import FirstTrimesterCalculator from './T21/FirstTrimesterCalculator';
+import SecondTrimesterCalculator from './T21/SecondTrimesterCalculator';
+import AgeCalculator from './T21/AgeCalculator';
 
 export default function T21Calculator() {
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="age" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
-          <TabsTrigger value="age" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
-              <Calculator className="w-4 h-4" />
-              <span>Riesgo por Edad</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="first" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
-              <Baby className="w-4 h-4" />
-              <span>Primer Trimestre</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="second" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
-              <Dna className="w-4 h-4" />
-              <span>Segundo Trimestre</span>
-            </div>
-          </TabsTrigger>
-        </TabsList>
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold text-blue-900">Calculadora de Riesgo T21</h1>
+        <p className="text-gray-600">Evaluación de riesgo de trisomía 21 basada en múltiples marcadores</p>
+      </div>
 
-        <TabsContent value="age" className="mt-6">
-          <AgeCalculator />
-        </TabsContent>
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Calculator className="w-6 h-6 text-blue-600" />
+              <h2 className="text-xl font-semibold text-blue-900">Riesgo por Edad</h2>
+            </div>
+            <AgeCalculator />
+          </div>
+        </div>
 
-        <TabsContent value="first" className="mt-6">
-          <FirstTrimesterCalculator />
-        </TabsContent>
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Baby className="w-6 h-6 text-blue-600" />
+              <h2 className="text-xl font-semibold text-blue-900">Primer Trimestre</h2>
+            </div>
+            <FirstTrimesterCalculator />
+          </div>
+        </div>
 
-        <TabsContent value="second" className="mt-6">
-          <SecondTrimesterCalculator />
-        </TabsContent>
-      </Tabs>
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Activity className="w-6 h-6 text-blue-600" />
+              <h2 className="text-xl font-semibold text-blue-900">Segundo Trimestre</h2>
+            </div>
+            <SecondTrimesterCalculator />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

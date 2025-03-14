@@ -1,241 +1,273 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { calculatorTypes } from "@shared/schema";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from 'react';
+import { Baby } from 'lucide-react';
+import { calculateFirstTrimesterRisk } from '@/utils/riskCalculator';
+import RiskDisplay from './RiskDisplay';
 
-type FirstTrimesterResult = {
-  risk: number;
-  interpretation: string;
-  details: string;
-};
+interface FirstTrimesterMarkers {
+  maternalAge: string;
+  previousT21: boolean;
+  crl: string;
+  heartRate: string;
+  nuchalTranslucency: string;
+  nasalBone: string;
+  tricuspidRegurgitation: string;
+  ductusVenosus: string;
+  pappA: string;
+  freeBetaHCG: string;
+  lhrNuchalTranslucency: string;
+  lhrDuctusVenosus: string;
+  lhrTricuspidFlow: string;
+}
 
 export default function FirstTrimesterCalculator() {
-  const [result, setResult] = useState<FirstTrimesterResult | null>(null);
-
-  const form = useForm({
-    resolver: zodResolver(calculatorTypes.t21FirstTrimester),
-    defaultValues: {
-      age: undefined,
-      crownRumpLength: undefined,
-      heartRate: undefined,
-      nuchalTranslucency: undefined,
-      nasalBone: 'normal',
-      tricuspidRegurgitation: 'normal',
-      ductusVenosus: 'normal',
-      previousT21: false,
-    },
+  const [markers, setMarkers] = useState<FirstTrimesterMarkers>({
+    maternalAge: '',
+    previousT21: false,
+    crl: '',
+    heartRate: '',
+    nuchalTranslucency: '',
+    nasalBone: 'normal',
+    tricuspidRegurgitation: 'normal',
+    ductusVenosus: 'normal',
+    pappA: '',
+    freeBetaHCG: '',
+    lhrNuchalTranslucency: '',
+    lhrDuctusVenosus: '',
+    lhrTricuspidFlow: ''
   });
+  const [risk, setRisk] = useState<number | null>(null);
+  const [crlError, setCrlError] = useState<string>('');
 
-  const onSubmit = async (data: any) => {
-    // TODO: Implementar el cálculo de riesgo real
-    const risk = 1 / (350 * Math.exp(-0.1 * (data.age - 35)));
-
-    const resultado = {
-      risk,
-      interpretation: risk > (1/100) 
-        ? "Alto Riesgo" 
-        : risk > (1/1000) 
-          ? "Riesgo Intermedio" 
-          : "Bajo Riesgo",
-      details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/risk)}`
-    };
-
-    setResult(resultado);
-
-    try {
-      await fetch("/api/calculations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          calculatorType: "t21FirstTrimester",
-          input: JSON.stringify(data),
-          result: JSON.stringify(resultado),
-        }),
-      });
-    } catch (error) {
-      console.error("Error saving calculation:", error);
+  const handleCrlChange = (value: string) => {
+    const crl = parseFloat(value);
+    if (value === '') {
+      setCrlError('');
+    } else if (crl < 45 || crl > 84) {
+      setCrlError('El CRL debe estar entre 45 y 84 mm para un cálculo preciso');
+    } else {
+      setCrlError('');
     }
+    setMarkers({ ...markers, crl: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (crlError) return;
+
+    const calculatedRisk = calculateFirstTrimesterRisk({
+      maternalAge: parseInt(markers.maternalAge),
+      crl: parseFloat(markers.crl),
+      heartRate: parseInt(markers.heartRate),
+      nuchalTranslucency: parseFloat(markers.nuchalTranslucency),
+      nasalBone: markers.nasalBone as 'normal' | 'absent' | 'hypoplastic',
+      tricuspidRegurgitation: markers.tricuspidRegurgitation as 'normal' | 'abnormal',
+      ductusVenosus: markers.ductusVenosus as 'normal' | 'abnormal',
+      previousT21: markers.previousT21,
+      pappA: parseFloat(markers.pappA),
+      freeBetaHCG: parseFloat(markers.freeBetaHCG),
+      lhrNuchalTranslucency: parseFloat(markers.lhrNuchalTranslucency),
+      lhrDuctusVenosus: parseFloat(markers.lhrDuctusVenosus),
+      lhrTricuspidFlow: parseFloat(markers.lhrTricuspidFlow)
+    });
+    setRisk(calculatedRisk);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Marcadores Primer Trimestre</h2>
-      </div>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            <FormField
-              control={form.control}
-              name="age"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Edad Materna (años)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="Ingrese edad materna"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="crownRumpLength"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="CRL entre 45-84 mm"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="heartRate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Frecuencia Cardíaca (lpm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="Latidos por minuto"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nuchalTranslucency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Translucencia Nucal (mm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="Medida en mm"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nasalBone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Hueso Nasal</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione estado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="normal">Normal</SelectItem>
-                      <SelectItem value="hipoplasico">Hipoplásico</SelectItem>
-                      <SelectItem value="ausente">Ausente</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tricuspidRegurgitation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Insuficiencia Tricuspídea</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione estado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="normal">Normal</SelectItem>
-                      <SelectItem value="presente">Presente</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="ductusVenosus"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ductus Venoso</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione estado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="normal">Normal</SelectItem>
-                      <SelectItem value="ausente">Ausente</SelectItem>
-                      <SelectItem value="reverso">Reverso</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="previousT21"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <Checkbox
-                    id="previousT21"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
-                  >
-                    {field.value && <span className="text-[10px] font-bold">X</span>}
-                  </Checkbox>
-                  <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
-                    Antecedente de hijo con Trisomía 21
-                  </FormLabel>
-                </FormItem>
-              )}
+    <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Edad Materna (años)
+            </label>
+            <input
+              type="number"
+              required
+              min="15"
+              max="50"
+              value={markers.maternalAge}
+              onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
             />
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-            Calcular Riesgo
-          </Button>
-        </form>
-      </Form>
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Longitud Cráneo-Caudal (mm)
+            </label>
+            <input
+              type="number"
+              required
+              min="45"
+              max="84"
+              step="0.1"
+              value={markers.crl}
+              onChange={(e) => handleCrlChange(e.target.value)}
+              className={`w-full px-4 py-2 rounded-lg border ${
+                crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-200 focus:border-blue-500'
+              } focus:ring-2 focus:ring-blue-200 outline-none transition`}
+            />
+            {crlError && <p className="mt-1 text-sm text-red-600">{crlError}</p>}
+          </div>
 
-      {result && (
-        <div className="mt-6 p-4 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
-          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
-          <p className={`font-medium ${
-            result.interpretation === "Alto Riesgo"
-              ? "text-red-600"
-              : result.interpretation === "Riesgo Intermedio"
-                ? "text-amber-600"
-                : "text-green-600"
-          }`}>
-            {result.interpretation}
-          </p>
-          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              PAPP-A (MoM)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0.1"
+              max="3"
+              value={markers.pappA}
+              onChange={(e) => setMarkers({ ...markers, pappA: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              β-hCG libre (MoM)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0.1"
+              max="5"
+              value={markers.freeBetaHCG}
+              onChange={(e) => setMarkers({ ...markers, freeBetaHCG: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Translucencia Nucal (mm)
+            </label>
+            <input
+              type="number"
+              step="0.1"
+              min="0.5"
+              max="6.5"
+              value={markers.nuchalTranslucency}
+              onChange={(e) => setMarkers({ ...markers, nuchalTranslucency: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              LHR Translucencia Nucal
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={markers.lhrNuchalTranslucency}
+              onChange={(e) => setMarkers({ ...markers, lhrNuchalTranslucency: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Hueso Nasal
+            </label>
+            <select
+              value={markers.nasalBone}
+              onChange={(e) => setMarkers({ ...markers, nasalBone: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            >
+              <option value="normal">Normal</option>
+              <option value="absent">Ausente</option>
+              <option value="hypoplastic">Hipoplásico</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Ductus Venoso
+            </label>
+            <select
+              value={markers.ductusVenosus}
+              onChange={(e) => setMarkers({ ...markers, ductusVenosus: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            >
+              <option value="normal">Normal</option>
+              <option value="reversed">Reverso</option>
+              <option value="absent">Ausente</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              LHR Ductus Venoso
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={markers.lhrDuctusVenosus}
+              onChange={(e) => setMarkers({ ...markers, lhrDuctusVenosus: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              Flujo Tricuspídeo
+            </label>
+            <select
+              value={markers.tricuspidRegurgitation}
+              onChange={(e) => setMarkers({ ...markers, tricuspidRegurgitation: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            >
+              <option value="normal">Normal</option>
+              <option value="abnormal">Regurgitación</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-800 mb-1">
+              LHR Flujo Tricuspídeo
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={markers.lhrTricuspidFlow}
+              onChange={(e) => setMarkers({ ...markers, lhrTricuspidFlow: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
+          </div>
         </div>
+
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
+            <input
+              type="checkbox"
+              checked={markers.previousT21}
+              onChange={(e) => setMarkers({ ...markers, previousT21: e.target.checked })}
+              className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+            />
+            Antecedente de hijo con Trisomía 21
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          disabled={!!crlError}
+          className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02] shadow-lg ${
+            crlError ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          Calcular Riesgo
+        </button>
+      </form>
+
+      {risk !== null && (
+        <RiskDisplay
+          title="Riesgo Primer Trimestre"
+          risk={risk}
+          description="Este cálculo considera los marcadores ecográficos y bioquímicos del primer trimestre para ajustar el riesgo de trisomía 21."
+        />
       )}
     </div>
   );
