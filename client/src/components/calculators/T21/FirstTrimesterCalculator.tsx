@@ -14,7 +14,7 @@ type FirstTrimesterInput = {
   baseRisk: string;
   nasalBone: 'normal' | 'ausente';
   tricuspidRegurgitation: 'normal' | 'presente';
-  ductusVenosus: 'normal' | 'ausente' | 'reverso';
+  ductusVenosus: 'normal' | 'negativa';
   previousT21: boolean;
 };
 
@@ -51,12 +51,10 @@ export default function FirstTrimesterCalculator() {
       },
       ductusVenosus: {
         normal: 0.44,
-        ausente: 7.63,
-        reverso: 7.63,
+        negativa: 7.63,
       }
     };
 
-    // Aplicar multiplicadores por cada marcador
     risk *= multipliers.nasalBone[data.nasalBone];
     risk *= multipliers.tricuspidRegurgitation[data.tricuspidRegurgitation];
     risk *= multipliers.ductusVenosus[data.ductusVenosus];
@@ -173,8 +171,7 @@ export default function FirstTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Onda A negativa (LR: 7.63)</SelectItem>
-                      <SelectItem value="reverso" className="text-gray-900">Onda A reversa (LR: 7.63)</SelectItem>
+                      <SelectItem value="negativa" className="text-gray-900">Onda A negativa (LR: 7.63)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
