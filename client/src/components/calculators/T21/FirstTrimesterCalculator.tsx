@@ -60,8 +60,9 @@ export default function FirstTrimesterCalculator() {
     risk *= multipliers.ductusVenosus[data.ductusVenosus];
 
     if (data.previousT21) {
-      risk *= 14.3;
+      risk *= 4.0; // LR for previous T21
     }
+    // If not checked, no multiplication needed as LR = 1.0
 
     const resultado = {
       risk,
@@ -190,7 +191,7 @@ export default function FirstTrimesterCalculator() {
                   className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                 />
                 <FormLabel className="font-normal cursor-pointer">
-                  Antecedente de hijo con Trisomía 21 (LR: 14.3)
+                  Antecedente de hijo con Trisomía 21 (LR: 4.0)
                 </FormLabel>
               </FormItem>
             )}
