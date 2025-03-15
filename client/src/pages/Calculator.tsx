@@ -31,16 +31,18 @@ export default function Calculator() {
   const CalculatorComponent = calculator.component;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
-      <Card className="shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
+    <div className="w-full max-w-2xl mx-auto px-4 h-[calc(100vh-2rem)]">
+      <Card className="shadow-lg h-full flex flex-col">
+        <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10 flex-shrink-0">
           <CardTitle className="flex items-center gap-2 text-blue-700 text-lg md:text-xl">
             {calculator.icon && <calculator.icon className="w-5 h-5 md:w-6 md:h-6" />}
             {calculator.name}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
-          <CalculatorComponent />
+        <CardContent className="p-6 flex-1 overflow-hidden">
+          <div className="h-full">
+            <CalculatorComponent />
+          </div>
         </CardContent>
       </Card>
     </div>

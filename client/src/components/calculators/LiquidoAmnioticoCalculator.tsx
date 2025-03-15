@@ -7,6 +7,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import BaseCalculator from "./BaseCalculator";
 
 export default function LiquidoAmnioticoCalculator() {
   const [result, setResult] = useState<{ ila: number; categoria: string } | null>(null);
@@ -40,10 +41,10 @@ export default function LiquidoAmnioticoCalculator() {
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+  const formSection = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((quadrant) => (
             <FormField
               key={quadrant}
@@ -63,28 +64,37 @@ export default function LiquidoAmnioticoCalculator() {
               )}
             />
           ))}
+        </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-            Calcular
-          </Button>
-        </form>
-      </Form>
+        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+          Calcular
+        </Button>
+      </form>
+    </Form>
+  );
 
-      {result && (
-        <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-            <p>
-              Índice de Líquido Amniótico:{" "}
-              <span className="font-medium">{result.ila} cm</span>
-            </p>
-            <p>
-              Clasificación:{" "}
-              <span className="font-medium">{result.categoria}</span>
-            </p>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+  const resultSection = result && (
+    <Card>
+      <CardContent className="pt-6">
+        <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+        <p>
+          Índice de Líquido Amniótico:{" "}
+          <span className="font-medium">{result.ila} cm</span>
+        </p>
+        <p>
+          Clasificación:{" "}
+          <span className="font-medium">{result.categoria}</span>
+        </p>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <BaseCalculator
+      title="Índice de Líquido Amniótico"
+      description="Calculadora para evaluar el volumen de líquido amniótico mediante la técnica de los cuatro cuadrantes"
+      formSection={formSection}
+      resultSection={resultSection}
+    />
   );
 }
