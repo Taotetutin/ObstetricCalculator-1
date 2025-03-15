@@ -42,17 +42,17 @@ export default function FirstTrimesterCalculator() {
 
     const multipliers = {
       nasalBone: {
-        normal: 0.41,
-        ausente: 51.0,
+        normal: 0.15,
+        ausente: 23.36,
       },
       tricuspidRegurgitation: {
-        normal: 0.62,
-        presente: 4.4,
+        normal: 0.45,
+        presente: 5.83,
       },
       ductusVenosus: {
-        normal: 0.61,
-        ausente: 3.5,
-        reverso: 4.1,
+        normal: 0.44,
+        ausente: 7.63,
+        reverso: 7.63,
       }
     };
 
@@ -62,7 +62,7 @@ export default function FirstTrimesterCalculator() {
     risk *= multipliers.ductusVenosus[data.ductusVenosus];
 
     if (data.previousT21) {
-      risk *= 14.3; //Updated LR for previousT21
+      risk *= 14.3;
     }
 
     const resultado = {
@@ -134,8 +134,8 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.41)</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 51.0)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.15)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 23.36)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -153,8 +153,8 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.62)</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 4.4)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.45)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.83)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -172,32 +172,32 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.61)</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Onda A ausente (LR: 3.5)</SelectItem>
-                      <SelectItem value="reverso" className="text-gray-900">Onda A reversa (LR: 4.1)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Onda A negativa (LR: 7.63)</SelectItem>
+                      <SelectItem value="reverso" className="text-gray-900">Onda A reversa (LR: 7.63)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="previousT21"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                  />
-                  <FormLabel className="font-normal cursor-pointer">
-                    Antecedente de hijo con Trisomía 21 (LR: 14.3)
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
           </div>
+
+          <FormField
+            control={form.control}
+            name="previousT21"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                />
+                <FormLabel className="font-normal cursor-pointer">
+                  Antecedente de hijo con Trisomía 21 (LR: 14.3)
+                </FormLabel>
+              </FormItem>
+            )}
+          />
 
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular Riesgo Ajustado
