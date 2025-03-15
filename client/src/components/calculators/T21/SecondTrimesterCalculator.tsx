@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 type SecondTrimesterResult = {
   risk: number;
@@ -23,13 +25,13 @@ export default function SecondTrimesterCalculator() {
       hasFirstTrimesterScreening: false,
       baselineRisk: undefined,
       nasalBone: 'normal',
-      cardiacFocus: 'ausente',
-      ventriculomegaly: 'ausente',
+      cardiacFocus: 'normal',
+      ventriculomegaly: 'normal',
       nuchalFold: 'normal',
       shortFemur: 'normal',
-      aberrantSubclavian: 'ausente',
-      hyperechogenicBowel: 'ausente',
-      pyelectasis: 'ausente',
+      aberrantSubclavian: 'normal',
+      hyperechogenicBowel: 'normal',
+      pyelectasis: 'normal',
     },
   });
 
@@ -57,10 +59,8 @@ export default function SecondTrimesterCalculator() {
     };
 
     Object.entries(data).forEach(([key, value]) => {
-      if (value === 'ausente' || value === 'presente' || value === 'anormal' || value === 'hipoplasico' || value === 'normal') {
-        const multiplier = markerMultipliers[`${key}_${value}`];
-        if (multiplier) risk *= multiplier;
-      }
+      const multiplier = markerMultipliers[`${key}_${value}`];
+      if (multiplier) risk *= multiplier;
     });
 
     const resultado = {
@@ -92,203 +92,180 @@ export default function SecondTrimesterCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Sonograma Genético</h2>
-      </div>
+      <Alert>
+        <InfoIcon className="h-4 w-4" />
+        <AlertDescription>
+          Calculadora para ajustar el riesgo de T21 basado en marcadores ecográficos del segundo trimestre
+        </AlertDescription>
+      </Alert>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            <FormField
-              control={form.control}
-              name="hasFirstTrimesterScreening"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+          <FormField
+            control={form.control}
+            name="baselineRisk"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Riesgo Basal por Screening (1/X)</FormLabel>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">1/</span>
+                  <Input
+                    type="text"
+                    placeholder="Ingrese el denominador del riesgo"
+                    {...field}
+                    className="flex-1 border border-gray-300 bg-white text-gray-900"
                   />
-                  <FormLabel className="font-normal cursor-pointer">
-                    Tiene screening de primer trimestre
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
+                </div>
+              </FormItem>
+            )}
+          />
 
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
-              name="baselineRisk"
+              name="nasalBone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Riesgo Basal por Edad Materna (1/X)</FormLabel>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">1/</span>
-                    <Input
-                      type="text"
-                      placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
-                      {...field}
-                      className="flex-1 border border-gray-300 bg-white text-gray-900"
-                    />
-                  </div>
+                  <FormLabel>Hueso Nasal</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.23)</SelectItem>
+                      <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 27.0)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 42.0)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="nasalBone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Hueso Nasal</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.23)</SelectItem>
-                        <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 27.0)</SelectItem>
-                        <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 42.0)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="cardiacFocus"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Foco Cardíaco Hiperecogénico</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.41)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.8)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="ventriculomegaly"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ventriculomegalia</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.32)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.0)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="nuchalFold"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Pliegue Nucal</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.18)</SelectItem>
-                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 23.0)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="shortFemur"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fémur Corto</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.33)</SelectItem>
-                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 3.7)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="aberrantSubclavian"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Arteria Subclavia Aberrante</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.39)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 3.9)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="hyperechogenicBowel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Intestino Hiperecogénico</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.28)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 11.0)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="pyelectasis"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Pielectasia</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
-                        <SelectValue placeholder="Seleccione estado" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 1.7)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="cardiacFocus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Foco Cardíaco Hiperecogénico</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.41)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.8)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="ventriculomegaly"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ventriculomegalia</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.32)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.0)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nuchalFold"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pliegue Nucal</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.18)</SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 23.0)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="shortFemur"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fémur Corto</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.33)</SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 3.7)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="aberrantSubclavian"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Arteria Subclavia Aberrante</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.39)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 3.9)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="hyperechogenicBowel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Intestino Hiperecogénico</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.28)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 11.0)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="pyelectasis"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pielectasia</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 1.7)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
           </div>
 
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
