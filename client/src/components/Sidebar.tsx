@@ -29,24 +29,22 @@ export default function Sidebar() {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
-      {/* Franja azul superior */}
-      <div className="h-[8vh] bg-gradient-to-r from-blue-600 to-blue-400"></div>
+    <div className="flex h-full flex-col">
+      {/* Espacio para la franja azul */}
+      <div className="h-32"></div>
 
-      {/* Logo y título */}
-      <div className="flex items-center gap-3 p-4 border-b h-[12vh]">
+      <div className="flex items-center gap-3 p-4 border-b">
         <img 
           src="/Adobe_Express_2024-04-12_7.56.48-removebg-preview.png"
           alt="MiMaternoFetal Logo"
           className="h-8 w-auto"
         />
-        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent border-b-2 border-blue-400">
           ObsteriX Legend
         </span>
       </div>
 
-      {/* Navegación con scroll solo si es necesario */}
-      <nav className="flex-1 overflow-y-auto h-[68vh]">
+      <nav className="flex-1 overflow-y-auto">
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
           <div key={groupName} className="py-2">
             <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
@@ -78,8 +76,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer con botón de logout */}
-      <div className="border-t h-[12vh] flex items-center p-4">
+      <div className="mt-auto p-4 border-t">
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"

@@ -42,34 +42,27 @@ export default function LiquidoAmnioticoCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Índice de Líquido Amniótico</h2>
-        <p className="text-gray-600">Calculadora para evaluar el volumen de líquido amniótico mediante la técnica de los cuatro cuadrantes</p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((quadrant) => (
-              <FormField
-                key={quadrant}
-                control={form.control}
-                name={`q${quadrant}` as "q1" | "q2" | "q3" | "q4"}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cuadrante {quadrant} (cm)</FormLabel>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-          </div>
+          {[1, 2, 3, 4].map((quadrant) => (
+            <FormField
+              key={quadrant}
+              control={form.control}
+              name={`q${quadrant}` as "q1" | "q2" | "q3" | "q4"}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cuadrante {quadrant} (cm)</FormLabel>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
 
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
             Calcular
