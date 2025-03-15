@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calculator } from 'lucide-react';
-import { calculateAgeBasedRisk } from '../utils/riskCalculators';
+import { calculateAgeBasedRisk } from './utils/riskCalculators';
 import RiskDisplay from './RiskDisplay';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
