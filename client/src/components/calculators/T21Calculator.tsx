@@ -7,8 +7,8 @@ import SecondTrimesterCalculator from "./T21/SecondTrimesterCalculator";
 
 export default function T21Calculator() {
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="age" className="w-full">
+    <div className="h-[calc(100vh-4rem)] flex flex-col">
+      <Tabs defaultValue="age" className="w-full flex-1 flex flex-col">
         <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
           <TabsTrigger value="age" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
@@ -29,15 +29,17 @@ export default function T21Calculator() {
             </div>
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="age" className="mt-6">
-          <AgeCalculator />
-        </TabsContent>
-        <TabsContent value="first" className="mt-6">
-          <FirstTrimesterCalculator />
-        </TabsContent>
-        <TabsContent value="second" className="mt-6">
-          <SecondTrimesterCalculator />
-        </TabsContent>
+        <div className="flex-1 overflow-hidden">
+          <TabsContent value="age" className="h-full">
+            <AgeCalculator />
+          </TabsContent>
+          <TabsContent value="first" className="h-full">
+            <FirstTrimesterCalculator />
+          </TabsContent>
+          <TabsContent value="second" className="h-full">
+            <SecondTrimesterCalculator />
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
