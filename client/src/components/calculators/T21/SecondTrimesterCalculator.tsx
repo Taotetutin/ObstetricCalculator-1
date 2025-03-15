@@ -36,7 +36,6 @@ export default function SecondTrimesterCalculator() {
   const onSubmit = async (data: any) => {
     let risk = 1/parseFloat(data.baselineRisk);
 
-    // Ajustar riesgo basado en los marcadores
     const markerMultipliers: Record<string, number> = {
       nasalBone_ausente: 2.5,
       cardiacFocus_presente: 2.0,
@@ -48,7 +47,6 @@ export default function SecondTrimesterCalculator() {
       pyelectasis_presente: 1.8
     };
 
-    // Aplicar multiplicadores por cada marcador anormal
     Object.entries(data).forEach(([key, value]) => {
       if (value === 'ausente' || value === 'presente' || value === 'anormal') {
         const multiplier = markerMultipliers[`${key}_${value}`];
@@ -98,14 +96,11 @@ export default function SecondTrimesterCalculator() {
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2">
                   <Checkbox
-                    id="hasFirstTrimesterScreening"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
-                  >
-                    {field.value && <span className="text-[10px] font-bold">X</span>}
-                  </Checkbox>
-                  <FormLabel htmlFor="hasFirstTrimesterScreening" className="font-normal cursor-pointer">
+                    className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                  />
+                  <FormLabel className="font-normal cursor-pointer">
                     Tiene screening de primer trimestre
                   </FormLabel>
                 </FormItem>
@@ -118,11 +113,15 @@ export default function SecondTrimesterCalculator() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Riesgo Basal por Edad Materna (1/X)</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
-                    {...field}
-                  />
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">1/</span>
+                    <Input
+                      type="text"
+                      placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
+                      {...field}
+                      className="flex-1 border border-gray-300 bg-white text-gray-900"
+                    />
+                  </div>
                 </FormItem>
               )}
             />
@@ -135,12 +134,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Hueso Nasal</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="normal">Normal</SelectItem>
-                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -154,12 +153,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Foco Cardíaco Hiperecogénico</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ausente">Ausente</SelectItem>
-                        <SelectItem value="presente">Presente</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -173,12 +172,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Ventriculomegalia</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ausente">Ausente</SelectItem>
-                        <SelectItem value="presente">Presente</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -192,12 +191,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Pliegue Nucal</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="normal">Normal</SelectItem>
-                        <SelectItem value="anormal">Anormal</SelectItem>
+                        <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                        <SelectItem value="anormal" className="text-gray-900">Anormal</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -211,12 +210,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Fémur Corto</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="normal">Normal</SelectItem>
-                        <SelectItem value="anormal">Anormal</SelectItem>
+                        <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                        <SelectItem value="anormal" className="text-gray-900">Anormal</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -230,12 +229,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Arteria Subclavia Aberrante</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ausente">Ausente</SelectItem>
-                        <SelectItem value="presente">Presente</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -249,12 +248,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Intestino Hiperecogénico</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ausente">Ausente</SelectItem>
-                        <SelectItem value="presente">Presente</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -268,12 +267,12 @@ export default function SecondTrimesterCalculator() {
                   <FormItem>
                     <FormLabel>Pielectasia</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                         <SelectValue placeholder="Seleccione estado" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ausente">Ausente</SelectItem>
-                        <SelectItem value="presente">Presente</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
