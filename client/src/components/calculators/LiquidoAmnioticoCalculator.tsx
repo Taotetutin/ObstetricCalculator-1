@@ -7,7 +7,6 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import BaseCalculator from "./BaseCalculator";
 
 export default function LiquidoAmnioticoCalculator() {
   const [result, setResult] = useState<{ ila: number; categoria: string } | null>(null);
@@ -41,60 +40,58 @@ export default function LiquidoAmnioticoCalculator() {
     }
   };
 
-  const formSection = (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map((quadrant) => (
-            <FormField
-              key={quadrant}
-              control={form.control}
-              name={`q${quadrant}` as "q1" | "q2" | "q3" | "q4"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cuadrante {quadrant} (cm)</FormLabel>
-                  <Input
-                    type="number"
-                    step="0.1"
-                    {...field}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-        </div>
-
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-          Calcular
-        </Button>
-      </form>
-    </Form>
-  );
-
-  const resultSection = result && (
-    <Card>
-      <CardContent className="pt-6">
-        <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-        <p>
-          Índice de Líquido Amniótico:{" "}
-          <span className="font-medium">{result.ila} cm</span>
-        </p>
-        <p>
-          Clasificación:{" "}
-          <span className="font-medium">{result.categoria}</span>
-        </p>
-      </CardContent>
-    </Card>
-  );
-
   return (
-    <BaseCalculator
-      title="Índice de Líquido Amniótico"
-      description="Calculadora para evaluar el volumen de líquido amniótico mediante la técnica de los cuatro cuadrantes"
-      formSection={formSection}
-      resultSection={resultSection}
-    />
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Índice de Líquido Amniótico</h2>
+        <p className="text-gray-600">Calculadora para evaluar el volumen de líquido amniótico mediante la técnica de los cuatro cuadrantes</p>
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((quadrant) => (
+              <FormField
+                key={quadrant}
+                control={form.control}
+                name={`q${quadrant}` as "q1" | "q2" | "q3" | "q4"}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cuadrante {quadrant} (cm)</FormLabel>
+                    <Input
+                      type="number"
+                      step="0.1"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
+
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            Calcular
+          </Button>
+        </form>
+      </Form>
+
+      {result && (
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+            <p>
+              Índice de Líquido Amniótico:{" "}
+              <span className="font-medium">{result.ila} cm</span>
+            </p>
+            <p>
+              Clasificación:{" "}
+              <span className="font-medium">{result.categoria}</span>
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }
