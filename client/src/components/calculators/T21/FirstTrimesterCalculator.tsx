@@ -37,11 +37,9 @@ export default function FirstTrimesterCalculator() {
   });
 
   const onSubmit = async (data: FirstTrimesterInput) => {
-    // Convertir el riesgo base de formato "1/X" a número decimal
     const baseRisk = 1 / parseFloat(data.baseRisk);
     let risk = baseRisk;
 
-    // Aplicar multiplicadores según los marcadores
     const multipliers = {
       nasalBone: {
         ausente: 3.0,
@@ -55,7 +53,6 @@ export default function FirstTrimesterCalculator() {
       }
     };
 
-    // Aplicar multiplicadores por cada marcador anormal
     if (data.nasalBone === 'ausente') {
       risk *= multipliers.nasalBone.ausente;
     }
@@ -66,7 +63,6 @@ export default function FirstTrimesterCalculator() {
       risk *= multipliers.ductusVenosus[data.ductusVenosus];
     }
 
-    // Aplicar multiplicador por antecedente de T21
     if (data.previousT21) {
       risk *= 2.5;
     }
@@ -121,7 +117,7 @@ export default function FirstTrimesterCalculator() {
                     type="number"
                     placeholder="Ingrese el denominador del riesgo"
                     {...field}
-                    className="flex-1 border-2 border-gray-200 focus:border-blue-500"
+                    className="flex-1 border border-gray-300 focus:border-blue-500"
                   />
                 </div>
               </FormItem>
@@ -136,12 +132,12 @@ export default function FirstTrimesterCalculator() {
                 <FormItem>
                   <FormLabel>Hueso Nasal</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className="border-2 border-gray-200 bg-white hover:bg-gray-50 focus:border-blue-500">
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="hover:bg-blue-50">Normal</SelectItem>
-                      <SelectItem value="ausente" className="hover:bg-blue-50">Ausente</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -155,12 +151,12 @@ export default function FirstTrimesterCalculator() {
                 <FormItem>
                   <FormLabel>Regurgitación Tricuspídea</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className="border-2 border-gray-200 bg-white hover:bg-gray-50 focus:border-blue-500">
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="hover:bg-blue-50">Normal</SelectItem>
-                      <SelectItem value="presente" className="hover:bg-blue-50">Presente</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -174,13 +170,13 @@ export default function FirstTrimesterCalculator() {
                 <FormItem>
                   <FormLabel>Ductus Venoso</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className="border-2 border-gray-200 bg-white hover:bg-gray-50 focus:border-blue-500">
+                    <SelectTrigger className="w-full border border-gray-300 bg-white text-gray-900">
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="hover:bg-blue-50">Normal</SelectItem>
-                      <SelectItem value="ausente" className="hover:bg-blue-50">Ausente</SelectItem>
-                      <SelectItem value="reverso" className="hover:bg-blue-50">Reverso</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                      <SelectItem value="reverso" className="text-gray-900">Reverso</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -195,7 +191,7 @@ export default function FirstTrimesterCalculator() {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="h-5 w-5 border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                    className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                   />
                   <FormLabel className="font-normal cursor-pointer">
                     Antecedente de hijo con Trisomía 21
