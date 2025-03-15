@@ -54,10 +54,16 @@ export function CalculationHistory({ calculatorType }: { calculatorType: string 
           <History className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent 
+        className="sm:max-w-[425px]"
+        aria-labelledby="calculation-history-title"
+        aria-describedby="calculation-history-description"
+      >
         <DialogHeader>
-          <DialogTitle>Historial de Cálculos</DialogTitle>
-          <DialogDescription>
+          <DialogTitle id="calculation-history-title">
+            Historial de Cálculos
+          </DialogTitle>
+          <DialogDescription id="calculation-history-description">
             Historial de cálculos realizados con esta calculadora
           </DialogDescription>
         </DialogHeader>
