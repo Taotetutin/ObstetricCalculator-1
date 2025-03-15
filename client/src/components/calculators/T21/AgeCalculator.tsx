@@ -1,21 +1,46 @@
-
 import React, { useState } from 'react';
 import { Calculator } from 'lucide-react';
 import { calculateAgeBasedRisk } from '../utils/riskCalculators';
 import RiskDisplay from './RiskDisplay';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+
+interface AgeCalculatorProps {
+  maternalAge: number;
+  setMaternalAge: (age: number) => void;
+}
+
+const AgeInput = ({ maternalAge, setMaternalAge }: AgeCalculatorProps) => (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="grid w-full items-center gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="age">Edad Materna</Label>
+            <Input
+              id="age"
+              type="number"
+              value={maternalAge}
+              onChange={(e) => setMaternalAge(Number(e.target.value))}
+              placeholder="Ingrese edad materna"
+            />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
 
 export default function AgeCalculator() {
-  const [formData, setFormData] = useState({
-    maternalAge: '',
-    previousT21: false
-  });
+  const [maternalAge, setMaternalAge] = useState<number>(0);
+  const [previousT21, setPreviousT21] = useState(false);
   const [risk, setRisk] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const calculatedRisk = calculateAgeBasedRisk(
-      parseInt(formData.maternalAge),
-      formData.previousT21
+      maternalAge,
+      previousT21
     );
     setRisk(calculatedRisk);
   };
@@ -28,27 +53,14 @@ export default function AgeCalculator() {
           <h2 className="text-2xl font-semibold text-blue-900">Riesgo por Edad Materna</h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-blue-800">
-              Edad Materna (años)
-            </label>
-            <input
-              type="number"
-              value={formData.maternalAge}
-              onChange={(e) => setFormData({ ...formData, maternalAge: e.target.value })}
-              className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              min="15"
-              max="50"
-              required
-            />
-          </div>
+          <AgeInput maternalAge={maternalAge} setMaternalAge={setMaternalAge} />
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
               <input
                 type="checkbox"
-                checked={formData.previousT21}
-                onChange={(e) => setFormData({ ...formData, previousT21: e.target.checked })}
+                checked={previousT21}
+                onChange={(e) => setPreviousT21(e.target.checked)}
                 className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
               />
               Antecedente de hijo con Trisomía 21

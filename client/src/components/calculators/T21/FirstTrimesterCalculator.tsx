@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import { Calculator } from 'lucide-react';
 import { calculateFirstTrimesterRisk } from '../utils/riskCalculators';
 import RiskDisplay from './RiskDisplay';
+import FirstTrimesterInput from './FirstTrimesterInput'; // Import the new component
+import { Card, CardContent } from '@/components/ui/card'; //Import UI components
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+
 
 export default function FirstTrimesterCalculator() {
   const [markers, setMarkers] = useState({
     maternalAge: '',
     gestationalAge: '',
     crl: '',
-    nt: '',
     previousT21: false,
-    bhcg: '',
-    pappa: ''
   });
 
   const [risk, setRisk] = useState<number | null>(null);
   const [crlError, setCrlError] = useState<string>('');
+  const [nt, setNt] = useState<number>(0);
+  const [bhcg, setBhcg] = useState<number>(0);
+  const [pappa, setPappa] = useState<number>(0);
+
 
   const validateCRL = (value: string) => {
     const crl = parseFloat(value);
@@ -35,10 +41,10 @@ export default function FirstTrimesterCalculator() {
       maternalAge: parseInt(markers.maternalAge),
       gestationalAge: parseFloat(markers.gestationalAge),
       crl: parseFloat(markers.crl),
-      nt: parseFloat(markers.nt),
+      nt: nt, //Use values from new component
       previousT21: markers.previousT21,
-      bhcg: parseFloat(markers.bhcg),
-      pappa: parseFloat(markers.pappa)
+      bhcg: bhcg, //Use values from new component
+      pappa: pappa //Use values from new component
     });
 
     setRisk(calculatedRisk);
@@ -58,7 +64,7 @@ export default function FirstTrimesterCalculator() {
               <label className="block text-sm font-medium text-blue-800">
                 Edad Materna (años)
               </label>
-              <input
+              <Input //replaced with Input from ui component
                 type="number"
                 value={markers.maternalAge}
                 onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
@@ -73,7 +79,7 @@ export default function FirstTrimesterCalculator() {
               <label className="block text-sm font-medium text-blue-800">
                 Edad Gestacional (semanas)
               </label>
-              <input
+              <Input //replaced with Input from ui component
                 type="number"
                 value={markers.gestationalAge}
                 onChange={(e) => setMarkers({ ...markers, gestationalAge: e.target.value })}
@@ -89,7 +95,7 @@ export default function FirstTrimesterCalculator() {
               <label className="block text-sm font-medium text-blue-800">
                 CRL (mm)
               </label>
-              <input
+              <Input //replaced with Input from ui component
                 type="number"
                 value={markers.crl}
                 onChange={(e) => {
@@ -107,55 +113,8 @@ export default function FirstTrimesterCalculator() {
                 <p className="mt-1 text-sm text-red-600">{crlError}</p>
               )}
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                NT (mm)
-              </label>
-              <input
-                type="number"
-                value={markers.nt}
-                onChange={(e) => setMarkers({ ...markers, nt: e.target.value })}
-                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                min="0.5"
-                max="10"
-                step="0.1"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                β-hCG (MoM)
-              </label>
-              <input
-                type="number"
-                value={markers.bhcg}
-                onChange={(e) => setMarkers({ ...markers, bhcg: e.target.value })}
-                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                min="0.1"
-                max="5"
-                step="0.01"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                PAPP-A (MoM)
-              </label>
-              <input
-                type="number"
-                value={markers.pappa}
-                onChange={(e) => setMarkers({ ...markers, pappa: e.target.value })}
-                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                min="0.1"
-                max="5"
-                step="0.01"
-                required
-              />
-            </div>
           </div>
+          <FirstTrimesterInput  nt={nt} setNt={setNt} bhcg={bhcg} setBhcg={setBhcg} pappa={pappa} setPappa={setPappa} />
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
