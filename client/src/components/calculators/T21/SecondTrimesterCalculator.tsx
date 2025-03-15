@@ -37,14 +37,14 @@ export default function SecondTrimesterCalculator() {
     let risk = 1/parseFloat(data.baselineRisk);
 
     const markerMultipliers: Record<string, number> = {
-      nasalBone_ausente: 6.3,
-      nasalBone_hipoplasico: 3.2,
-      cardiacFocus_presente: 1.8,
-      ventriculomegaly_presente: 3.8,
-      nuchalFold_anormal: 4.1,
-      shortFemur_anormal: 2.7,
+      nasalBone_ausente: 42.0,
+      nasalBone_hipoplasico: 27.0,
+      cardiacFocus_presente: 5.8,
+      ventriculomegaly_presente: 27.0,
+      nuchalFold_anormal: 23.0,
+      shortFemur_anormal: 3.7,
       aberrantSubclavian_presente: 3.9,
-      hyperechogenicBowel_presente: 3.0,
+      hyperechogenicBowel_presente: 11.0,
       pyelectasis_presente: 1.7
     };
 
@@ -140,8 +140,8 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
-                        <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 3.2)</SelectItem>
-                        <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 6.3)</SelectItem>
+                        <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 27.0)</SelectItem>
+                        <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 42.0)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -160,7 +160,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 1.0)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 1.8)</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.8)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -179,7 +179,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 1.0)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 3.8)</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.0)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -198,7 +198,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
-                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 4.1)</SelectItem>
+                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 23.0)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -217,7 +217,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
-                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 2.7)</SelectItem>
+                        <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 3.7)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -255,7 +255,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 1.0)</SelectItem>
-                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 3.0)</SelectItem>
+                        <SelectItem value="presente" className="text-gray-900">Presente (LR: 11.0)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
