@@ -30,9 +30,9 @@ export function CalculationHistory({ calculatorType }: { calculatorType: string 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(calculation),
       });
-      
+
       if (!response.ok) throw new Error('Error generating PDF');
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -54,7 +54,7 @@ export function CalculationHistory({ calculatorType }: { calculatorType: string 
           <History className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Historial de Cálculos</DialogTitle>
           <DialogDescription>
