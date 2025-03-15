@@ -86,3 +86,49 @@ interface TrisomyRisk {
     interpretation: string;
     recommendation: string;
 }
+export function calculateFirstTrimesterRisk(markers: {
+  maternalAge: string;
+  gestationalAge: string;
+  crl: string;
+  previousT21: boolean;
+  nt?: number;
+  bhcg?: number;
+  pappa?: number;
+}) {
+  const age = parseInt(markers.maternalAge);
+  const baseRisk = calculateBaseRisk(age);
+  
+  let adjustedRisk = baseRisk;
+  if (markers.previousT21) {
+    adjustedRisk *= 1.5;
+  }
+
+  // Adjust for biochemical markers if available
+  if (markers.nt && markers.bhcg && markers.pappa) {
+    adjustedRisk *= calculateBiochemicalRisk(markers.nt, markers.bhcg, markers.pappa);
+  }
+
+  return adjustedRisk;
+}
+
+function calculateBaseRisk(age: number): number {
+  // Basic age-based risk calculation
+  if (age < 20) return 0.001;
+  if (age > 45) return 0.05;
+  return 0.001 * Math.pow(1.25, age - 20);
+}
+
+function calculateBiochemicalRisk(nt: number, bhcg: number, pappa: number): number {
+  let risk = 1.0;
+  
+  // NT adjustment
+  if (nt > 3.5) risk *= 2;
+  
+  // Free β-hCG adjustment
+  if (bhcg > 2.5 || bhcg < 0.4) risk *= 1.5;
+  
+  // PAPP-A adjustment
+  if (pappa < 0.4) risk *= 1.5;
+  
+  return risk;
+}
