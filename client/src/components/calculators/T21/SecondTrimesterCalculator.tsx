@@ -22,7 +22,6 @@ export default function SecondTrimesterCalculator() {
   const form = useForm({
     resolver: zodResolver(calculatorTypes.t21SecondTrimester),
     defaultValues: {
-      hasFirstTrimesterScreening: false,
       baselineRisk: undefined,
       nasalBone: 'normal',
       cardiacFocus: 'normal',
@@ -32,6 +31,7 @@ export default function SecondTrimesterCalculator() {
       aberrantSubclavian: 'normal',
       hyperechogenicBowel: 'normal',
       pyelectasis: 'normal',
+      previousT21: false,
     },
   });
 
@@ -59,9 +59,15 @@ export default function SecondTrimesterCalculator() {
     };
 
     Object.entries(data).forEach(([key, value]) => {
-      const multiplier = markerMultipliers[`${key}_${value}`];
-      if (multiplier) risk *= multiplier;
+      if (key !== 'baselineRisk' && key !== 'previousT21') {
+        const multiplier = markerMultipliers[`${key}_${value}`];
+        if (multiplier) risk *= multiplier;
+      }
     });
+
+    if (data.previousT21) {
+      risk *= 13.0;
+    }
 
     const resultado = {
       risk,
@@ -116,6 +122,23 @@ export default function SecondTrimesterCalculator() {
                     className="flex-1 border border-gray-300 bg-white text-gray-900"
                   />
                 </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="previousT21"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                />
+                <FormLabel className="font-normal cursor-pointer">
+                  Antecedente de hijo con Trisomía 21 (LR: 13.0)
+                </FormLabel>
               </FormItem>
             )}
           />
