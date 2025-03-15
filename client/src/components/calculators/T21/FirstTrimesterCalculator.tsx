@@ -136,8 +136,8 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 3.0)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -155,8 +155,8 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 2.5)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -174,9 +174,9 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
-                      <SelectItem value="reverso" className="text-gray-900">Reverso</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 1.0)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 2.0)</SelectItem>
+                      <SelectItem value="reverso" className="text-gray-900">Reverso (LR: 3.0)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -194,7 +194,7 @@ export default function FirstTrimesterCalculator() {
                     className="h-5 w-5 border border-gray-300 rounded data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                   />
                   <FormLabel className="font-normal cursor-pointer">
-                    Antecedente de hijo con Trisomía 21
+                    Antecedente de hijo con Trisomía 21 (LR: 2.5)
                   </FormLabel>
                 </FormItem>
               )}
