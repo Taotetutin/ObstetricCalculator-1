@@ -38,6 +38,7 @@ export default function SecondTrimesterCalculator() {
 
     const markerMultipliers: Record<string, number> = {
       nasalBone_ausente: 2.5,
+      nasalBone_hipoplasico: 2.0,
       cardiacFocus_presente: 2.0,
       ventriculomegaly_presente: 2.5,
       nuchalFold_anormal: 3.0,
@@ -48,7 +49,7 @@ export default function SecondTrimesterCalculator() {
     };
 
     Object.entries(data).forEach(([key, value]) => {
-      if (value === 'ausente' || value === 'presente' || value === 'anormal') {
+      if (value === 'ausente' || value === 'presente' || value === 'anormal' || value === 'hipoplasico') {
         const multiplier = markerMultipliers[`${key}_${value}`];
         if (multiplier) risk *= multiplier;
       }
@@ -139,6 +140,7 @@ export default function SecondTrimesterCalculator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="normal" className="text-gray-900">Normal</SelectItem>
+                        <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico</SelectItem>
                         <SelectItem value="ausente" className="text-gray-900">Ausente</SelectItem>
                       </SelectContent>
                     </Select>
