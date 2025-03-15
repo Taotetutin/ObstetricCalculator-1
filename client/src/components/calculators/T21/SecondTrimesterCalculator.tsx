@@ -1,227 +1,308 @@
-import React, { useState } from 'react';
-import { Stethoscope } from 'lucide-react';
-import { calculateSecondTrimesterRisk } from '../utils/riskCalculators';
-import RiskDisplay from './RiskDisplay';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { calculatorTypes } from "@shared/schema";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
-interface SecondTrimesterMarkers {
-  baselineRisk: string;
-  previousT21: boolean;
-  nasalBone: string;
-  cardiacFocus: string;
-  ventriculomegaly: string;
-  nuchalFold: string;
-  shortFemur: string;
-  aberrantSubclavian: string;
-  hyperechogenicBowel: string;
-  pyelectasis: string;
-  hasFirstTrimesterScreening: boolean;
-}
+type SecondTrimesterResult = {
+  risk: number;
+  interpretation: string;
+  details: string;
+};
 
 export default function SecondTrimesterCalculator() {
-  const [markers, setMarkers] = useState<SecondTrimesterMarkers>({
-    baselineRisk: '',
-    previousT21: false,
-    nasalBone: 'normal',
-    cardiacFocus: 'absent',
-    ventriculomegaly: 'absent',
-    nuchalFold: 'normal',
-    shortFemur: 'normal',
-    aberrantSubclavian: 'absent',
-    hyperechogenicBowel: 'absent',
-    pyelectasis: 'absent',
-    hasFirstTrimesterScreening: false
-  });
-  const [risk, setRisk] = useState<number | null>(null);
+  const [result, setResult] = useState<SecondTrimesterResult | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const calculatedRisk = calculateSecondTrimesterRisk({
-      ...markers,
-      baselineRisk: parseFloat(markers.baselineRisk)
+  const form = useForm({
+    resolver: zodResolver(calculatorTypes.t21SecondTrimester),
+    defaultValues: {
+      hasFirstTrimesterScreening: false,
+      baselineRisk: undefined,
+      nasalBone: 'normal',
+      cardiacFocus: 'ausente',
+      ventriculomegaly: 'ausente',
+      nuchalFold: 'normal',
+      shortFemur: 'normal',
+      aberrantSubclavian: 'ausente',
+      hyperechogenicBowel: 'ausente',
+      pyelectasis: 'ausente',
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    let risk = 1/parseFloat(data.baselineRisk);
+
+    // Ajustar riesgo basado en los marcadores
+    const markerMultipliers: Record<string, number> = {
+      nasalBone_ausente: 2.5,
+      cardiacFocus_presente: 2.0,
+      ventriculomegaly_presente: 2.5,
+      nuchalFold_anormal: 3.0,
+      shortFemur_anormal: 2.2,
+      aberrantSubclavian_presente: 2.0,
+      hyperechogenicBowel_presente: 2.5,
+      pyelectasis_presente: 1.8
+    };
+
+    // Aplicar multiplicadores por cada marcador anormal
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === 'ausente' || value === 'presente' || value === 'anormal') {
+        const multiplier = markerMultipliers[`${key}_${value}`];
+        if (multiplier) risk *= multiplier;
+      }
     });
-    setRisk(calculatedRisk);
+
+    const resultado = {
+      risk,
+      interpretation: risk > (1/100) 
+        ? "Alto Riesgo" 
+        : risk > (1/1000) 
+          ? "Riesgo Intermedio" 
+          : "Bajo Riesgo",
+      details: `Riesgo ajustado del segundo trimestre: 1:${Math.round(1/risk)}`
+    };
+
+    setResult(resultado);
+
+    try {
+      await fetch("/api/calculations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          calculatorType: "t21SecondTrimester",
+          input: JSON.stringify(data),
+          result: JSON.stringify(resultado),
+        }),
+      });
+    } catch (error) {
+      console.error("Error saving calculation:", error);
+    }
   };
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Stethoscope className="w-6 h-6 text-blue-600" />
-          <h2 className="text-2xl font-semibold text-blue-900">Sonograma Genético</h2>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-blue-800 mb-4">
-              <input
-                type="checkbox"
-                checked={markers.hasFirstTrimesterScreening}
-                onChange={(e) => setMarkers({ ...markers, hasFirstTrimesterScreening: e.target.checked })}
-                className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
-              />
-              Tiene screening de primer trimestre
-            </label>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
-              {markers.hasFirstTrimesterScreening 
-                ? 'Riesgo del Screening Primer Trimestre (1/X)' 
-                : 'Riesgo Basal por Edad Materna (1/X)'}
-            </label>
-            <input
-              type="number"
-              required
-              min="1"
-              value={markers.baselineRisk}
-              onChange={(e) => setMarkers({ ...markers, baselineRisk: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-blue-800 mb-4">
-              <input
-                type="checkbox"
-                checked={markers.previousT21}
-                onChange={(e) => setMarkers({ ...markers, previousT21: e.target.checked })}
-                className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
-              />
-              Antecedente de hijo con Trisomía 21
-            </label>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Hueso Nasal
-              </label>
-              <select
-                value={markers.nasalBone}
-                onChange={(e) => setMarkers({ ...markers, nasalBone: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="hypoplastic">Hipoplásico</option>
-                <option value="absent">Ausente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Foco Cardíaco Hiperecogénico
-              </label>
-              <select
-                value={markers.cardiacFocus}
-                onChange={(e) => setMarkers({ ...markers, cardiacFocus: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="absent">Ausente</option>
-                <option value="present">Presente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Ventriculomegalia
-              </label>
-              <select
-                value={markers.ventriculomegaly}
-                onChange={(e) => setMarkers({ ...markers, ventriculomegaly: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="absent">Ausente</option>
-                <option value="present">Presente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Pliegue Nucal
-              </label>
-              <select
-                value={markers.nuchalFold}
-                onChange={(e) => setMarkers({ ...markers, nuchalFold: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="increased">Aumentado</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Fémur Corto
-              </label>
-              <select
-                value={markers.shortFemur}
-                onChange={(e) => setMarkers({ ...markers, shortFemur: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="short">Corto</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Arteria Subclavia Aberrante
-              </label>
-              <select
-                value={markers.aberrantSubclavian}
-                onChange={(e) => setMarkers({ ...markers, aberrantSubclavian: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="absent">Ausente</option>
-                <option value="present">Presente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Intestino Hiperecogénico
-              </label>
-              <select
-                value={markers.hyperechogenicBowel}
-                onChange={(e) => setMarkers({ ...markers, hyperechogenicBowel: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="absent">Ausente</option>
-                <option value="present">Presente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Pielectasia
-              </label>
-              <select
-                value={markers.pyelectasis}
-                onChange={(e) => setMarkers({ ...markers, pyelectasis: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="absent">Ausente</option>
-                <option value="present">Presente</option>
-              </select>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02] shadow-lg"
-          >
-            Calcular Riesgo
-          </button>
-        </form>
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Sonograma Genético</h2>
       </div>
 
-      {risk !== null && (
-        <RiskDisplay 
-          title="Riesgo Segundo Trimestre"
-          risk={risk}
-          description="Este cálculo considera los hallazgos del sonograma genético para ajustar el riesgo de trisomía 21."
-        />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            <FormField
+              control={form.control}
+              name="hasFirstTrimesterScreening"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2">
+                  <Checkbox
+                    id="hasFirstTrimesterScreening"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
+                  >
+                    {field.value && <span className="text-[10px] font-bold">X</span>}
+                  </Checkbox>
+                  <FormLabel htmlFor="hasFirstTrimesterScreening" className="font-normal cursor-pointer">
+                    Tiene screening de primer trimestre
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="baselineRisk"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Riesgo Basal por Edad Materna (1/X)</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Ingrese el denominador del riesgo (ej: 250 para 1/250)"
+                    {...field}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="nasalBone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hueso Nasal</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="normal">Normal</SelectItem>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cardiacFocus"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Foco Cardíaco Hiperecogénico</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="presente">Presente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="ventriculomegaly"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ventriculomegalia</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="presente">Presente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="nuchalFold"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pliegue Nucal</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="normal">Normal</SelectItem>
+                        <SelectItem value="anormal">Anormal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="shortFemur"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fémur Corto</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="normal">Normal</SelectItem>
+                        <SelectItem value="anormal">Anormal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="aberrantSubclavian"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Arteria Subclavia Aberrante</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="presente">Presente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="hyperechogenicBowel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Intestino Hiperecogénico</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="presente">Presente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pyelectasis"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pielectasia</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione estado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ausente">Ausente</SelectItem>
+                        <SelectItem value="presente">Presente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            Calcular Riesgo
+          </Button>
+        </form>
+      </Form>
+
+      {result && (
+        <div className="mt-6 p-4 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
+          <p className={`font-medium ${
+            result.interpretation === "Alto Riesgo"
+              ? "text-red-600"
+              : result.interpretation === "Riesgo Intermedio"
+                ? "text-amber-600"
+                : "text-green-600"
+          }`}>
+            {result.interpretation}
+          </p>
+          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+        </div>
       )}
     </div>
   );

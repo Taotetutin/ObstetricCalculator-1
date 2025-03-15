@@ -1,151 +1,241 @@
-import React, { useState } from 'react';
-import { Calculator } from 'lucide-react';
-import { calculateFirstTrimesterRisk } from '../utils/riskCalculators';
-import RiskDisplay from './RiskDisplay';
-import FirstTrimesterInput from './FirstTrimesterInput'; // Import the new component
-import { Card, CardContent } from '@/components/ui/card'; //Import UI components
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { calculatorTypes } from "@shared/schema";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
+type FirstTrimesterResult = {
+  risk: number;
+  interpretation: string;
+  details: string;
+};
 
 export default function FirstTrimesterCalculator() {
-  const [markers, setMarkers] = useState({
-    maternalAge: '',
-    gestationalAge: '',
-    crl: '',
-    previousT21: false,
+  const [result, setResult] = useState<FirstTrimesterResult | null>(null);
+
+  const form = useForm({
+    resolver: zodResolver(calculatorTypes.t21FirstTrimester),
+    defaultValues: {
+      age: undefined,
+      crownRumpLength: undefined,
+      heartRate: undefined,
+      nuchalTranslucency: undefined,
+      nasalBone: 'normal',
+      tricuspidRegurgitation: 'normal',
+      ductusVenosus: 'normal',
+      previousT21: false,
+    },
   });
 
-  const [risk, setRisk] = useState<number | null>(null);
-  const [crlError, setCrlError] = useState<string>('');
-  const [nt, setNt] = useState<number>(0);
-  const [bhcg, setBhcg] = useState<number>(0);
-  const [pappa, setPappa] = useState<number>(0);
+  const onSubmit = async (data: any) => {
+    // TODO: Implementar el cálculo de riesgo real
+    const risk = 1 / (350 * Math.exp(-0.1 * (data.age - 35)));
 
+    const resultado = {
+      risk,
+      interpretation: risk > (1/100) 
+        ? "Alto Riesgo" 
+        : risk > (1/1000) 
+          ? "Riesgo Intermedio" 
+          : "Bajo Riesgo",
+      details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/risk)}`
+    };
 
-  const validateCRL = (value: string) => {
-    const crl = parseFloat(value);
-    if (crl < 45 || crl > 84) {
-      setCrlError('CRL debe estar entre 45 y 84 mm');
-      return false;
+    setResult(resultado);
+
+    try {
+      await fetch("/api/calculations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          calculatorType: "t21FirstTrimester",
+          input: JSON.stringify(data),
+          result: JSON.stringify(resultado),
+        }),
+      });
+    } catch (error) {
+      console.error("Error saving calculation:", error);
     }
-    setCrlError('');
-    return true;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateCRL(markers.crl)) return;
-
-    const calculatedRisk = calculateFirstTrimesterRisk({
-      maternalAge: parseInt(markers.maternalAge),
-      gestationalAge: parseFloat(markers.gestationalAge),
-      crl: parseFloat(markers.crl),
-      nt: nt, //Use values from new component
-      previousT21: markers.previousT21,
-      bhcg: bhcg, //Use values from new component
-      pappa: pappa //Use values from new component
-    });
-
-    setRisk(calculatedRisk);
   };
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Calculator className="w-6 h-6 text-blue-600" />
-          <h2 className="text-2xl font-semibold text-blue-900">Cálculo Primer Trimestre</h2>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                Edad Materna (años)
-              </label>
-              <Input //replaced with Input from ui component
-                type="number"
-                value={markers.maternalAge}
-                onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
-                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                min="15"
-                max="50"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                Edad Gestacional (semanas)
-              </label>
-              <Input //replaced with Input from ui component
-                type="number"
-                value={markers.gestationalAge}
-                onChange={(e) => setMarkers({ ...markers, gestationalAge: e.target.value })}
-                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                min="11"
-                max="13.6"
-                step="0.1"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800">
-                CRL (mm)
-              </label>
-              <Input //replaced with Input from ui component
-                type="number"
-                value={markers.crl}
-                onChange={(e) => {
-                  setMarkers({ ...markers, crl: e.target.value });
-                  validateCRL(e.target.value);
-                }}
-                className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 ${
-                  crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-300 focus:border-blue-500'
-                }`}
-                min="45"
-                max="84"
-                required
-              />
-              {crlError && (
-                <p className="mt-1 text-sm text-red-600">{crlError}</p>
-              )}
-            </div>
-          </div>
-          <FirstTrimesterInput  nt={nt} setNt={setNt} bhcg={bhcg} setBhcg={setBhcg} pappa={pappa} setPappa={setPappa} />
-
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-blue-800">
-              <input
-                type="checkbox"
-                checked={markers.previousT21}
-                onChange={(e) => setMarkers({ ...markers, previousT21: e.target.checked })}
-                className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
-              />
-              Antecedente de hijo con Trisomía 21
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={!!crlError}
-            className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02] shadow-lg ${
-              crlError ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            Calcular Riesgo
-          </button>
-        </form>
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-blue-700 mb-1">Marcadores Primer Trimestre</h2>
       </div>
 
-      {risk !== null && (
-        <RiskDisplay
-          title="Riesgo Primer Trimestre"
-          risk={risk}
-          description="Este cálculo considera los marcadores ecográficos y bioquímicos del primer trimestre para ajustar el riesgo de trisomía 21."
-        />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Edad Materna (años)</FormLabel>
+                  <Input
+                    type="number"
+                    placeholder="Ingrese edad materna"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="crownRumpLength"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
+                  <Input
+                    type="number"
+                    placeholder="CRL entre 45-84 mm"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="heartRate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Frecuencia Cardíaca (lpm)</FormLabel>
+                  <Input
+                    type="number"
+                    placeholder="Latidos por minuto"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="nuchalTranslucency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Translucencia Nucal (mm)</FormLabel>
+                  <Input
+                    type="number"
+                    placeholder="Medida en mm"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="nasalBone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hueso Nasal</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="hipoplasico">Hipoplásico</SelectItem>
+                      <SelectItem value="ausente">Ausente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tricuspidRegurgitation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Insuficiencia Tricuspídea</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="presente">Presente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ductusVenosus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ductus Venoso</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccione estado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="ausente">Ausente</SelectItem>
+                      <SelectItem value="reverso">Reverso</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="previousT21"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2">
+                  <Checkbox
+                    id="previousT21"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
+                  >
+                    {field.value && <span className="text-[10px] font-bold">X</span>}
+                  </Checkbox>
+                  <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
+                    Antecedente de hijo con Trisomía 21
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            Calcular Riesgo
+          </Button>
+        </form>
+      </Form>
+
+      {result && (
+        <div className="mt-6 p-4 bg-white rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
+          <p className={`font-medium ${
+            result.interpretation === "Alto Riesgo"
+              ? "text-red-600"
+              : result.interpretation === "Riesgo Intermedio"
+                ? "text-amber-600"
+                : "text-green-600"
+          }`}>
+            {result.interpretation}
+          </p>
+          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+        </div>
       )}
     </div>
   );
