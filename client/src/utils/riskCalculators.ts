@@ -132,3 +132,10 @@ function calculateBiochemicalRisk(nt: number, bhcg: number, pappa: number): numb
   
   return risk;
 }
+export const calculateT21Risk = (params: Record<string, number>) => {
+  // Basic risk calculation implementation
+  return {
+    risk: 0,
+    adjustedRisk: 0
+  };
+};
