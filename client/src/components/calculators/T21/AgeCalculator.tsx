@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calculator } from 'lucide-react';
 import { calculateAgeBasedRisk } from '../utils/riskCalculators';
@@ -26,21 +27,19 @@ export default function AgeCalculator() {
           <Calculator className="w-6 h-6 text-blue-600" />
           <h2 className="text-2xl font-semibold text-blue-900">Riesgo por Edad Materna</h2>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-blue-800 mb-1">
+            <label className="block text-sm font-medium text-blue-800">
               Edad Materna (años)
             </label>
             <input
               type="number"
-              required
-              min="15"
-              max="50"
               value={formData.maternalAge}
               onChange={(e) => setFormData({ ...formData, maternalAge: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              placeholder="Ingrese la edad materna"
+              className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              min="15"
+              max="50"
+              required
             />
           </div>
 

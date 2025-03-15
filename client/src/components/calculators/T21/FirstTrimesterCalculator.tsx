@@ -1,74 +1,46 @@
 import React, { useState } from 'react';
-import { Baby } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 import { calculateFirstTrimesterRisk } from '../utils/riskCalculators';
 import RiskDisplay from './RiskDisplay';
 
-interface FirstTrimesterMarkers {
-  maternalAge: string;
-  previousT21: boolean;
-  crl: string;
-  heartRate: string;
-  nuchalTranslucency: string;
-  nasalBone: string;
-  tricuspidRegurgitation: string;
-  ductusVenosus: string;
-  pappA: string;
-  freeBetaHCG: string;
-  lhrNuchalTranslucency: string;
-  lhrDuctusVenosus: string;
-  lhrTricuspidFlow: string;
-}
-
 export default function FirstTrimesterCalculator() {
-  const [markers, setMarkers] = useState<FirstTrimesterMarkers>({
+  const [markers, setMarkers] = useState({
     maternalAge: '',
-    previousT21: false,
+    gestationalAge: '',
     crl: '',
-    heartRate: '',
-    nuchalTranslucency: '',
-    nasalBone: 'normal',
-    tricuspidRegurgitation: 'normal',
-    ductusVenosus: 'normal',
-    pappA: '',
-    freeBetaHCG: '',
-    lhrNuchalTranslucency: '',
-    lhrDuctusVenosus: '',
-    lhrTricuspidFlow: ''
+    nt: '',
+    previousT21: false,
+    bhcg: '',
+    pappa: ''
   });
+
   const [risk, setRisk] = useState<number | null>(null);
   const [crlError, setCrlError] = useState<string>('');
 
-  const handleCrlChange = (value: string) => {
+  const validateCRL = (value: string) => {
     const crl = parseFloat(value);
-    if (value === '') {
-      setCrlError('');
-    } else if (crl < 45 || crl > 84) {
-      setCrlError('El CRL debe estar entre 45 y 84 mm para un cálculo preciso');
-    } else {
-      setCrlError('');
+    if (crl < 45 || crl > 84) {
+      setCrlError('CRL debe estar entre 45 y 84 mm');
+      return false;
     }
-    setMarkers({ ...markers, crl: value });
+    setCrlError('');
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (crlError) return;
+    if (!validateCRL(markers.crl)) return;
 
     const calculatedRisk = calculateFirstTrimesterRisk({
       maternalAge: parseInt(markers.maternalAge),
-      previousT21: markers.previousT21,
+      gestationalAge: parseFloat(markers.gestationalAge),
       crl: parseFloat(markers.crl),
-      heartRate: parseInt(markers.heartRate),
-      nuchalTranslucency: parseFloat(markers.nuchalTranslucency),
-      nasalBone: markers.nasalBone as 'normal' | 'absent' | 'hypoplastic',
-      tricuspidRegurgitation: markers.tricuspidRegurgitation as 'normal' | 'abnormal',
-      ductusVenosus: markers.ductusVenosus as 'normal' | 'abnormal',
-      pappA: parseFloat(markers.pappA),
-      freeBetaHCG: parseFloat(markers.freeBetaHCG),
-      lhrNuchalTranslucency: parseFloat(markers.lhrNuchalTranslucency),
-      lhrDuctusVenosus: parseFloat(markers.lhrDuctusVenosus),
-      lhrTricuspidFlow: parseFloat(markers.lhrTricuspidFlow)
+      nt: parseFloat(markers.nt),
+      previousT21: markers.previousT21,
+      bhcg: parseFloat(markers.bhcg),
+      pappa: parseFloat(markers.pappa)
     });
+
     setRisk(calculatedRisk);
   };
 
@@ -76,44 +48,60 @@ export default function FirstTrimesterCalculator() {
     <div className="space-y-6">
       <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
         <div className="flex items-center gap-3 mb-6">
-          <Baby className="w-6 h-6 text-blue-600" />
-          <h2 className="text-2xl font-semibold text-blue-900">Marcadores Primer Trimestre</h2>
+          <Calculator className="w-6 h-6 text-blue-600" />
+          <h2 className="text-2xl font-semibold text-blue-900">Cálculo Primer Trimestre</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
+              <label className="block text-sm font-medium text-blue-800">
                 Edad Materna (años)
               </label>
               <input
                 type="number"
-                required
-                min="15"
-                max="50"
                 value={markers.maternalAge}
                 onChange={(e) => setMarkers({ ...markers, maternalAge: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-                placeholder="Ingrese edad materna"
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="15"
+                max="50"
+                required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Longitud Cráneo-Caudal (mm)
+              <label className="block text-sm font-medium text-blue-800">
+                Edad Gestacional (semanas)
               </label>
               <input
                 type="number"
+                value={markers.gestationalAge}
+                onChange={(e) => setMarkers({ ...markers, gestationalAge: e.target.value })}
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="11"
+                max="13.6"
+                step="0.1"
                 required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800">
+                CRL (mm)
+              </label>
+              <input
+                type="number"
+                value={markers.crl}
+                onChange={(e) => {
+                  setMarkers({ ...markers, crl: e.target.value });
+                  validateCRL(e.target.value);
+                }}
+                className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 ${
+                  crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-300 focus:border-blue-500'
+                }`}
                 min="45"
                 max="84"
-                step="0.1"
-                value={markers.crl}
-                onChange={(e) => handleCrlChange(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg border ${
-                  crlError ? 'border-red-300 focus:border-red-500' : 'border-blue-200 focus:border-blue-500'
-                } focus:ring-2 focus:ring-blue-200 outline-none transition`}
-                placeholder="CRL entre 45-84 mm"
+                required
               />
               {crlError && (
                 <p className="mt-1 text-sm text-red-600">{crlError}</p>
@@ -121,144 +109,50 @@ export default function FirstTrimesterCalculator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
+              <label className="block text-sm font-medium text-blue-800">
+                NT (mm)
+              </label>
+              <input
+                type="number"
+                value={markers.nt}
+                onChange={(e) => setMarkers({ ...markers, nt: e.target.value })}
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="0.5"
+                max="10"
+                step="0.1"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800">
+                β-hCG (MoM)
+              </label>
+              <input
+                type="number"
+                value={markers.bhcg}
+                onChange={(e) => setMarkers({ ...markers, bhcg: e.target.value })}
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="0.1"
+                max="5"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-blue-800">
                 PAPP-A (MoM)
               </label>
               <input
                 type="number"
-                step="0.01"
-                min="0.1"
-                max="3"
-                value={markers.pappA}
-                onChange={(e) => setMarkers({ ...markers, pappA: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                β-hCG libre (MoM)
-              </label>
-              <input
-                type="number"
-                step="0.01"
+                value={markers.pappa}
+                onChange={(e) => setMarkers({ ...markers, pappa: e.target.value })}
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 min="0.1"
                 max="5"
-                value={markers.freeBetaHCG}
-                onChange={(e) => setMarkers({ ...markers, freeBetaHCG: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Translucencia Nucal (mm)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                min="0.5"
-                max="6.5"
-                value={markers.nuchalTranslucency}
-                onChange={(e) => setMarkers({ ...markers, nuchalTranslucency: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                LHR Translucencia Nucal
-              </label>
-              <input
-                type="number"
                 step="0.01"
-                value={markers.lhrNuchalTranslucency}
-                onChange={(e) => setMarkers({ ...markers, lhrNuchalTranslucency: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Hueso Nasal
-              </label>
-              <select
-                value={markers.nasalBone}
-                onChange={(e) => setMarkers({ ...markers, nasalBone: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="absent">Ausente</option>
-                <option value="hypoplastic">Hipoplásico</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Ductus Venoso
-              </label>
-              <select
-                value={markers.ductusVenosus}
-                onChange={(e) => setMarkers({ ...markers, ductusVenosus: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="reversed">Reverso</option>
-                <option value="absent">Ausente</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                LHR Ductus Venoso
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={markers.lhrDuctusVenosus}
-                onChange={(e) => setMarkers({ ...markers, lhrDuctusVenosus: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Flujo Tricuspídeo
-              </label>
-              <select
-                value={markers.tricuspidRegurgitation}
-                onChange={(e) => setMarkers({ ...markers, tricuspidRegurgitation: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              >
-                <option value="normal">Normal</option>
-                <option value="abnormal">Regurgitación</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                LHR Flujo Tricuspídeo
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={markers.lhrTricuspidFlow}
-                onChange={(e) => setMarkers({ ...markers, lhrTricuspidFlow: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-blue-800 mb-1">
-                Frecuencia Cardíaca (lpm)
-              </label>
-              <input
-                type="number"
-                min="100"
-                max="200"
-                value={markers.heartRate}
-                onChange={(e) => setMarkers({ ...markers, heartRate: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-                placeholder="Latidos por minuto"
+                required
               />
             </div>
           </div>
