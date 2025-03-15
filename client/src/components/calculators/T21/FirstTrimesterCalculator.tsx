@@ -7,23 +7,28 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
-type FirstTrimesterResult = {
-  risk: number;
-  interpretation: string;
-  details: string;
+type FirstTrimesterInput = {
+  baseRisk: string;
+  nasalBone: 'normal' | 'ausente';
+  tricuspidRegurgitation: 'normal' | 'presente';
+  ductusVenosus: 'normal' | 'ausente' | 'reverso';
+  previousT21: boolean;
 };
 
 export default function FirstTrimesterCalculator() {
-  const [result, setResult] = useState<FirstTrimesterResult | null>(null);
+  const [result, setResult] = useState<{
+    risk: number;
+    interpretation: string;
+    details: string;
+  } | null>(null);
 
-  const form = useForm({
+  const form = useForm<FirstTrimesterInput>({
     resolver: zodResolver(calculatorTypes.t21FirstTrimester),
     defaultValues: {
-      age: undefined,
-      crownRumpLength: undefined,
-      heartRate: undefined,
-      nuchalTranslucency: undefined,
+      baseRisk: '',
       nasalBone: 'normal',
       tricuspidRegurgitation: 'normal',
       ductusVenosus: 'normal',
@@ -31,9 +36,40 @@ export default function FirstTrimesterCalculator() {
     },
   });
 
-  const onSubmit = async (data: any) => {
-    // TODO: Implementar el cálculo de riesgo real
-    const risk = 1 / (350 * Math.exp(-0.1 * (data.age - 35)));
+  const onSubmit = async (data: FirstTrimesterInput) => {
+    // Convertir el riesgo base de formato "1/X" a número decimal
+    const baseRisk = 1 / parseFloat(data.baseRisk);
+    let risk = baseRisk;
+
+    // Aplicar multiplicadores según los marcadores
+    const multipliers = {
+      nasalBone: {
+        ausente: 3.0,
+      },
+      tricuspidRegurgitation: {
+        presente: 2.5,
+      },
+      ductusVenosus: {
+        ausente: 2.0,
+        reverso: 3.0,
+      }
+    };
+
+    // Aplicar multiplicadores por cada marcador anormal
+    if (data.nasalBone === 'ausente') {
+      risk *= multipliers.nasalBone.ausente;
+    }
+    if (data.tricuspidRegurgitation === 'presente') {
+      risk *= multipliers.tricuspidRegurgitation.presente;
+    }
+    if (data.ductusVenosus !== 'normal') {
+      risk *= multipliers.ductusVenosus[data.ductusVenosus];
+    }
+
+    // Aplicar multiplicador por antecedente de T21
+    if (data.previousT21) {
+      risk *= 2.5;
+    }
 
     const resultado = {
       risk,
@@ -42,7 +78,7 @@ export default function FirstTrimesterCalculator() {
         : risk > (1/1000) 
           ? "Riesgo Intermedio" 
           : "Bajo Riesgo",
-      details: `Riesgo combinado del primer trimestre: 1:${Math.round(1/risk)}`
+      details: `Riesgo ajustado del primer trimestre: 1:${Math.round(1/risk)}`
     };
 
     setResult(resultado);
@@ -64,77 +100,35 @@ export default function FirstTrimesterCalculator() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-blue-700 mb-1">Marcadores Primer Trimestre</h2>
-      </div>
+      <Alert>
+        <InfoIcon className="h-4 w-4" />
+        <AlertDescription>
+          Calculadora para ajustar el riesgo de T21 del primer trimestre basado en marcadores ecográficos adicionales
+        </AlertDescription>
+      </Alert>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            <FormField
-              control={form.control}
-              name="age"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Edad Materna (años)</FormLabel>
+          <FormField
+            control={form.control}
+            name="baseRisk"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Riesgo por Screening básico (1/X)</FormLabel>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium">1/</span>
                   <Input
                     type="number"
-                    placeholder="Ingrese edad materna"
+                    placeholder="Ingrese el denominador del riesgo"
                     {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                    className="flex-1"
                   />
-                </FormItem>
-              )}
-            />
+                </div>
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="crownRumpLength"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Longitud Cráneo-Caudal (mm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="CRL entre 45-84 mm"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="heartRate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Frecuencia Cardíaca (lpm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="Latidos por minuto"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nuchalTranslucency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Translucencia Nucal (mm)</FormLabel>
-                  <Input
-                    type="number"
-                    placeholder="Medida en mm"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  />
-                </FormItem>
-              )}
-            />
-
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="nasalBone"
@@ -147,7 +141,6 @@ export default function FirstTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="normal">Normal</SelectItem>
-                      <SelectItem value="hipoplasico">Hipoplásico</SelectItem>
                       <SelectItem value="ausente">Ausente</SelectItem>
                     </SelectContent>
                   </Select>
@@ -160,7 +153,7 @@ export default function FirstTrimesterCalculator() {
               name="tricuspidRegurgitation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Insuficiencia Tricuspídea</FormLabel>
+                  <FormLabel>Regurgitación Tricuspídea</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccione estado" />
@@ -200,14 +193,11 @@ export default function FirstTrimesterCalculator() {
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2">
                   <Checkbox
-                    id="previousT21"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 [&>span]:data-[state=checked]:text-white"
-                  >
-                    {field.value && <span className="text-[10px] font-bold">X</span>}
-                  </Checkbox>
-                  <FormLabel htmlFor="previousT21" className="font-normal cursor-pointer">
+                    className="border-2 border-gray-200 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                  />
+                  <FormLabel className="font-normal cursor-pointer">
                     Antecedente de hijo con Trisomía 21
                   </FormLabel>
                 </FormItem>
@@ -216,7 +206,7 @@ export default function FirstTrimesterCalculator() {
           </div>
 
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-            Calcular Riesgo
+            Calcular Riesgo Ajustado
           </Button>
         </form>
       </Form>
