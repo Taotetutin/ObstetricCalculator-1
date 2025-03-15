@@ -19,3 +19,30 @@ export function calculateFirstTrimesterRisk(
   
   return baseRisk * ntFactor * pappAFactor * hcgFactor;
 }
+export function calculateFirstTrimesterRisk(params: {
+  maternalAge: number;
+  gestationalAge: number;
+  crl: number;
+  nt: number;
+  bhcg: number;
+  pappa: number;
+  previousT21: boolean;
+}) {
+  // Basic risk calculation based on maternal age
+  let baseRisk = Math.exp(-16.51 + 0.286 * params.maternalAge);
+  
+  // Adjust for previous T21
+  if (params.previousT21) {
+    baseRisk *= 2.5;
+  }
+
+  // Adjust for biochemical markers (simplified calculation)
+  const ntMoM = params.nt / 2.0; // Assuming 2.0mm is median NT for CRL
+  const bhcgMoM = params.bhcg / 1.0; // Simplified MoM calculation
+  const pappaMoM = params.pappa / 1.0; // Simplified MoM calculation
+
+  // Combined risk calculation
+  const combinedRisk = baseRisk * ntMoM * bhcgMoM * (1/pappaMoM);
+  
+  return Math.min(combinedRisk, 1);
+}
