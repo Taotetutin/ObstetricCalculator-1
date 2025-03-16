@@ -23,14 +23,14 @@ export default function SecondTrimesterCalculator() {
     resolver: zodResolver(calculatorTypes.t21SecondTrimester),
     defaultValues: {
       baselineRisk: undefined,
-      nasalBone: 'normal',
-      cardiacFocus: 'normal',
-      ventriculomegaly: 'normal',
-      nuchalFold: 'normal',
-      shortFemur: 'normal',
-      aberrantSubclavian: 'normal',
-      hyperechogenicBowel: 'normal',
-      pyelectasis: 'normal',
+      nasalBone: 'no_evaluado',
+      cardiacFocus: 'no_evaluado',
+      ventriculomegaly: 'no_evaluado',
+      nuchalFold: 'no_evaluado',
+      shortFemur: 'no_evaluado',
+      aberrantSubclavian: 'no_evaluado',
+      hyperechogenicBowel: 'no_evaluado',
+      pyelectasis: 'no_evaluado',
       previousT21: false,
     },
   });
@@ -39,21 +39,36 @@ export default function SecondTrimesterCalculator() {
     let risk = 1/parseFloat(data.baselineRisk);
 
     const markerMultipliers: Record<string, number> = {
+      nasalBone_no_evaluado: 1.0,
       nasalBone_normal: 0.46,
       nasalBone_hipoplasico: 27.3,
       nasalBone_ausente: 42.2,
+
+      cardiacFocus_no_evaluado: 1.0,
       cardiacFocus_normal: 0.80,
       cardiacFocus_presente: 7.06,
+
+      ventriculomegaly_no_evaluado: 1.0,
       ventriculomegaly_normal: 0.84,
       ventriculomegaly_presente: 25.0,
+
+      nuchalFold_no_evaluado: 1.0,
       nuchalFold_normal: 0.46,
       nuchalFold_anormal: 11.18,
+
+      shortFemur_no_evaluado: 1.0,
       shortFemur_normal: 0.80,
       shortFemur_anormal: 2.7,
+
+      aberrantSubclavian_no_evaluado: 1.0,
       aberrantSubclavian_normal: 0.71,
       aberrantSubclavian_presente: 21.6,
+
+      hyperechogenicBowel_no_evaluado: 1.0,
       hyperechogenicBowel_normal: 0.65,
       hyperechogenicBowel_presente: 11.44,
+
+      pyelectasis_no_evaluado: 1.0,
       pyelectasis_normal: 0.84,
       pyelectasis_presente: 7.63,
     };
@@ -66,9 +81,8 @@ export default function SecondTrimesterCalculator() {
     });
 
     if (data.previousT21) {
-      risk *= 4.0; // LR for previous T21
+      risk *= 4.0;
     }
-    // If not checked, no multiplication needed as LR = 1.0
 
     const resultado = {
       risk,
@@ -156,6 +170,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.46)</SelectItem>
                       <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 27.3)</SelectItem>
                       <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 42.2)</SelectItem>
@@ -164,6 +179,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="cardiacFocus"
@@ -175,6 +191,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 7.06)</SelectItem>
                     </SelectContent>
@@ -182,6 +199,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="ventriculomegaly"
@@ -193,6 +211,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.84)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 25.0)</SelectItem>
                     </SelectContent>
@@ -200,6 +219,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="nuchalFold"
@@ -211,6 +231,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.46)</SelectItem>
                       <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 11.18)</SelectItem>
                     </SelectContent>
@@ -218,6 +239,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="shortFemur"
@@ -229,6 +251,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
                       <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 2.7)</SelectItem>
                     </SelectContent>
@@ -236,6 +259,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="aberrantSubclavian"
@@ -247,6 +271,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.71)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 21.6)</SelectItem>
                     </SelectContent>
@@ -254,6 +279,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="hyperechogenicBowel"
@@ -265,6 +291,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.65)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 11.44)</SelectItem>
                     </SelectContent>
@@ -272,6 +299,7 @@ export default function SecondTrimesterCalculator() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="pyelectasis"
@@ -283,6 +311,7 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.84)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 7.63)</SelectItem>
                     </SelectContent>

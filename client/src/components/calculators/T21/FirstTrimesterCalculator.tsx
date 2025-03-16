@@ -12,9 +12,9 @@ import { InfoIcon } from "lucide-react";
 
 type FirstTrimesterInput = {
   baseRisk: string;
-  nasalBone: 'normal' | 'ausente';
-  tricuspidRegurgitation: 'normal' | 'presente';
-  ductusVenosus: 'normal' | 'negativa';
+  nasalBone: 'no_evaluado' | 'normal' | 'ausente';
+  tricuspidRegurgitation: 'no_evaluado' | 'normal' | 'presente';
+  ductusVenosus: 'no_evaluado' | 'normal' | 'negativa';
   previousT21: boolean;
 };
 
@@ -29,27 +29,29 @@ export default function FirstTrimesterCalculator() {
     resolver: zodResolver(calculatorTypes.t21FirstTrimester),
     defaultValues: {
       baseRisk: '',
-      nasalBone: 'normal',
-      tricuspidRegurgitation: 'normal',
-      ductusVenosus: 'normal',
+      nasalBone: 'no_evaluado',
+      tricuspidRegurgitation: 'no_evaluado',
+      ductusVenosus: 'no_evaluado',
       previousT21: false,
     },
   });
 
   const onSubmit = async (data: FirstTrimesterInput) => {
-    const baseRisk = 1 / parseFloat(data.baseRisk);
-    let risk = baseRisk;
+    let risk = 1/parseFloat(data.baseRisk);
 
     const multipliers = {
       nasalBone: {
+        no_evaluado: 1.0,
         normal: 0.15,
         ausente: 23.36,
       },
       tricuspidRegurgitation: {
+        no_evaluado: 1.0,
         normal: 0.45,
         presente: 5.83,
       },
       ductusVenosus: {
+        no_evaluado: 1.0,
         normal: 0.44,
         negativa: 7.63,
       }
@@ -60,9 +62,8 @@ export default function FirstTrimesterCalculator() {
     risk *= multipliers.ductusVenosus[data.ductusVenosus];
 
     if (data.previousT21) {
-      risk *= 4.0; // LR for previous T21
+      risk *= 4.0;
     }
-    // If not checked, no multiplication needed as LR = 1.0
 
     const resultado = {
       risk,
@@ -96,7 +97,7 @@ export default function FirstTrimesterCalculator() {
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
-          Calculadora para ajustar el riesgo de T21 del primer trimestre basado en marcadores ecográficos adicionales
+          Calculadora para ajustar el riesgo de T21 basado en marcadores ecográficos adicionales
         </AlertDescription>
       </Alert>
 
@@ -111,10 +112,10 @@ export default function FirstTrimesterCalculator() {
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium">1/</span>
                   <Input
-                    type="number"
+                    type="text"
                     placeholder="Ingrese el denominador del riesgo"
                     {...field}
-                    className="flex-1 border border-gray-300 focus:border-blue-500"
+                    className="flex-1 border border-gray-300 bg-white text-gray-900"
                   />
                 </div>
               </FormItem>
@@ -133,6 +134,7 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.15)</SelectItem>
                       <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 23.36)</SelectItem>
                     </SelectContent>
@@ -152,6 +154,7 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.45)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.83)</SelectItem>
                     </SelectContent>
@@ -171,6 +174,7 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
                       <SelectItem value="negativa" className="text-gray-900">Onda A negativa (LR: 7.63)</SelectItem>
                     </SelectContent>
