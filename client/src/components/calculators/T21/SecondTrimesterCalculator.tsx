@@ -41,35 +41,35 @@ export default function SecondTrimesterCalculator() {
     const markerMultipliers: Record<string, number> = {
       nasalBone_no_evaluado: 1.0,
       nasalBone_normal: 0.46,
-      nasalBone_hipoplasico: 27.3,
-      nasalBone_ausente: 42.2,
+      nasalBone_hipoplasico: 23.27,
+      nasalBone_ausente: 23.27,
 
       cardiacFocus_no_evaluado: 1.0,
       cardiacFocus_normal: 0.80,
-      cardiacFocus_presente: 7.06,
+      cardiacFocus_presente: 5.83,
 
       ventriculomegaly_no_evaluado: 1.0,
-      ventriculomegaly_normal: 0.84,
-      ventriculomegaly_presente: 25.0,
+      ventriculomegaly_normal: 0.94,
+      ventriculomegaly_presente: 27.52,
 
       nuchalFold_no_evaluado: 1.0,
-      nuchalFold_normal: 0.46,
-      nuchalFold_anormal: 11.18,
+      nuchalFold_normal: 0.80,
+      nuchalFold_anormal: 23.3,
 
       shortFemur_no_evaluado: 1.0,
       shortFemur_normal: 0.80,
-      shortFemur_anormal: 2.7,
+      shortFemur_anormal: 3.72,
 
       aberrantSubclavian_no_evaluado: 1.0,
       aberrantSubclavian_normal: 0.71,
-      aberrantSubclavian_presente: 21.6,
+      aberrantSubclavian_presente: 27.52,
 
       hyperechogenicBowel_no_evaluado: 1.0,
-      hyperechogenicBowel_normal: 0.65,
+      hyperechogenicBowel_normal: 0.84,
       hyperechogenicBowel_presente: 11.44,
 
       pyelectasis_no_evaluado: 1.0,
-      pyelectasis_normal: 0.84,
+      pyelectasis_normal: 0.92,
       pyelectasis_presente: 7.63,
     };
 
@@ -172,8 +172,8 @@ export default function SecondTrimesterCalculator() {
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.46)</SelectItem>
-                      <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 27.3)</SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 42.2)</SelectItem>
+                      <SelectItem value="hipoplasico" className="text-gray-900">Hipoplásico (LR: 23.27)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 23.27)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -193,7 +193,7 @@ export default function SecondTrimesterCalculator() {
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 7.06)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.83)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -212,8 +212,8 @@ export default function SecondTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.84)</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 25.0)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.94)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.52)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -232,8 +232,8 @@ export default function SecondTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.46)</SelectItem>
-                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 11.18)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 23.3)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -253,7 +253,7 @@ export default function SecondTrimesterCalculator() {
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
-                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 2.7)</SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 3.72)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -273,7 +273,7 @@ export default function SecondTrimesterCalculator() {
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
                       <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.71)</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 21.6)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.52)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -292,7 +292,7 @@ export default function SecondTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.65)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.84)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 11.44)</SelectItem>
                     </SelectContent>
                   </Select>
@@ -312,7 +312,7 @@ export default function SecondTrimesterCalculator() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.84)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.92)</SelectItem>
                       <SelectItem value="presente" className="text-gray-900">Presente (LR: 7.63)</SelectItem>
                     </SelectContent>
                   </Select>
