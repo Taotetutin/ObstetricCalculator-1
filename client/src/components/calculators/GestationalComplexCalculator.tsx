@@ -279,24 +279,42 @@ export default function GestationalComplexCalculator() {
                           Edad Gestacional: {result.gestationalAge.weeks}s {result.gestationalAge.days}d
                         </h3>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                          <div className="space-y-3">
-                            <div className="p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Concepción</p>
-                              <p className="text-lg font-semibold">{format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Concepción</p>
+                            <p className="text-lg font-semibold">{format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Parto</p>
+                            <p className="text-lg font-semibold">{format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-blue-100">
+                      <CardContent className="p-4">
+                        <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                          Fechas Administrativas
+                        </h4>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Asignación Familiar</p>
+                              <p className="text-sm mt-1">Semana 20: {format(result.week20, "dd/MM/yyyy", { locale: es })}</p>
                             </div>
-                            <div className="p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Parto</p>
-                              <p className="text-lg font-semibold">{format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">ISAPRE</p>
+                              <p className="text-sm mt-1">Semana 30: {format(result.week30, "dd/MM/yyyy", { locale: es })}</p>
                             </div>
                           </div>
-                          <div className="space-y-3">
-                            <div className="p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Trámite ISAPRE</p>
-                              <p className="text-lg font-semibold">{format(result.week30, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Pre Natal</p>
+                              <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
                             </div>
-                            <div className="p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre Natal</p>
-                              <p className="text-lg font-semibold">{format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Fecha Probable de Parto</p>
+                              <p className="text-sm mt-1">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</p>
                             </div>
                           </div>
                         </div>
@@ -352,36 +370,6 @@ export default function GestationalComplexCalculator() {
                         </CardContent>
                       </Card>
                     </div>
-
-                    <Card className="border-2 border-blue-100">
-                      <CardContent className="p-4">
-                        <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
-                          Fechas Administrativas
-                        </h4>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                          <div className="space-y-2.5">
-                            <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">Asignación Familiar</p>
-                              <p className="text-sm mt-1">Semana 20: {format(result.week20, "dd/MM/yyyy", { locale: es })}</p>
-                            </div>
-                            <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">ISAPRE</p>
-                              <p className="text-sm mt-1">Semana 30: {format(result.week30, "dd/MM/yyyy", { locale: es })}</p>
-                            </div>
-                          </div>
-                          <div className="space-y-2.5">
-                            <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">Pre Natal</p>
-                              <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
-                            </div>
-                            <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">Fecha Probable de Parto</p>
-                              <p className="text-sm mt-1">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
                   </div>
                 </div>
               )}
