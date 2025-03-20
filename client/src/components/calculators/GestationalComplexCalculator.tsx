@@ -293,8 +293,8 @@ export default function GestationalComplexCalculator() {
                         </div>
                         <div className="space-y-3">
                           <div className="p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Trámite As. Familiar</p>
-                            <p className="text-lg font-semibold">{format(result.week20, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Trámite ISAPRE</p>
+                            <p className="text-lg font-semibold">{format(result.week30, "dd 'de' MMMM, yyyy", { locale: es })}</p>
                           </div>
                           <div className="p-3 bg-blue-50 rounded-lg">
                             <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre/Post Natal</p>
@@ -309,7 +309,7 @@ export default function GestationalComplexCalculator() {
                     <Card className="border-2 border-blue-100">
                       <CardContent className="p-4">
                         <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
-                          Exámenes y Controles
+                          Controles 1° y 2° Trimestre
                         </h4>
                         <div className="space-y-2.5">
                           <div className="p-2.5 bg-gray-50 rounded-lg">
@@ -354,6 +354,36 @@ export default function GestationalComplexCalculator() {
                       </CardContent>
                     </Card>
                   </div>
+
+                  <Card className="border-2 border-blue-100">
+                    <CardContent className="p-4">
+                      <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                        Fechas Administrativas
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2.5">
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Asignación Familiar</p>
+                            <p className="text-sm mt-1">Semana 20: {format(result.week20, "dd/MM/yyyy", { locale: es })}</p>
+                          </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">ISAPRE</p>
+                            <p className="text-sm mt-1">Semana 30: {format(result.week30, "dd/MM/yyyy", { locale: es })}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-2.5">
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Pre/Post Natal</p>
+                            <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
+                          </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Fecha Probable de Parto</p>
+                            <p className="text-sm mt-1">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
             </div>
