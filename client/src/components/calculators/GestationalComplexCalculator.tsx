@@ -295,7 +295,7 @@ export default function GestationalComplexCalculator() {
                               <p className="text-lg font-semibold">{format(result.week30, "dd 'de' MMMM, yyyy", { locale: es })}</p>
                             </div>
                             <div className="p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre/Post Natal</p>
+                              <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre Natal</p>
                               <p className="text-lg font-semibold">{format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}</p>
                             </div>
                           </div>
@@ -371,7 +371,7 @@ export default function GestationalComplexCalculator() {
                           </div>
                           <div className="space-y-2.5">
                             <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">Pre/Post Natal</p>
+                              <p className="text-sm font-medium text-blue-600">Pre Natal</p>
                               <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
                             </div>
                             <div className="p-2.5 bg-gray-50 rounded-lg">
