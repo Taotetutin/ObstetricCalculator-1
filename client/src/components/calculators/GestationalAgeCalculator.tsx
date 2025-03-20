@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { UserPlus, Calculator, Search } from "lucide-react";
+import { UserPlus, Calculator, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { calculatorTypes, insertPatientSchema } from "@shared/schema";
 import { calculateGestationalAge } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -158,7 +158,7 @@ export default function GestationalAgeCalculator() {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full justify-start text-left font-normal",
+                                "w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -169,15 +169,52 @@ export default function GestationalAgeCalculator() {
                               )}
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-4 bg-white rounded-lg shadow-lg border-2 border-blue-100" align="start">
                             <Calendar
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                              }
+                              disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                               initialFocus
+                              className="rounded-md border-blue-200"
+                              classNames={{
+                                months: "space-y-4",
+                                month: "space-y-4",
+                                caption: "flex justify-center pt-1 relative items-center gap-1",
+                                caption_label: "text-sm font-medium",
+                                nav: "space-x-1 flex items-center",
+                                nav_button: cn(
+                                  "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-blue-100 rounded-full transition-colors",
+                                  "text-blue-600 hover:text-blue-900"
+                                ),
+                                nav_button_previous: "absolute left-1",
+                                nav_button_next: "absolute right-1",
+                                table: "w-full border-collapse space-y-1",
+                                head_row: "flex",
+                                head_cell: "text-blue-500 rounded-md w-9 font-normal text-[0.8rem]",
+                                row: "flex w-full mt-2",
+                                cell: cn(
+                                  "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-100/50",
+                                  "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
+                                ),
+                                day: cn(
+                                  "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-blue-100 rounded-md transition-colors",
+                                  "text-blue-900 hover:text-blue-900"
+                                ),
+                                day_range_end: "day-range-end",
+                                day_selected:
+                                  "bg-blue-600 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white",
+                                day_today: "bg-blue-100 text-blue-900",
+                                day_outside: "text-gray-400 opacity-50",
+                                day_disabled: "text-gray-400 opacity-50 hover:bg-transparent",
+                                day_range_middle:
+                                  "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                                day_hidden: "invisible",
+                              }}
+                              components={{
+                                IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+                                IconRight: () => <ChevronRight className="h-4 w-4" />,
+                              }}
                             />
                           </PopoverContent>
                         </Popover>
@@ -230,10 +267,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nombre</FormLabel>
-                        <Input
-                          className="border-blue-200 focus:border-blue-400"
-                          {...field}
-                        />
+                        <Input className="border-blue-200 focus:border-blue-400" {...field} />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -245,10 +279,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Apellido</FormLabel>
-                        <Input
-                          className="border-blue-200 focus:border-blue-400"
-                          {...field}
-                        />
+                        <Input className="border-blue-200 focus:border-blue-400" {...field} />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -260,10 +291,7 @@ export default function GestationalAgeCalculator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Identificación</FormLabel>
-                        <Input
-                          className="border-blue-200 focus:border-blue-400"
-                          {...field}
-                        />
+                        <Input className="border-blue-200 focus:border-blue-400" {...field} />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -280,7 +308,7 @@ export default function GestationalAgeCalculator() {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full justify-start text-left font-normal",
+                                "w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -291,15 +319,52 @@ export default function GestationalAgeCalculator() {
                               )}
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-4 bg-white rounded-lg shadow-lg border-2 border-blue-100" align="start">
                             <Calendar
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                              }
+                              disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                               initialFocus
+                              className="rounded-md border-blue-200"
+                              classNames={{
+                                months: "space-y-4",
+                                month: "space-y-4",
+                                caption: "flex justify-center pt-1 relative items-center gap-1",
+                                caption_label: "text-sm font-medium",
+                                nav: "space-x-1 flex items-center",
+                                nav_button: cn(
+                                  "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-blue-100 rounded-full transition-colors",
+                                  "text-blue-600 hover:text-blue-900"
+                                ),
+                                nav_button_previous: "absolute left-1",
+                                nav_button_next: "absolute right-1",
+                                table: "w-full border-collapse space-y-1",
+                                head_row: "flex",
+                                head_cell: "text-blue-500 rounded-md w-9 font-normal text-[0.8rem]",
+                                row: "flex w-full mt-2",
+                                cell: cn(
+                                  "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-100/50",
+                                  "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
+                                ),
+                                day: cn(
+                                  "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-blue-100 rounded-md transition-colors",
+                                  "text-blue-900 hover:text-blue-900"
+                                ),
+                                day_range_end: "day-range-end",
+                                day_selected:
+                                  "bg-blue-600 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white",
+                                day_today: "bg-blue-100 text-blue-900",
+                                day_outside: "text-gray-400 opacity-50",
+                                day_disabled: "text-gray-400 opacity-50 hover:bg-transparent",
+                                day_range_middle:
+                                  "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                                day_hidden: "invisible",
+                              }}
+                              components={{
+                                IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+                                IconRight: () => <ChevronRight className="h-4 w-4" />,
+                              }}
                             />
                           </PopoverContent>
                         </Popover>
