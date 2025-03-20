@@ -6,7 +6,7 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User as SelectUser } from "@shared/schema";
+import { User as SelectUser, type InsertUser } from "@shared/schema";
 
 declare global {
   namespace Express {
@@ -30,6 +30,7 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
+  // Session configuration
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
@@ -37,67 +38,97 @@ export function setupAuth(app: Express) {
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      sameSite: "lax",
+      httpOnly: true,
     },
     store: storage.sessionStore,
   };
 
-  app.set("trust proxy", 1);
+  // Trust proxy if in production
+  if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+  }
+
+  // Setup session middleware before passport
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Local Strategy Configuration
   passport.use(
-    new LocalStrategy({
-      usernameField: "email",
-      passwordField: "password",
-    }, async (email, password, done) => {
-      try {
-        const user = await storage.getUserByEmail(email);
-        if (!user || !(await comparePasswords(password, user.password))) {
-          return done(null, false, { message: "Email o contraseña incorrectos" });
-        }
-        return done(null, user);
-      } catch (error) {
-        return done(error);
-      }
-    }),
-  );
-
-  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-    passport.use(
-      new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
-      }, async (accessToken, refreshToken, profile, done) => {
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+      },
+      async (email, password, done) => {
         try {
-          let user = await storage.getUserByEmail(profile.emails![0].value);
+          const user = await storage.getUserByEmail(email);
           if (!user) {
-            user = await storage.createUser({
-              email: profile.emails![0].value,
-              name: profile.displayName,
-              password: await hashPassword(randomBytes(32).toString("hex")),
-              googleId: profile.id,
-            });
+            return done(null, false, { message: "Email o contraseña incorrectos" });
           }
+
+          const isValid = await comparePasswords(password, user.password);
+          if (!isValid) {
+            return done(null, false, { message: "Email o contraseña incorrectos" });
+          }
+
           return done(null, user);
         } catch (error) {
           return done(error);
         }
-      }),
+      }
+    )
+  );
+
+  // Google OAuth Strategy (if configured)
+  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL: "/auth/google/callback",
+        },
+        async (accessToken, refreshToken, profile, done) => {
+          try {
+            let user = await storage.getUserByEmail(profile.emails![0].value);
+            if (!user) {
+              const insertUser: InsertUser = {
+                email: profile.emails![0].value,
+                name: profile.displayName,
+                password: await hashPassword(randomBytes(32).toString("hex")),
+                role: "user",
+              };
+              user = await storage.createUser(insertUser);
+            }
+            return done(null, user);
+          } catch (error) {
+            return done(error);
+          }
+        }
+      )
     );
   }
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  // Passport serialization
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
+      if (!user) {
+        return done(null, false);
+      }
       done(null, user);
     } catch (error) {
       done(error);
     }
   });
 
+  // Auth routes
   app.post("/api/register", async (req, res, next) => {
     try {
       const existingUser = await storage.getUserByEmail(req.body.email);
@@ -105,11 +136,13 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "El email ya está registrado" });
       }
 
-      const user = await storage.createUser({
+      const insertUser: InsertUser = {
         ...req.body,
         password: await hashPassword(req.body.password),
-      });
+        role: "user",
+      };
 
+      const user = await storage.createUser(insertUser);
       req.login(user, (err) => {
         if (err) return next(err);
         res.status(201).json(user);
@@ -152,7 +185,9 @@ export function setupAuth(app: Express) {
   });
 
   app.get("/api/user", (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
+    if (!req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
     res.json(req.user);
   });
 }
