@@ -27,6 +27,83 @@ type Result = {
   estimatedLMP?: Date;
 };
 
+const DateSelector = ({ field, label }: { field: any; label: string }) => {
+  const date = field.value instanceof Date ? field.value : new Date();
+
+  const handleDateChange = (type: 'day' | 'month' | 'year', value: string) => {
+    const newDate = new Date(date);
+    if (type === 'day') newDate.setDate(parseInt(value));
+    if (type === 'month') newDate.setMonth(parseInt(value) - 1);
+    if (type === 'year') newDate.setFullYear(parseInt(value));
+    field.onChange(newDate);
+  };
+
+  return (
+    <FormItem className="space-y-2">
+      <FormLabel className="text-base font-medium">{label}</FormLabel>
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <Select
+            value={date.getDate().toString()}
+            onValueChange={(value) => handleDateChange('day', value)}
+          >
+            <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+              <SelectValue placeholder="Día" />
+            </SelectTrigger>
+            <SelectContent>
+              {days.map((day) => (
+                <SelectItem key={day} value={day.toString()}>
+                  {day}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="mt-1 text-xs text-center text-gray-500">Día</div>
+        </div>
+
+        <div className="flex-[1.2]">
+          <Select
+            value={(date.getMonth() + 1).toString()}
+            onValueChange={(value) => handleDateChange('month', value)}
+          >
+            <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+              <SelectValue placeholder="Mes" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month} value={month.toString()}>
+                  {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="mt-1 text-xs text-center text-gray-500">Mes</div>
+        </div>
+
+        <div className="flex-1">
+          <Select
+            value={date.getFullYear().toString()}
+            onValueChange={(value) => handleDateChange('year', value)}
+          >
+            <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+              <SelectValue placeholder="Año" />
+            </SelectTrigger>
+            <SelectContent>
+              {years.map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="mt-1 text-xs text-center text-gray-500">Año</div>
+        </div>
+      </div>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
 export default function GestationalAgeCalculator() {
   const [result, setResult] = useState<Result | null>(null);
   const { toast } = useToast();
@@ -115,74 +192,6 @@ export default function GestationalAgeCalculator() {
         variant: "destructive",
       });
     }
-  };
-
-  const DateSelector = ({ field, label }: { field: any; label: string }) => {
-    const date = field.value instanceof Date ? field.value : new Date();
-
-    const handleDateChange = (type: 'day' | 'month' | 'year', value: string) => {
-      const newDate = new Date(date);
-      if (type === 'day') newDate.setDate(parseInt(value));
-      if (type === 'month') newDate.setMonth(parseInt(value) - 1);
-      if (type === 'year') newDate.setFullYear(parseInt(value));
-      field.onChange(newDate);
-    };
-
-    return (
-      <FormItem className="space-y-1">
-        <FormLabel>{label}</FormLabel>
-        <div className="flex gap-2">
-          <Select
-            defaultValue={date.getDate().toString()}
-            onValueChange={(value) => handleDateChange('day', value)}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Día" />
-            </SelectTrigger>
-            <SelectContent>
-              {days.map((day) => (
-                <SelectItem key={day} value={day.toString()}>
-                  {day}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            defaultValue={(date.getMonth() + 1).toString()}
-            onValueChange={(value) => handleDateChange('month', value)}
-          >
-            <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder="Mes" />
-            </SelectTrigger>
-            <SelectContent>
-              {months.map((month) => (
-                <SelectItem key={month} value={month.toString()}>
-                  {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            defaultValue={date.getFullYear().toString()}
-            onValueChange={(value) => handleDateChange('year', value)}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Año" />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <FormMessage />
-      </FormItem>
-    );
   };
 
   return (

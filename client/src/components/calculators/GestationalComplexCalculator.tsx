@@ -19,6 +19,7 @@ const months = Array.from({ length: 12 }, (_, i) => i + 1);
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 126 }, (_, i) => currentYear - 125 + i);
 
+// type GestationalResult remains unchanged
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
   conceptionDate: Date;
@@ -37,6 +38,7 @@ type GestationalResult = {
   };
 };
 
+// getGestationalAge function remains unchanged
 function getGestationalAge(startDate: Date, endDate: Date) {
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -166,56 +168,65 @@ export default function GestationalComplexCalculator() {
     };
 
     return (
-      <FormItem className="space-y-1">
+      <FormItem className="space-y-2">
         <FormLabel className="text-base font-medium">{label}</FormLabel>
         <div className="flex gap-2">
-          <Select
-            defaultValue={date.getDate().toString()}
-            onValueChange={(value) => handleDateChange('day', value)}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Día" />
-            </SelectTrigger>
-            <SelectContent>
-              {days.map((day) => (
-                <SelectItem key={day} value={day.toString()}>
-                  {day}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex-1">
+            <Select
+              value={date.getDate().toString()}
+              onValueChange={(value) => handleDateChange('day', value)}
+            >
+              <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+                <SelectValue placeholder="Día" />
+              </SelectTrigger>
+              <SelectContent>
+                {days.map((day) => (
+                  <SelectItem key={day} value={day.toString()}>
+                    {day}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="mt-1 text-xs text-center text-gray-500">Día</div>
+          </div>
 
-          <Select
-            defaultValue={(date.getMonth() + 1).toString()}
-            onValueChange={(value) => handleDateChange('month', value)}
-          >
-            <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder="Mes" />
-            </SelectTrigger>
-            <SelectContent>
-              {months.map((month) => (
-                <SelectItem key={month} value={month.toString()}>
-                  {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex-[1.2]">
+            <Select
+              value={(date.getMonth() + 1).toString()}
+              onValueChange={(value) => handleDateChange('month', value)}
+            >
+              <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+                <SelectValue placeholder="Mes" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month} value={month.toString()}>
+                    {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="mt-1 text-xs text-center text-gray-500">Mes</div>
+          </div>
 
-          <Select
-            defaultValue={date.getFullYear().toString()}
-            onValueChange={(value) => handleDateChange('year', value)}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Año" />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex-1">
+            <Select
+              value={date.getFullYear().toString()}
+              onValueChange={(value) => handleDateChange('year', value)}
+            >
+              <SelectTrigger className="w-full bg-white border-blue-200 hover:border-blue-300 focus:ring-blue-200">
+                <SelectValue placeholder="Año" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="mt-1 text-xs text-center text-gray-500">Año</div>
+          </div>
         </div>
         <FormMessage />
       </FormItem>
