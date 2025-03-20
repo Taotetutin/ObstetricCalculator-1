@@ -274,85 +274,85 @@ export default function GestationalComplexCalculator() {
               </Card>
 
               {result && (
-                <div className="overflow-auto">
-                  <div className="space-y-4">
+                <div className="space-y-4">
+                  <Card className="border-2 border-blue-100">
+                    <CardContent className="p-6">
+                      <h3 className="text-2xl font-bold text-blue-700 mb-4 text-center">
+                        Edad Gestacional: {result.gestationalAge.weeks}s {result.gestationalAge.days}d
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Concepción</p>
+                            <p className="text-lg font-semibold">{format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Parto</p>
+                            <p className="text-lg font-semibold">{format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Trámite As. Familiar</p>
+                            <p className="text-lg font-semibold">{format(result.week20, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre/Post Natal</p>
+                            <p className="text-lg font-semibold">{format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <Card className="border-2 border-blue-100">
                       <CardContent className="p-4">
-                        <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Resultados Principales</h3>
-                        <div className="space-y-2 text-sm">
-                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                            <span className="font-medium">Edad Gestacional:</span>
-                            <span className="text-blue-700">{result.gestationalAge.weeks}s {result.gestationalAge.days}d</span>
-                          </p>
-                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                            <span className="font-medium">FP Concepción:</span>
-                            <span className="text-blue-700">{format(result.conceptionDate, "dd/MM/yyyy", { locale: es })}</span>
-                          </p>
-                          <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                            <span className="font-medium">FP Parto:</span>
-                            <span className="text-blue-700">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</span>
-                          </p>
+                        <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                          Exámenes y Controles
+                        </h4>
+                        <div className="space-y-2.5">
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Screening 1° Trimestre</p>
+                            <p className="text-sm mt-1">{result.screening.firstTrimester}</p>
+                          </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Screening 2° Trimestre</p>
+                            <p className="text-sm mt-1">{result.screening.secondTrimester}</p>
+                          </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Exámenes 2° Trimestre</p>
+                            <p className="text-sm mt-1">{result.screening.secondTrimesterExams}</p>
+                          </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Vacuna DTPa</p>
+                            <p className="text-sm mt-1">{result.screening.dtpaVaccine}</p>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <Card className="border-2 border-blue-100">
-                        <CardContent className="p-4">
-                          <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Fechas Administrativas</h3>
-                          <div className="space-y-2 text-sm">
-                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                              <span className="font-medium">As. Familiar:</span>
-                              <span className="text-blue-700">{format(result.week20, "dd/MM/yyyy", { locale: es })}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                              <span className="font-medium">Isapre:</span>
-                              <span className="text-blue-700">{format(result.week30, "dd/MM/yyyy", { locale: es })}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                              <span className="font-medium">Prenatal:</span>
-                              <span className="text-blue-700">{format(result.week34, "dd/MM/yyyy", { locale: es })}</span>
-                            </p>
+                    <Card className="border-2 border-blue-100">
+                      <CardContent className="p-4">
+                        <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                          Controles 3° Trimestre
+                        </h4>
+                        <div className="space-y-2.5">
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Exámenes</p>
+                            <p className="text-sm mt-1">{result.screening.thirdTrimesterExams}</p>
                           </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border-2 border-blue-100">
-                        <CardContent className="p-4">
-                          <h3 className="text-base font-semibold text-blue-600 mb-2 pb-1 border-b">Fechas Clínicas</h3>
-                          <div className="space-y-1.5 text-xs">
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">Screen I:</span>
-                              <span className="text-blue-700">{result.screening.firstTrimester}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">Screen II:</span>
-                              <span className="text-blue-700">{result.screening.secondTrimester}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">Ex II:</span>
-                              <span className="text-blue-700">{result.screening.secondTrimesterExams}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">DTPa:</span>
-                              <span className="text-blue-700">{result.screening.dtpaVaccine}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">Ex III:</span>
-                              <span className="text-blue-700">{result.screening.thirdTrimesterExams}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">Screen III:</span>
-                              <span className="text-blue-700">{result.screening.thirdTrimesterScreening}</span>
-                            </p>
-                            <p className="flex justify-between items-center bg-gray-50 p-1.5 rounded">
-                              <span className="font-medium">SGB:</span>
-                              <span className="text-blue-700">{result.screening.gbsTest}</span>
-                            </p>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Screening</p>
+                            <p className="text-sm mt-1">{result.screening.thirdTrimesterScreening}</p>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </div>
+                          <div className="p-2.5 bg-gray-50 rounded-lg">
+                            <p className="text-sm font-medium text-blue-600">Cultivo SGB</p>
+                            <p className="text-sm mt-1">{result.screening.gbsTest}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               )}
