@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { format, addDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { Search, Calculator, UserPlus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Calculator, UserPlus } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Patient } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+
+// Generamos arrays para los selectores
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
+const months = Array.from({ length: 12 }, (_, i) => i + 1);
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 126 }, (_, i) => currentYear - 125 + i);
 
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
@@ -150,6 +154,74 @@ export default function GestationalComplexCalculator() {
     }
   };
 
+  const DateSelector = ({ field, label }: { field: any; label: string }) => {
+    const date = field.value instanceof Date ? field.value : new Date();
+
+    const handleDateChange = (type: 'day' | 'month' | 'year', value: string) => {
+      const newDate = new Date(date);
+      if (type === 'day') newDate.setDate(parseInt(value));
+      if (type === 'month') newDate.setMonth(parseInt(value) - 1);
+      if (type === 'year') newDate.setFullYear(parseInt(value));
+      field.onChange(newDate);
+    };
+
+    return (
+      <FormItem className="space-y-1">
+        <FormLabel className="text-base font-medium">{label}</FormLabel>
+        <div className="flex gap-2">
+          <Select
+            defaultValue={date.getDate().toString()}
+            onValueChange={(value) => handleDateChange('day', value)}
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="Día" />
+            </SelectTrigger>
+            <SelectContent>
+              {days.map((day) => (
+                <SelectItem key={day} value={day.toString()}>
+                  {day}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            defaultValue={(date.getMonth() + 1).toString()}
+            onValueChange={(value) => handleDateChange('month', value)}
+          >
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Mes" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month} value={month.toString()}>
+                  {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            defaultValue={date.getFullYear().toString()}
+            onValueChange={(value) => handleDateChange('year', value)}
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="Año" />
+            </SelectTrigger>
+            <SelectContent>
+              {years.map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <FormMessage />
+      </FormItem>
+    );
+  };
+
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
       <Alert className="mb-4">
@@ -191,77 +263,7 @@ export default function GestationalComplexCalculator() {
                         control={calculatorForm.control}
                         name="lastMenstrualPeriod"
                         render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="text-base font-medium">Fecha de Última Regla (FUR)</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP", { locale: es })
-                                  ) : (
-                                    <span>Seleccione una fecha</span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-4 bg-white rounded-lg shadow-lg border-2 border-blue-100" align="start">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() || date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                  className="rounded-md border-blue-200"
-                                  classNames={{
-                                    months: "space-y-4",
-                                    month: "space-y-4",
-                                    caption: "flex justify-center pt-1 relative items-center gap-1",
-                                    caption_label: "text-sm font-medium",
-                                    nav: "space-x-1 flex items-center",
-                                    nav_button: cn(
-                                      "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-blue-100 rounded-full transition-colors",
-                                      "text-blue-600 hover:text-blue-900"
-                                    ),
-                                    nav_button_previous: "absolute left-1",
-                                    nav_button_next: "absolute right-1",
-                                    table: "w-full border-collapse space-y-1",
-                                    head_row: "flex",
-                                    head_cell: "text-blue-500 rounded-md w-9 font-normal text-[0.8rem]",
-                                    row: "flex w-full mt-2",
-                                    cell: cn(
-                                      "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-100/50",
-                                      "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-                                    ),
-                                    day: cn(
-                                      "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-blue-100 rounded-md transition-colors",
-                                      "text-blue-900 hover:text-blue-900"
-                                    ),
-                                    day_range_end: "day-range-end",
-                                    day_selected:
-                                      "bg-blue-600 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white",
-                                    day_today: "bg-blue-100 text-blue-900",
-                                    day_outside: "text-gray-400 opacity-50",
-                                    day_disabled: "text-gray-400 opacity-50 hover:bg-transparent",
-                                    day_range_middle:
-                                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                                    day_hidden: "invisible",
-                                  }}
-                                  components={{
-                                    IconLeft: () => <ChevronLeft className="h-4 w-4" />,
-                                    IconRight: () => <ChevronRight className="h-4 w-4" />,
-                                  }}
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
+                          <DateSelector field={field} label="Fecha de Última Regla (FUR)" />
                         )}
                       />
                       <Button type="submit" className="w-full py-4">
@@ -404,77 +406,7 @@ export default function GestationalComplexCalculator() {
                       control={patientForm.control}
                       name="lastMenstrualPeriod"
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Fecha de Última Regla (FUR)</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full justify-start text-left font-normal border-blue-200 hover:bg-blue-50",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP", { locale: es })
-                                ) : (
-                                  <span>Seleccione una fecha</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-4 bg-white rounded-lg shadow-lg border-2 border-blue-100" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() || date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                                className="rounded-md border-blue-200"
-                                classNames={{
-                                  months: "space-y-4",
-                                  month: "space-y-4",
-                                  caption: "flex justify-center pt-1 relative items-center gap-1",
-                                  caption_label: "text-sm font-medium",
-                                  nav: "space-x-1 flex items-center",
-                                  nav_button: cn(
-                                    "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 hover:bg-blue-100 rounded-full transition-colors",
-                                    "text-blue-600 hover:text-blue-900"
-                                  ),
-                                  nav_button_previous: "absolute left-1",
-                                  nav_button_next: "absolute right-1",
-                                  table: "w-full border-collapse space-y-1",
-                                  head_row: "flex",
-                                  head_cell: "text-blue-500 rounded-md w-9 font-normal text-[0.8rem]",
-                                  row: "flex w-full mt-2",
-                                  cell: cn(
-                                    "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-blue-100/50",
-                                    "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-                                  ),
-                                  day: cn(
-                                    "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-blue-100 rounded-md transition-colors",
-                                    "text-blue-900 hover:text-blue-900"
-                                  ),
-                                  day_range_end: "day-range-end",
-                                  day_selected:
-                                    "bg-blue-600 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white",
-                                  day_today: "bg-blue-100 text-blue-900",
-                                  day_outside: "text-gray-400 opacity-50",
-                                  day_disabled: "text-gray-400 opacity-50 hover:bg-transparent",
-                                  day_range_middle:
-                                    "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                                  day_hidden: "invisible",
-                                }}
-                                components={{
-                                  IconLeft: () => <ChevronLeft className="h-4 w-4" />,
-                                  IconRight: () => <ChevronRight className="h-4 w-4" />,
-                                }}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
+                        <DateSelector field={field} label="Fecha de Última Regla (FUR)" />
                       )}
                     />
 
