@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
-//import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Patient } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,7 +18,6 @@ const months = Array.from({ length: 12 }, (_, i) => i + 1);
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 126 }, (_, i) => currentYear - 125 + i);
 
-// type GestationalResult remains unchanged
 type GestationalResult = {
   gestationalAge: { weeks: number; days: number };
   conceptionDate: Date;
@@ -38,7 +36,6 @@ type GestationalResult = {
   };
 };
 
-// getGestationalAge function remains unchanged
 function getGestationalAge(startDate: Date, endDate: Date) {
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -222,14 +219,14 @@ export default function GestationalComplexCalculator() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
+    <div className="h-full flex flex-col">
       <Alert className="mb-4">
         <AlertDescription>
           Calculadora gestacional completa para determinar fechas importantes del embarazo
         </AlertDescription>
       </Alert>
 
-      <Tabs defaultValue="calculator" className="flex-1 flex flex-col overflow-hidden">
+      <Tabs defaultValue="calculator" className="flex-1 flex flex-col">
         <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="calculator" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
             <div className="flex items-center gap-2">
@@ -254,7 +251,7 @@ export default function GestationalComplexCalculator() {
         <div className="flex-1 flex overflow-hidden">
           <TabsContent value="calculator" className="flex-1 h-full">
             <div className="h-full grid md:grid-cols-2 gap-4">
-              <Card className="overflow-auto">
+              <Card className="overflow-y-auto">
                 <CardContent className="p-4">
                   <Form {...calculatorForm}>
                     <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-4">
@@ -274,116 +271,118 @@ export default function GestationalComplexCalculator() {
               </Card>
 
               {result && (
-                <div className="space-y-4">
-                  <Card className="border-2 border-blue-100">
-                    <CardContent className="p-6">
-                      <h3 className="text-2xl font-bold text-blue-700 mb-4 text-center">
-                        Edad Gestacional: {result.gestationalAge.weeks}s {result.gestationalAge.days}d
-                      </h3>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-3">
-                          <div className="p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Concepción</p>
-                            <p className="text-lg font-semibold">{format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
-                          </div>
-                          <div className="p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Parto</p>
-                            <p className="text-lg font-semibold">{format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
-                          </div>
-                        </div>
-                        <div className="space-y-3">
-                          <div className="p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Fecha Trámite ISAPRE</p>
-                            <p className="text-lg font-semibold">{format(result.week30, "dd 'de' MMMM, yyyy", { locale: es })}</p>
-                          </div>
-                          <div className="p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre/Post Natal</p>
-                            <p className="text-lg font-semibold">{format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="overflow-y-auto pr-2">
+                  <div className="space-y-4">
                     <Card className="border-2 border-blue-100">
-                      <CardContent className="p-4">
-                        <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
-                          Controles 1° y 2° Trimestre
-                        </h4>
-                        <div className="space-y-2.5">
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Screening 1° Trimestre</p>
-                            <p className="text-sm mt-1">{result.screening.firstTrimester}</p>
+                      <CardContent className="p-6">
+                        <h3 className="text-2xl font-bold text-blue-700 mb-4 text-center">
+                          Edad Gestacional: {result.gestationalAge.weeks}s {result.gestationalAge.days}d
+                        </h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <div className="space-y-3">
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Concepción</p>
+                              <p className="text-lg font-semibold">{format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            </div>
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Probable de Parto</p>
+                              <p className="text-lg font-semibold">{format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            </div>
                           </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Screening 2° Trimestre</p>
-                            <p className="text-sm mt-1">{result.screening.secondTrimester}</p>
-                          </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Exámenes 2° Trimestre</p>
-                            <p className="text-sm mt-1">{result.screening.secondTrimesterExams}</p>
-                          </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Vacuna DTPa</p>
-                            <p className="text-sm mt-1">{result.screening.dtpaVaccine}</p>
+                          <div className="space-y-3">
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-600 font-medium mb-1">Fecha Trámite ISAPRE</p>
+                              <p className="text-lg font-semibold">{format(result.week30, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            </div>
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <p className="text-sm text-blue-600 font-medium mb-1">Trámite Pre/Post Natal</p>
+                              <p className="text-lg font-semibold">{format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}</p>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
 
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <Card className="border-2 border-blue-100">
+                        <CardContent className="p-4">
+                          <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                            Controles 1° y 2° Trimestre
+                          </h4>
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Screening 1° Trimestre</p>
+                              <p className="text-sm mt-1">{result.screening.firstTrimester}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Screening 2° Trimestre</p>
+                              <p className="text-sm mt-1">{result.screening.secondTrimester}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Exámenes 2° Trimestre</p>
+                              <p className="text-sm mt-1">{result.screening.secondTrimesterExams}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Vacuna DTPa</p>
+                              <p className="text-sm mt-1">{result.screening.dtpaVaccine}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-2 border-blue-100">
+                        <CardContent className="p-4">
+                          <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
+                            Controles 3° Trimestre
+                          </h4>
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Exámenes</p>
+                              <p className="text-sm mt-1">{result.screening.thirdTrimesterExams}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Screening</p>
+                              <p className="text-sm mt-1">{result.screening.thirdTrimesterScreening}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Cultivo SGB</p>
+                              <p className="text-sm mt-1">{result.screening.gbsTest}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
                     <Card className="border-2 border-blue-100">
                       <CardContent className="p-4">
                         <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
-                          Controles 3° Trimestre
+                          Fechas Administrativas
                         </h4>
-                        <div className="space-y-2.5">
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Exámenes</p>
-                            <p className="text-sm mt-1">{result.screening.thirdTrimesterExams}</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Asignación Familiar</p>
+                              <p className="text-sm mt-1">Semana 20: {format(result.week20, "dd/MM/yyyy", { locale: es })}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">ISAPRE</p>
+                              <p className="text-sm mt-1">Semana 30: {format(result.week30, "dd/MM/yyyy", { locale: es })}</p>
+                            </div>
                           </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Screening</p>
-                            <p className="text-sm mt-1">{result.screening.thirdTrimesterScreening}</p>
-                          </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Cultivo SGB</p>
-                            <p className="text-sm mt-1">{result.screening.gbsTest}</p>
+                          <div className="space-y-2.5">
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Pre/Post Natal</p>
+                              <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Fecha Probable de Parto</p>
+                              <p className="text-sm mt-1">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</p>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
-
-                  <Card className="border-2 border-blue-100">
-                    <CardContent className="p-4">
-                      <h4 className="text-lg font-semibold text-blue-700 mb-3 pb-2 border-b border-blue-100">
-                        Fechas Administrativas
-                      </h4>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2.5">
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Asignación Familiar</p>
-                            <p className="text-sm mt-1">Semana 20: {format(result.week20, "dd/MM/yyyy", { locale: es })}</p>
-                          </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">ISAPRE</p>
-                            <p className="text-sm mt-1">Semana 30: {format(result.week30, "dd/MM/yyyy", { locale: es })}</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2.5">
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Pre/Post Natal</p>
-                            <p className="text-sm mt-1">Semana 34: {format(result.week34, "dd/MM/yyyy", { locale: es })}</p>
-                          </div>
-                          <div className="p-2.5 bg-gray-50 rounded-lg">
-                            <p className="text-sm font-medium text-blue-600">Fecha Probable de Parto</p>
-                            <p className="text-sm mt-1">{format(result.dueDate, "dd/MM/yyyy", { locale: es })}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               )}
             </div>
