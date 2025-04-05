@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { format } from "date-fns";
 import { calculatorTypes } from "@shared/schema";
 import { calculateBishop } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -15,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 const dilatacionOptions = [
   { value: 0, label: "Cerrado" },
@@ -258,20 +261,38 @@ export default function BishopCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-            <div className="space-y-2">
-              <p>
-                Puntuación Bishop:{" "}
-                <span className="font-medium">{result.score}</span>
-              </p>
-              <p>
-                Favorabilidad:{" "}
-                <span className="font-medium">{result.favorability}</span>
-              </p>
-              <p>
-                Recomendación:{" "}
-                <span className="font-medium">{result.recommendation}</span>
-              </p>
+            <div id="bishop-pdf-content">
+              <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+              <div className="space-y-2">
+                <p>
+                  Puntuación Bishop:{" "}
+                  <span className="font-medium">{result.score}</span>
+                </p>
+                <p>
+                  Favorabilidad:{" "}
+                  <span className="font-medium">{result.favorability}</span>
+                </p>
+                <p>
+                  Recomendación:{" "}
+                  <span className="font-medium">{result.recommendation}</span>
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-6 print:hidden">
+              <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <div className="flex space-x-2">
+                <SpeechButton
+                  text={`Resultados del Test de Bishop: 
+                  La puntuación Bishop es ${result.score}.
+                  Favorabilidad: ${result.favorability}.
+                  Recomendación: ${result.recommendation}.`}
+                />
+                <GeneratePDFButton
+                  contentId="bishop-pdf-content"
+                  fileName="Test_Bishop"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

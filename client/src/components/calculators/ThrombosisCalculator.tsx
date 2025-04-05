@@ -6,6 +6,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { calculatorTypes } from "@shared/schema";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 interface RiskFactor {
   id: string;
@@ -169,7 +172,7 @@ export default function ThrombosisCalculator() {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className={`rounded-lg border p-6 ${
+              <div id="thrombosis-pdf-content" className={`rounded-lg border p-6 ${
                 result.totalPoints >= 4 ? 'border-red-500 bg-red-50' :
                   result.totalPoints === 3 ? 'border-orange-500 bg-orange-50' :
                     result.totalPoints === 2 ? 'border-yellow-500 bg-yellow-50' :
@@ -187,6 +190,35 @@ export default function ThrombosisCalculator() {
                 </div>
                 <div className="mt-4">
                   <p className="text-lg font-medium">{result.prophylaxisGuideline}</p>
+                </div>
+                
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold mb-2">Factores de riesgo seleccionados:</h3>
+                  <ul className="list-disc pl-5 space-y-1 text-sm">
+                    {selectedFactors.map(factorId => {
+                      const factor = riskFactors.find(f => f.id === factorId);
+                      return (
+                        <li key={factorId}>
+                          {factor?.label} ({factor?.points} {factor?.points === 1 ? 'punto' : 'puntos'})
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-6 print:hidden">
+                <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+                <div className="flex space-x-2">
+                  <SpeechButton
+                    text={`Resultado del cálculo de riesgo tromboembólico: 
+                    Puntuación total: ${result.totalPoints} puntos. 
+                    Recomendación: ${result.prophylaxisGuideline}.`}
+                  />
+                  <GeneratePDFButton
+                    contentId="thrombosis-pdf-content"
+                    fileName="Riesgo_Tromboembolico"
+                  />
                 </div>
               </div>
             </CardContent>

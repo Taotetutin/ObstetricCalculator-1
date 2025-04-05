@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { format } from "date-fns";
 import { calculatorTypes } from "@shared/schema";
 import { calculateCVR } from "@/lib/calculator-utils";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 export default function CVRCalculator() {
   const [result, setResult] = useState<{
@@ -134,7 +137,7 @@ export default function CVRCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <div className="space-y-2">
+            <div id="cvr-pdf-content" className="space-y-2">
               <p>
                 Volumen de la lesión:{" "}
                 <span className="font-medium">{result.lesionVolume} mm³</span>
@@ -145,6 +148,22 @@ export default function CVRCalculator() {
               <p>
                 Riesgo: <span className="font-medium">{result.risk}</span>
               </p>
+            </div>
+            
+            <div className="mt-6 print:hidden">
+              <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <div className="flex space-x-2">
+                <SpeechButton
+                  text={`Resultados del cálculo CVR: 
+                  El volumen de la lesión es ${result.lesionVolume} milímetros cúbicos.
+                  CVR: ${result.cvr}.
+                  Nivel de riesgo: ${result.risk}.`}
+                />
+                <GeneratePDFButton
+                  contentId="cvr-pdf-content"
+                  fileName="Calculo_CVR"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -9,6 +9,8 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DateRoller } from "@/components/ui/wheel-roller";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 export default function FPPCalculator() {
   const [result, setResult] = useState<{
@@ -79,20 +81,37 @@ export default function FPPCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-            <div className="space-y-2">
-              <p>
-                Fecha Probable de Parto:{" "}
-                <span className="font-medium">
-                  {format(result.fpp, "PPP", { locale: es })}
-                </span>
-              </p>
-              <p>
-                Fecha Probable de Concepción:{" "}
-                <span className="font-medium">
-                  {format(result.concepcion, "PPP", { locale: es })}
-                </span>
-              </p>
+            <div id="fpp-pdf-content">
+              <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+              <div className="space-y-2">
+                <p>
+                  Fecha Probable de Parto:{" "}
+                  <span className="font-medium">
+                    {format(result.fpp, "PPP", { locale: es })}
+                  </span>
+                </p>
+                <p>
+                  Fecha Probable de Concepción:{" "}
+                  <span className="font-medium">
+                    {format(result.concepcion, "PPP", { locale: es })}
+                  </span>
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-6 print:hidden">
+              <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <div className="flex space-x-2">
+                <SpeechButton
+                  text={`Resultados de cálculo de fecha probable de parto: 
+                  La fecha probable de parto es ${format(result.fpp, "dd 'de' MMMM 'de' yyyy", { locale: es })}.
+                  La fecha probable de concepción es ${format(result.concepcion, "dd 'de' MMMM 'de' yyyy", { locale: es })}.`}
+                />
+                <GeneratePDFButton
+                  contentId="fpp-pdf-content"
+                  fileName="Fecha_Probable_Parto"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

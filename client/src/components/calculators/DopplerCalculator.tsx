@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 import {
   Select,
   SelectContent,
@@ -238,35 +241,56 @@ export default function DopplerCalculator() {
       {result && (
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4 text-blue-700">Resultados:</h3>
-            <div className="space-y-4">
-              <div>
-                <p className="font-medium text-blue-700">Índices Doppler:</p>
-                <ul className="list-disc list-inside ml-4">
-                  <li>AU-IP: <span className="font-medium">{result.percentiles.auPi}%</span></li>
-                  <li>ACM-IP: <span className="font-medium">{result.percentiles.acmPi}%</span></li>
-                  <li>ACM-PSV: <span className="font-medium">{result.percentiles.acmPsv}%</span></li>
-                </ul>
-              </div>
+            <div id="doppler-pdf-content">
+              <h3 className="text-lg font-semibold mb-4 text-blue-700">Resultados:</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="font-medium text-blue-700">Índices Doppler:</p>
+                  <ul className="list-disc list-inside ml-4">
+                    <li>AU-IP: <span className="font-medium">{result.percentiles.auPi}%</span></li>
+                    <li>ACM-IP: <span className="font-medium">{result.percentiles.acmPi}%</span></li>
+                    <li>ACM-PSV: <span className="font-medium">{result.percentiles.acmPsv}%</span></li>
+                  </ul>
+                </div>
 
-              <div>
-                <p className="font-medium text-blue-700">Índice Cerebro-Placentario (IPC):</p>
-                <ul className="list-disc list-inside ml-4">
-                  <li>Valor: <span className="font-medium">{result.cpr.toFixed(2)}</span></li>
-                  <li>Percentil: <span className="font-medium">{result.cprPercentile}%</span></li>
-                </ul>
-              </div>
+                <div>
+                  <p className="font-medium text-blue-700">Índice Cerebro-Placentario (IPC):</p>
+                  <ul className="list-disc list-inside ml-4">
+                    <li>Valor: <span className="font-medium">{result.cpr.toFixed(2)}</span></li>
+                    <li>Percentil: <span className="font-medium">{result.cprPercentile}%</span></li>
+                  </ul>
+                </div>
 
-              <div>
-                <p className="font-medium text-blue-700">Estado:</p>
-                <p className={`ml-4 font-medium ${result.evaluation === "Alterado" ? "text-red-600" : "text-green-600"}`}>
-                  {result.evaluation}
-                </p>
-              </div>
+                <div>
+                  <p className="font-medium text-blue-700">Estado:</p>
+                  <p className={`ml-4 font-medium ${result.evaluation === "Alterado" ? "text-red-600" : "text-green-600"}`}>
+                    {result.evaluation}
+                  </p>
+                </div>
 
-              <div>
-                <p className="font-medium text-blue-700">Interpretación y Recomendaciones:</p>
-                <p className="ml-4 text-sm">{result.recommendations}</p>
+                <div>
+                  <p className="font-medium text-blue-700">Interpretación y Recomendaciones:</p>
+                  <p className="ml-4 text-sm">{result.recommendations}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 print:hidden">
+              <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <div className="flex space-x-2">
+                <SpeechButton
+                  text={`Resultados del Doppler Fetal:
+                    Índices Doppler: Arteria Umbilical IP: ${result.percentiles.auPi}%, 
+                    Arteria Cerebral Media IP: ${result.percentiles.acmPi}%, 
+                    Arteria Cerebral Media Velocidad Pico Sistólica: ${result.percentiles.acmPsv}%.
+                    Índice Cerebro-Placentario: ${result.cpr.toFixed(2)}, en percentil ${result.cprPercentile}%.
+                    Estado: ${result.evaluation}.
+                    Recomendaciones: ${result.recommendations}`}
+                />
+                <GeneratePDFButton
+                  contentId="doppler-pdf-content"
+                  fileName="Doppler_Fetal_Resultado"
+                />
               </div>
             </div>
           </CardContent>

@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 //import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 // Generamos arrays para los selectores
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -323,7 +325,7 @@ export default function GestationalAgeCalculator() {
       {result && (
         <Card className="mt-4 border-2 border-blue-100">
           <CardContent className="pt-6">
-            <div className="text-center">
+            <div id="gestational-age-pdf-content" className="text-center">
               <p className="text-2xl font-bold text-blue-600">
                 {result.weeks} semanas y {result.days} días
               </p>
@@ -335,6 +337,22 @@ export default function GestationalAgeCalculator() {
                   FUM estimada: {format(result.estimatedLMP, "dd/MM/yyyy")}
                 </p>
               )}
+            </div>
+            
+            <div className="mt-6 print:hidden flex justify-center">
+              <p className="text-sm text-gray-500 mr-4">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <div className="flex space-x-2">
+                <SpeechButton
+                  text={`Resultado del cálculo de edad gestacional: 
+                  ${result.weeks} semanas y ${result.days} días.
+                  Calculado por ${result.method}.
+                  ${result.estimatedLMP ? `Fecha de última menstruación estimada: ${format(result.estimatedLMP, "dd/MM/yyyy")}` : ''}`}
+                />
+                <GeneratePDFButton
+                  contentId="gestational-age-pdf-content"
+                  fileName="Edad_Gestacional"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
