@@ -248,10 +248,10 @@ export default function GestationalComplexCalculator() {
           </TabsTrigger>
         </TabsList>
 
-        <div className="flex-1 flex overflow-hidden">
-          <TabsContent value="calculator" className="flex-1 h-full">
+        <div className="flex-1 flex overflow-auto">
+          <TabsContent value="calculator" className="flex-1 h-full w-full">
             <div className="h-full grid md:grid-cols-2 gap-4">
-              <Card className="overflow-y-auto">
+              <Card className="overflow-y-auto max-h-[500px]">
                 <CardContent className="p-4">
                   <Form {...calculatorForm}>
                     <form onSubmit={calculatorForm.handleSubmit(onCalculate)} className="space-y-4">
@@ -271,7 +271,7 @@ export default function GestationalComplexCalculator() {
               </Card>
 
               {result && (
-                <div className="overflow-y-auto pr-2">
+                <div className="overflow-y-auto pr-2 max-h-[80vh] pb-4">
                   <div className="space-y-4">
                     <Card className="border-2 border-blue-100">
                       <CardContent className="p-6">

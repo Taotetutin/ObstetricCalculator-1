@@ -145,7 +145,11 @@ export function setupAuth(app: Express) {
       const user = await storage.createUser(insertUser);
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(201).json(user);
+        
+        // Create a new object without the password field
+        const { password, ...userWithoutPassword } = user;
+        
+        res.status(201).json(userWithoutPassword);
       });
     } catch (error) {
       next(error);
@@ -153,14 +157,19 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) return next(err);
       if (!user) {
+        console.log("Authentication failed:", info);
         return res.status(401).json({ message: info?.message || "Error de autenticación" });
       }
-      req.login(user, (err) => {
+      req.login(user, (err: any) => {
         if (err) return next(err);
-        res.json(user);
+        
+        // Create a new object without the password field
+        const { password, ...userWithoutPassword } = user;
+        
+        res.json(userWithoutPassword);
       });
     })(req, res, next);
   });
@@ -173,6 +182,7 @@ export function setupAuth(app: Express) {
   app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/auth" }),
     (req, res) => {
+      // After successful authentication, redirect to home
       res.redirect("/");
     }
   );
@@ -188,6 +198,9 @@ export function setupAuth(app: Express) {
     if (!req.isAuthenticated()) {
       return res.sendStatus(401);
     }
-    res.json(req.user);
+    // Create a new object without the password field
+    const { password, ...userWithoutPassword } = req.user as any;
+    
+    res.json(userWithoutPassword);
   });
 }
