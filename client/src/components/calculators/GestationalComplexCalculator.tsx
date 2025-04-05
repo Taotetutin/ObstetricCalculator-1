@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Patient } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 // Generamos arrays para los selectores
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -272,7 +274,19 @@ export default function GestationalComplexCalculator() {
 
               {result && (
                 <div className="overflow-y-auto pr-2 max-h-[80vh] pb-4">
-                  <div className="space-y-4">
+                  <div className="flex justify-end gap-2 mb-2">
+                    <SpeechButton 
+                      text={`Edad gestacional: ${result.gestationalAge.weeks} semanas ${result.gestationalAge.days} días. 
+                      Fecha de concepción: ${format(result.conceptionDate, "dd 'de' MMMM, yyyy", { locale: es })}.
+                      Fecha probable de parto: ${format(result.dueDate, "dd 'de' MMMM, yyyy", { locale: es })}.
+                      Pre Natal en la semana 34: ${format(result.week34, "dd 'de' MMMM, yyyy", { locale: es })}.`}
+                    />
+                    <GeneratePDFButton 
+                      contentId="calculation-result" 
+                      fileName={`gestacion-${format(new Date(), "yyyyMMdd")}`}
+                    />
+                  </div>
+                  <div className="space-y-4" id="calculation-result">
                     <Card className="border-2 border-blue-100">
                       <CardContent className="p-6">
                         <h3 className="text-2xl font-bold text-blue-700 mb-4 text-center">

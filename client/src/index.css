@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos para exportación de PDF */
+.pdf-export {
+  background-color: white !important;
+  color: black !important;
+  padding: 20px !important;
+  box-shadow: none !important;
+}
+
+.pdf-export * {
+  color: black !important;
+  border-color: #ddd !important;
+}
+
+/* Asegurar que los elementos de resultado tengan un ID para el PDF */
+#calculation-result {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  page-break-inside: avoid;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
