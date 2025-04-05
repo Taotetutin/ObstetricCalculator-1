@@ -6,6 +6,9 @@ import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 type AgeRiskResult = {
   risk: number;
@@ -149,19 +152,59 @@ export default function AgeCalculator() {
       </Form>
 
       {result && (
-        <div className="mt-6 p-4 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
-          <p className={`font-medium ${
-            result.interpretation === "Alto Riesgo"
-              ? "text-red-600"
-              : result.interpretation === "Riesgo Intermedio"
-                ? "text-amber-600"
-                : "text-green-600"
-          }`}>
-            {result.interpretation}
-          </p>
-          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+        <div className="mt-6">
+          <div className="flex justify-end gap-2 mb-2">
+            <SpeechButton 
+              text={`El riesgo estimado de trisomía 21 es: 1 en ${Math.round(1/result.risk)}. 
+              La interpretación es: ${result.interpretation}. 
+              ${result.details}`}
+            />
+            <GeneratePDFButton 
+              contentId="t21-result" 
+              fileName={`riesgo-t21-${format(new Date(), "yyyyMMdd")}`}
+            />
+          </div>
+          <div id="t21-result" className="p-4 bg-white rounded-lg shadow">
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+            <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
+            <p className={`font-medium ${
+              result.interpretation === "Alto Riesgo"
+                ? "text-red-600"
+                : result.interpretation === "Riesgo Intermedio"
+                  ? "text-amber-600"
+                  : "text-green-600"
+            }`}>
+              {result.interpretation}
+            </p>
+            <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+            
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <h4 className="font-medium mb-2">Recomendaciones:</h4>
+              <ul className="list-disc pl-5 space-y-1 text-sm">
+                {result.interpretation === "Alto Riesgo" && (
+                  <>
+                    <li>Se sugiere confirmación mediante prueba diagnóstica invasiva (amniocentesis o biopsia de vellosidades coriónicas)</li>
+                    <li>Consejería genética especializada</li>
+                    <li>Seguimiento ecográfico detallado</li>
+                  </>
+                )}
+                {result.interpretation === "Riesgo Intermedio" && (
+                  <>
+                    <li>Se recomienda prueba de ADN fetal en sangre materna (NIPT)</li>
+                    <li>Ecografía detallada para marcadores de aneuploidías</li>
+                    <li>Seguimiento especializado</li>
+                  </>
+                )}
+                {result.interpretation === "Bajo Riesgo" && (
+                  <>
+                    <li>Seguimiento obstétrico habitual</li>
+                    <li>Ecografía del primer trimestre con medición de translucencia nucal</li>
+                    <li>Considerar pruebas de cribado combinado del primer trimestre</li>
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
         </div>
       )}
     </div>

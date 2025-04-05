@@ -15,6 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
+import { format } from "date-fns";
 
 const schema = z.object({
   gestationalWeeks: z.number().min(22).max(34),
@@ -217,21 +220,58 @@ export default function PartoPrematuroCalculator() {
       </Form>
 
       {result && (
-        <Card className="mt-6">
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
-            <p className="text-lg">
-              Nivel de riesgo:{" "}
-              <span className={`font-bold ${
-                result === "Alto" ? "text-red-500" :
-                result === "Moderado" ? "text-yellow-500" :
-                "text-green-500"
-              }`}>
-                {result}
-              </span>
-            </p>
-          </CardContent>
-        </Card>
+        <div className="mt-6">
+          <div className="flex justify-end gap-2 mb-2">
+            <SpeechButton 
+              text={`El nivel de riesgo de parto prematuro es ${result}.`}
+            />
+            <GeneratePDFButton 
+              contentId="calculation-result" 
+              fileName={`riesgo-prematuro-${format(new Date(), "yyyyMMdd")}`}
+            />
+          </div>
+          <Card>
+            <CardContent className="pt-6" id="calculation-result">
+              <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
+              <p className="text-lg">
+                Nivel de riesgo:{" "}
+                <span className={`font-bold ${
+                  result === "Alto" ? "text-red-500" :
+                  result === "Moderado" ? "text-yellow-500" :
+                  "text-green-500"
+                }`}>
+                  {result}
+                </span>
+              </p>
+              <div className="mt-4">
+                <h4 className="font-medium mb-2">Recomendaciones:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {result === "Alto" && (
+                    <>
+                      <li>Considerar hospitalización para monitoreo continuo</li>
+                      <li>Evaluación de administración de corticoides</li>
+                      <li>Consulta con especialista en medicina materno-fetal</li>
+                    </>
+                  )}
+                  {result === "Moderado" && (
+                    <>
+                      <li>Seguimiento frecuente (cada 1-2 semanas)</li>
+                      <li>Reposo relativo según criterio médico</li>
+                      <li>Considerar monitorización de actividad uterina</li>
+                    </>
+                  )}
+                  {result === "Bajo" && (
+                    <>
+                      <li>Seguimiento obstétrico habitual</li>
+                      <li>Control prenatal normal</li>
+                      <li>Educación sobre signos de alarma</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
