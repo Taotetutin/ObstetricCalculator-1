@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calculator, Heart, AlertTriangle, Stethoscope } from 'lucide-react';
 import { calculateRiskLevel, type RiskFactors, type RiskAssessment } from './utils/riskCalculator';
 import { RiskResult } from './components/RiskResult';
-import { GestationWheelRoller } from "@/components/ui/gestation-wheel-roller";
+import { format, differenceInWeeks, differenceInDays } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+// Generamos arrays para los selectores de fecha
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
+const months = Array.from({ length: 12 }, (_, i) => i + 1);
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 
 export default function ColestasisCalculator() {
   const [formData, setFormData] = useState({
     age: '',
+    gestationalDate: new Date(),
     gestationalWeeks: 20,
     gestationalDays: 0,
     bileAcids: '',
@@ -47,13 +55,39 @@ export default function ColestasisCalculator() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleGestationChange = (value: { weeks: number; days: number }) => {
+  const handleGestationDateChange = (type: 'day' | 'month' | 'year', value: string) => {
+    const newDate = new Date(formData.gestationalDate);
+    if (type === 'day') newDate.setDate(parseInt(value));
+    if (type === 'month') newDate.setMonth(parseInt(value) - 1);
+    if (type === 'year') newDate.setFullYear(parseInt(value));
+    
+    // Calculamos semanas y días de gestación basados en la fecha actual
+    const today = new Date();
+    const weeks = differenceInWeeks(today, newDate);
+    const totalDays = differenceInDays(today, newDate);
+    const remainingDays = totalDays % 7;
+    
     setFormData(prev => ({
       ...prev,
-      gestationalWeeks: value.weeks,
-      gestationalDays: value.days
+      gestationalDate: newDate,
+      gestationalWeeks: weeks,
+      gestationalDays: remainingDays
     }));
   };
+  
+  // Efecto para actualizar las semanas y días gestacionales cuando se carga el componente
+  useEffect(() => {
+    const today = new Date();
+    const weeks = differenceInWeeks(today, formData.gestationalDate);
+    const totalDays = differenceInDays(today, formData.gestationalDate);
+    const remainingDays = totalDays % 7;
+    
+    setFormData(prev => ({
+      ...prev,
+      gestationalWeeks: weeks,
+      gestationalDays: remainingDays
+    }));
+  }, []);
 
   // Generar array de edades de 14 a 50
   const ages = Array.from({ length: 37 }, (_, i) => i + 14);
@@ -92,12 +126,62 @@ export default function ColestasisCalculator() {
 
               <div>
                 <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Edad Gestacional
+                  Fecha de Gestación
                 </label>
-                <GestationWheelRoller
-                  value={{ weeks: formData.gestationalWeeks, days: formData.gestationalDays }}
-                  onChange={handleGestationChange}
-                />
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <select
+                        className="w-full h-10 rounded-md border border-blue-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={formData.gestationalDate.getDate().toString()}
+                        onChange={(e) => handleGestationDateChange('day', e.target.value)}
+                      >
+                        {days.map((day) => (
+                          <option key={day} value={day.toString()}>
+                            {day}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="mt-1 text-xs text-center text-gray-500">Día</div>
+                    </div>
+
+                    <div className="flex-[1.2]">
+                      <select
+                        className="w-full h-10 rounded-md border border-blue-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={(formData.gestationalDate.getMonth() + 1).toString()}
+                        onChange={(e) => handleGestationDateChange('month', e.target.value)}
+                      >
+                        {months.map((month) => (
+                          <option key={month} value={month.toString()}>
+                            {format(new Date(2024, month - 1), 'MMMM', { locale: es })}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="mt-1 text-xs text-center text-gray-500">Mes</div>
+                    </div>
+
+                    <div className="flex-1">
+                      <select
+                        className="w-full h-10 rounded-md border border-blue-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={formData.gestationalDate.getFullYear().toString()}
+                        onChange={(e) => handleGestationDateChange('year', e.target.value)}
+                      >
+                        {years.map((year) => (
+                          <option key={year} value={year.toString()}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="mt-1 text-xs text-center text-gray-500">Año</div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 rounded-lg bg-blue-100 text-center">
+                    <p className="text-blue-800 font-medium">
+                      Edad gestacional calculada: <span className="font-bold">{formData.gestationalWeeks} semanas y {formData.gestationalDays} días</span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
