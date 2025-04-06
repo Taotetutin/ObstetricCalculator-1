@@ -365,12 +365,12 @@ export default function GestationalComplexCalculator() {
                           </h4>
                           <div className="space-y-2.5">
                             <div className="p-2.5 bg-gray-50 rounded-lg">
-                              <p className="text-sm font-medium text-blue-600">Exámenes</p>
-                              <p className="text-sm mt-1">{result.screening.thirdTrimesterExams}</p>
-                            </div>
-                            <div className="p-2.5 bg-gray-50 rounded-lg">
                               <p className="text-sm font-medium text-blue-600">Vacuna DTPa y Rhogam</p>
                               <p className="text-sm mt-1">{result.screening.dtpaVaccine}</p>
+                            </div>
+                            <div className="p-2.5 bg-gray-50 rounded-lg">
+                              <p className="text-sm font-medium text-blue-600">Exámenes</p>
+                              <p className="text-sm mt-1">{result.screening.thirdTrimesterExams}</p>
                             </div>
                             <div className="p-2.5 bg-gray-50 rounded-lg">
                               <p className="text-sm font-medium text-blue-600">Screening</p>
