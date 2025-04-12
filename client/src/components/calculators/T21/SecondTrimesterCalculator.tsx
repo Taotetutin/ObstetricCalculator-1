@@ -281,9 +281,24 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
-                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 23.3)</SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>No evaluado</span>
+                          <span className="text-xs text-gray-500">LR: 1.0</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Normal</span>
+                          <span className="text-xs text-gray-500">LR: 0.80</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Anormal</span>
+                          <span className="text-xs text-gray-500">LR: 23.3</span>
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -301,9 +316,24 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.80)</SelectItem>
-                      <SelectItem value="anormal" className="text-gray-900">Anormal (LR: 3.72)</SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>No evaluado</span>
+                          <span className="text-xs text-gray-500">LR: 1.0</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Normal</span>
+                          <span className="text-xs text-gray-500">LR: 0.80</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="anormal" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Anormal</span>
+                          <span className="text-xs text-gray-500">LR: 3.72</span>
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -321,9 +351,24 @@ export default function SecondTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.71)</SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 27.52)</SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>No evaluado</span>
+                          <span className="text-xs text-gray-500">LR: 1.0</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Normal</span>
+                          <span className="text-xs text-gray-500">LR: 0.71</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">
+                        <div className="flex justify-between w-full">
+                          <span>Presente</span>
+                          <span className="text-xs text-gray-500">LR: 27.52</span>
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
