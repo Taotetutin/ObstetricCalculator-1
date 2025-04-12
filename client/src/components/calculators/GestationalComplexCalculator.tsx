@@ -229,35 +229,37 @@ export default function GestationalComplexCalculator() {
       </Alert>
 
       <Tabs defaultValue="calculator" className="flex-1 flex flex-col">
-        <TabsList className="flex w-full h-auto flex-wrap md:flex-nowrap mb-4">
-          <TabsTrigger 
-            value="calculator" 
-            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
-              <Calculator className="w-4 h-4" />
-              <span className="text-xs sm:text-sm whitespace-normal text-center">Calcular</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="register" 
-            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
-              <UserPlus className="w-4 h-4" />
-              <span className="text-xs sm:text-sm whitespace-normal text-center">Registrar</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="search" 
-            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
-              <Search className="w-4 h-4" />
-              <span className="text-xs sm:text-sm whitespace-normal text-center">Buscar</span>
-            </div>
-          </TabsTrigger>
-        </TabsList>
+        <div className="w-full mb-4">
+          <TabsList className="flex w-full min-h-[50px] h-auto bg-blue-100/50 flex-wrap">
+            <TabsTrigger 
+              value="calculator" 
+              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
+              <div className="flex flex-col items-center justify-center gap-1">
+                <Calculator className="w-4 h-4 flex-shrink-0" />
+                <span className="text-[10px] md:text-xs leading-tight text-center">Calcular</span>
+              </div>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="register" 
+              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
+              <div className="flex flex-col items-center justify-center gap-1">
+                <UserPlus className="w-4 h-4 flex-shrink-0" />
+                <span className="text-[10px] md:text-xs leading-tight text-center">Registrar</span>
+              </div>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="search" 
+              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
+              <div className="flex flex-col items-center justify-center gap-1">
+                <Search className="w-4 h-4 flex-shrink-0" />
+                <span className="text-[10px] md:text-xs leading-tight text-center">Buscar</span>
+              </div>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <div className="flex-1 flex overflow-auto">
           <TabsContent value="calculator" className="flex-1 h-full w-full">
