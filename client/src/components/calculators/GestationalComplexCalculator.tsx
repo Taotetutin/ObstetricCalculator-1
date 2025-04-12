@@ -229,23 +229,32 @@ export default function GestationalComplexCalculator() {
       </Alert>
 
       <Tabs defaultValue="calculator" className="flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-3 mb-4">
-          <TabsTrigger value="calculator" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+        <TabsList className="flex w-full h-auto flex-wrap md:flex-nowrap mb-4">
+          <TabsTrigger 
+            value="calculator" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <Calculator className="w-4 h-4" />
-              <span>Calcular</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Calcular</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="register" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+          <TabsTrigger 
+            value="register" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <UserPlus className="w-4 h-4" />
-              <span>Registrar</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Registrar</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="search" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+          <TabsTrigger 
+            value="search" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <Search className="w-4 h-4" />
-              <span>Buscar</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Buscar</span>
             </div>
           </TabsTrigger>
         </TabsList>
