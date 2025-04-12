@@ -107,7 +107,7 @@ export default function ColestasisCalculator() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Edad
+                  Edad Materna
                 </label>
                 <select
                   id="age"
