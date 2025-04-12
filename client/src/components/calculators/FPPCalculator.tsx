@@ -11,6 +11,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { DateRoller } from "@/components/ui/wheel-roller";
 import SpeechButton from "@/components/ui/SpeechButton";
 import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calculator, Search, UserPlus, Calendar } from "lucide-react";
 
 export default function FPPCalculator() {
   const [result, setResult] = useState<{
@@ -62,10 +64,10 @@ export default function FPPCalculator() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Fecha de última menstruación</FormLabel>
-                <DateRoller
+                <DateDropdown
                   value={field.value}
                   onChange={field.onChange}
-                  minYear={1900}
+                  minYear={1950}
                   maxYear={2025}
                 />
                 <FormMessage />
