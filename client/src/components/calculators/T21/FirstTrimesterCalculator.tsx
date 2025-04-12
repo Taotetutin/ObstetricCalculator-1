@@ -134,24 +134,9 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>No evaluado</span>
-                          <span className="text-xs text-gray-500">LR: 1.0</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Normal</span>
-                          <span className="text-xs text-gray-500">LR: 0.15</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="ausente" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Ausente</span>
-                          <span className="text-xs text-gray-500">LR: 23.36</span>
-                        </div>
-                      </SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.15)</SelectItem>
+                      <SelectItem value="ausente" className="text-gray-900">Ausente (LR: 23.36)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -169,24 +154,9 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>No evaluado</span>
-                          <span className="text-xs text-gray-500">LR: 1.0</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Normal</span>
-                          <span className="text-xs text-gray-500">LR: 0.45</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="presente" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Presente</span>
-                          <span className="text-xs text-gray-500">LR: 5.83</span>
-                        </div>
-                      </SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.45)</SelectItem>
+                      <SelectItem value="presente" className="text-gray-900">Presente (LR: 5.83)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -204,24 +174,9 @@ export default function FirstTrimesterCalculator() {
                       <SelectValue placeholder="Seleccione estado" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no_evaluado" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>No evaluado</span>
-                          <span className="text-xs text-gray-500">LR: 1.0</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="normal" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Normal</span>
-                          <span className="text-xs text-gray-500">LR: 0.44</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="negativa" className="text-gray-900">
-                        <div className="flex justify-between w-full">
-                          <span>Onda A negativa</span>
-                          <span className="text-xs text-gray-500">LR: 7.63</span>
-                        </div>
-                      </SelectItem>
+                      <SelectItem value="no_evaluado" className="text-gray-900">No evaluado (LR: 1.0)</SelectItem>
+                      <SelectItem value="normal" className="text-gray-900">Normal (LR: 0.44)</SelectItem>
+                      <SelectItem value="negativa" className="text-gray-900">Onda A negativa (LR: 7.63)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
