@@ -230,32 +230,33 @@ export default function GestationalComplexCalculator() {
 
       <Tabs defaultValue="calculator" className="flex-1 flex flex-col">
         <div className="w-full mb-4">
-          <TabsList className="flex w-full min-h-[50px] h-auto bg-blue-100/50 flex-wrap">
+          <div className="mb-2 text-xs text-gray-500 text-center">Selecciona una opción:</div>
+          <TabsList className="p-1 bg-blue-100/50 rounded-lg flex justify-center">
             <TabsTrigger 
               value="calculator" 
-              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="h-10 px-3 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-md"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <Calculator className="w-4 h-4 flex-shrink-0" />
-                <span className="text-[10px] md:text-xs leading-tight text-center">Calcular</span>
+              <div className="inline-flex items-center">
+                <Calculator className="h-4 w-4 mr-1.5" />
+                <span>Calcular</span>
               </div>
             </TabsTrigger>
             <TabsTrigger 
               value="register" 
-              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="h-10 px-3 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-md"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <UserPlus className="w-4 h-4 flex-shrink-0" />
-                <span className="text-[10px] md:text-xs leading-tight text-center">Registrar</span>
+              <div className="inline-flex items-center">
+                <UserPlus className="h-4 w-4 mr-1.5" />
+                <span>Registrar</span>
               </div>
             </TabsTrigger>
             <TabsTrigger 
               value="search" 
-              className="flex-1 h-full min-h-[50px] py-1.5 px-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="h-10 px-3 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-md"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <Search className="w-4 h-4 flex-shrink-0" />
-                <span className="text-[10px] md:text-xs leading-tight text-center">Buscar</span>
+              <div className="inline-flex items-center">
+                <Search className="h-4 w-4 mr-1.5" />
+                <span>Buscar</span>
               </div>
             </TabsTrigger>
           </TabsList>
