@@ -58,7 +58,6 @@ export default function CrecimientoFetalCalculator() {
   return (
     <div className="space-y-8">
       <Alert className="bg-blue-50 border-blue-200 text-blue-700">
-        <Scale className="h-4 w-4 mr-2" />
         <AlertDescription className="font-medium">
           Evaluación integral del crecimiento fetal usando percentiles OMS y curva de crecimiento
         </AlertDescription>
@@ -66,8 +65,7 @@ export default function CrecimientoFetalCalculator() {
 
       <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-3">
-          <CardTitle className="text-blue-700 flex items-center gap-2">
-            <Weight className="h-5 w-5" />
+          <CardTitle className="text-blue-700">
             Calculadora de Crecimiento Fetal
           </CardTitle>
           <CardDescription>
@@ -77,10 +75,7 @@ export default function CrecimientoFetalCalculator() {
         <CardContent className="pt-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-              <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
-                <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
-                  <Scale className="h-3.5 w-3.5 text-blue-600" />
-                </span>
+              <label className="block text-sm font-medium text-blue-700 mb-2">
                 Edad Gestacional (Semanas)
               </label>
               <Input
@@ -94,10 +89,7 @@ export default function CrecimientoFetalCalculator() {
               />
             </div>
             <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-              <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
-                <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
-                  <Scale className="h-3.5 w-3.5 text-blue-600" />
-                </span>
+              <label className="block text-sm font-medium text-blue-700 mb-2">
                 Edad Gestacional (Días)
               </label>
               <Input
@@ -113,10 +105,7 @@ export default function CrecimientoFetalCalculator() {
           </div>
 
           <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-            <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
-              <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
-                <Weight className="h-3.5 w-3.5 text-blue-600" />
-              </span>
+            <label className="block text-sm font-medium text-blue-700 mb-2">
               Peso Fetal (gramos)
             </label>
             <Input
@@ -141,8 +130,7 @@ export default function CrecimientoFetalCalculator() {
         <div className="space-y-6">
           <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
-              <CardTitle className="text-blue-700 flex items-center gap-2">
-                <BarChart className="h-5 w-5" />
+              <CardTitle className="text-blue-700">
                 Resultado del Análisis
               </CardTitle>
             </CardHeader>
@@ -156,8 +144,7 @@ export default function CrecimientoFetalCalculator() {
           {curveData.length > 0 && (
             <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
-                <CardTitle className="text-blue-700 flex items-center gap-2">
-                  <LineChartIcon className="h-5 w-5" />
+                <CardTitle className="text-blue-700">
                   Curva de Crecimiento
                 </CardTitle>
               </CardHeader>
