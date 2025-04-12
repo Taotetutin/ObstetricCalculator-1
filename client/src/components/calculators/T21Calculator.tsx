@@ -9,23 +9,32 @@ export default function T21Calculator() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="age" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-blue-100/50">
-          <TabsTrigger value="age" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+        <TabsList className="flex w-full h-auto flex-wrap md:flex-nowrap bg-blue-100/50">
+          <TabsTrigger 
+            value="age" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <Calculator className="w-4 h-4" />
-              <span>Riesgo por Edad</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Riesgo por Edad</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="first" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+          <TabsTrigger 
+            value="first" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <Baby className="w-4 h-4" />
-              <span>Primer Trimestre</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Primer Trimestre</span>
             </div>
           </TabsTrigger>
-          <TabsTrigger value="second" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <div className="flex items-center gap-2">
+          <TabsTrigger 
+            value="second" 
+            className="flex-1 py-2 px-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-2">
               <Stethoscope className="w-4 h-4" />
-              <span>Segundo Trimestre</span>
+              <span className="text-xs sm:text-sm whitespace-normal text-center">Segundo Trimestre</span>
             </div>
           </TabsTrigger>
         </TabsList>
