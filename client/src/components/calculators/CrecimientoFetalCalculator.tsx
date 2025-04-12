@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Scale, LineChart as LineChartIcon, Weight } from "lucide-react";
 
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
@@ -56,17 +57,30 @@ export default function CrecimientoFetalCalculator() {
 
   return (
     <div className="space-y-8">
-      <Alert>
-        <AlertDescription>
+      <Alert className="bg-blue-50 border-blue-200 text-blue-700">
+        <Scale className="h-4 w-4 mr-2" />
+        <AlertDescription className="font-medium">
           Evaluación integral del crecimiento fetal usando percentiles OMS y curva de crecimiento
         </AlertDescription>
       </Alert>
 
-      <Card>
+      <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-3">
+          <CardTitle className="text-blue-700 flex items-center gap-2">
+            <Weight className="h-5 w-5" />
+            Calculadora de Crecimiento Fetal
+          </CardTitle>
+          <CardDescription>
+            Ingrese la edad gestacional y el peso fetal para evaluar su desarrollo
+          </CardDescription>
+        </CardHeader>
         <CardContent className="pt-6 space-y-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+              <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
+                <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
+                  <Scale className="h-3.5 w-3.5 text-blue-600" />
+                </span>
                 Edad Gestacional (Semanas)
               </label>
               <Input
@@ -76,10 +90,14 @@ export default function CrecimientoFetalCalculator() {
                 value={gestationalWeeks}
                 onChange={(e) => setGestationalWeeks(e.target.value)}
                 placeholder="14-40"
+                className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+              <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
+                <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
+                  <Scale className="h-3.5 w-3.5 text-blue-600" />
+                </span>
                 Edad Gestacional (Días)
               </label>
               <Input
@@ -89,12 +107,16 @@ export default function CrecimientoFetalCalculator() {
                 value={gestationalDays}
                 onChange={(e) => setGestationalDays(e.target.value)}
                 placeholder="0-6"
+                className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+            <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center">
+              <span className="inline-block bg-blue-100 rounded-full p-1 mr-2">
+                <Weight className="h-3.5 w-3.5 text-blue-600" />
+              </span>
               Peso Fetal (gramos)
             </label>
             <Input
@@ -102,12 +124,13 @@ export default function CrecimientoFetalCalculator() {
               value={fetalWeight}
               onChange={(e) => setFetalWeight(e.target.value)}
               placeholder="Ingrese el peso fetal en gramos"
+              className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
             />
           </div>
 
           <Button 
             onClick={handleCalculate}
-            className="w-full"
+            className="w-full bg-blue-600 hover:bg-blue-700"
           >
             Calcular
           </Button>
@@ -116,72 +139,98 @@ export default function CrecimientoFetalCalculator() {
 
       {percentilResult && (
         <div className="space-y-6">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold text-blue-600 mb-4">
+          <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
+              <CardTitle className="text-blue-700 flex items-center gap-2">
+                <BarChart className="h-5 w-5" />
                 Resultado del Análisis
-              </h3>
-              <p className="text-lg font-medium">{percentilResult}</p>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
+              </div>
             </CardContent>
           </Card>
 
           {curveData.length > 0 && (
-            <Card>
-              <CardContent className="pt-6">
-                <h3 className="text-lg font-semibold text-blue-600 mb-4">
+            <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
+                <CardTitle className="text-blue-700 flex items-center gap-2">
+                  <LineChartIcon className="h-5 w-5" />
                   Curva de Crecimiento
-                </h3>
-                <div className="w-full h-[400px]">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="w-full h-[400px] bg-white p-2 rounded-lg border border-blue-100">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={curveData}
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                       <XAxis 
                         dataKey="semana" 
                         label={{ 
                           value: 'Semanas de Gestación', 
                           position: 'insideBottom', 
-                          offset: -5 
+                          offset: -5,
+                          style: { fill: '#4b5563' }
                         }} 
+                        tick={{ fill: '#4b5563' }}
                       />
                       <YAxis 
                         label={{ 
                           value: 'Peso (g)', 
                           angle: -90, 
-                          position: 'insideLeft' 
+                          position: 'insideLeft',
+                          style: { fill: '#4b5563' }
+                        }} 
+                        tick={{ fill: '#4b5563' }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'white', 
+                          border: '1px solid #dbeafe',
+                          borderRadius: '6px' 
                         }} 
                       />
-                      <Tooltip />
-                      <Legend />
+                      <Legend 
+                        wrapperStyle={{ 
+                          paddingTop: '10px' 
+                        }} 
+                      />
                       <Line 
                         type="monotone" 
                         dataKey="p3" 
                         stroke="#ffa726" 
                         name="Percentil 3" 
-                        dot={false} 
+                        dot={false}
+                        strokeWidth={2}
                       />
                       <Line 
                         type="monotone" 
                         dataKey="p50" 
                         stroke="#66bb6a" 
                         name="Percentil 50" 
-                        dot={false} 
+                        dot={false}
+                        strokeWidth={2}
                       />
                       <Line 
                         type="monotone" 
                         dataKey="p97" 
                         stroke="#ef5350" 
                         name="Percentil 97" 
-                        dot={false} 
+                        dot={false}
+                        strokeWidth={2}
                       />
                       <Line 
                         type="monotone" 
                         dataKey="actual" 
                         stroke="#2196f3" 
                         name="Peso Actual" 
-                        dot={{ r: 6 }} 
+                        dot={{ r: 6, strokeWidth: 2, fill: 'white' }}
+                        strokeWidth={2}
                       />
                     </LineChart>
                   </ResponsiveContainer>
