@@ -19,6 +19,13 @@ import {
   ZAxis
 } from 'recharts';
 
+// Interfaces para trabajar con el gráfico
+interface DotProps {
+  cx?: number;
+  cy?: number;
+  [key: string]: any;
+}
+
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
   const [gestationalDays, setGestationalDays] = useState("");
@@ -185,24 +192,30 @@ export default function CrecimientoFetalCalculator() {
                         dataKey="p3"
                         name="Percentil 3"
                         stroke="#ffa726"
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         dot={false}
+                        strokeDasharray="0"
+                        activeDot={false}
                       />
                       <Line
                         type="monotone"
                         dataKey="p50"
                         name="Percentil 50"
                         stroke="#66bb6a"
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         dot={false}
+                        strokeDasharray="0"
+                        activeDot={false}
                       />
                       <Line
                         type="monotone"
                         dataKey="p97"
                         name="Percentil 97"
                         stroke="#ef5350"
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         dot={false}
+                        strokeDasharray="0"
+                        activeDot={false}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -238,15 +251,15 @@ export default function CrecimientoFetalCalculator() {
                           name="Peso Fetal" 
                           data={pointData} 
                           fill="#2196f3"
-                          shape={(props) => {
+                          shape={(props: DotProps) => {
                             const { cx, cy } = props;
                             return (
                               <circle
                                 cx={cx}
                                 cy={cy}
-                                r={10}
+                                r={6}
                                 stroke="#1565c0"
-                                strokeWidth={2}
+                                strokeWidth={1.5}
                                 fill="#2196f3"
                               />
                             );
