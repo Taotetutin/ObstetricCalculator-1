@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { BarChart, Scale, LineChart as LineChartIcon, Weight } from "lucide-react";
 
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
@@ -64,15 +63,12 @@ export default function CrecimientoFetalCalculator() {
       </Alert>
 
       <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-3">
-          <CardTitle className="text-blue-700">
-            Calculadora de Crecimiento Fetal
-          </CardTitle>
-          <CardDescription>
-            Ingrese la edad gestacional y el peso fetal para evaluar su desarrollo
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-6">
+        <CardContent className="p-6 space-y-6">
+          <div>
+            <h3 className="text-xl font-semibold mb-1 text-blue-700">Calculadora de Crecimiento Fetal</h3>
+            <p className="text-sm text-gray-500">Ingrese la edad gestacional y el peso fetal para evaluar su desarrollo</p>
+          </div>
+        
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
               <label className="block text-sm font-medium text-blue-700 mb-2">
@@ -129,12 +125,8 @@ export default function CrecimientoFetalCalculator() {
       {percentilResult && (
         <div className="space-y-6">
           <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
-              <CardTitle className="text-blue-700">
-                Resultado del Análisis
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-semibold mb-3 text-blue-700">Resultado del Análisis</h3>
               <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
                 <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
               </div>
@@ -143,12 +135,8 @@ export default function CrecimientoFetalCalculator() {
 
           {curveData.length > 0 && (
             <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 pb-2">
-                <CardTitle className="text-blue-700">
-                  Curva de Crecimiento
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento</h3>
                 <div className="w-full h-[400px] bg-white p-2 rounded-lg border border-blue-100">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
