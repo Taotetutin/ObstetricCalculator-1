@@ -11,86 +11,7 @@ export default function CrecimientoFetalCalculator() {
   const [gestationalDays, setGestationalDays] = useState("");
   const [fetalWeight, setFetalWeight] = useState("");
   const [percentilResult, setPercentilResult] = useState("");
-  const [curveData, setCurveData] = useState<Array<{
-    semana: number;
-    p3: number;
-    p50: number;
-    p97: number;
-    actual: number | null;
-  }>>([]);
-
-  // Esta función genera datos de ejemplo para la curva de crecimiento
-  const calculateCurveData = (weeks: number, days: number, weight: number, percentil: string) => {
-    // Extraer el valor del percentil numérico
-    let percentilNum = 50; // Valor por defecto
-    if (percentil) {
-      const match = percentil.match(/percentil (\d+(\.\d+)?)/i);
-      if (match && match[1]) {
-        percentilNum = parseFloat(match[1]);
-      }
-    }
-    
-    // Datos de curva simplificados para mostrar en gráfica
-    const data: Array<{
-      semana: number;
-      p3: number;
-      p50: number;
-      p97: number;
-      actual: number | null;
-    }> = [
-      { semana: 14, p3: 70, p50: 100, p97: 130, actual: null },
-      { semana: 16, p3: 105, p50: 150, p97: 195, actual: null },
-      { semana: 18, p3: 170, p50: 250, p97: 325, actual: null },
-      { semana: 20, p3: 250, p50: 350, p97: 450, actual: null },
-      { semana: 22, p3: 350, p50: 500, p97: 650, actual: null },
-      { semana: 24, p3: 470, p50: 650, p97: 850, actual: null },
-      { semana: 26, p3: 600, p50: 850, p97: 1100, actual: null },
-      { semana: 28, p3: 750, p50: 1050, p97: 1350, actual: null },
-      { semana: 30, p3: 900, p50: 1250, p97: 1600, actual: null },
-      { semana: 32, p3: 1100, p50: 1500, p97: 1900, actual: null },
-      { semana: 34, p3: 1350, p50: 1900, p97: 2450, actual: null },
-      { semana: 36, p3: 1650, p50: 2350, p97: 3050, actual: null },
-      { semana: 38, p3: 1950, p50: 2700, p97: 3450, actual: null },
-      { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null },
-    ];
-    
-    // Encontrar la semana más cercana
-    const w = Math.floor(weeks);
-    const closestWeekIndex = data.findIndex(item => item.semana === w) !== -1 
-      ? data.findIndex(item => item.semana === w)
-      : data.findIndex(item => item.semana >= w);
-    
-    if (closestWeekIndex !== -1) {
-      // Calcular un peso que refleje el percentil real
-      const item = data[closestWeekIndex];
-      let adjustedWeight: number;
-      
-      if (percentilNum <= 3) {
-        adjustedWeight = item.p3;
-      } else if (percentilNum < 50) {
-        // Interpolar entre p3 y p50 según el percentil
-        const ratio = (percentilNum - 3) / (50 - 3);
-        adjustedWeight = item.p3 + ratio * (item.p50 - item.p3);
-      } else if (percentilNum === 50) {
-        adjustedWeight = item.p50;
-      } else if (percentilNum < 97) {
-        // Interpolar entre p50 y p97 según el percentil
-        const ratio = (percentilNum - 50) / (97 - 50);
-        adjustedWeight = item.p50 + ratio * (item.p97 - item.p50);
-      } else {
-        adjustedWeight = item.p97;
-      }
-      
-      const newData = [...data];
-      newData[closestWeekIndex] = {
-        ...newData[closestWeekIndex],
-        actual: adjustedWeight
-      };
-      return newData;
-    }
-    
-    return data;
-  };
+  const [curveData, setCurveData] = useState<any[]>([]);
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -107,9 +28,65 @@ export default function CrecimientoFetalCalculator() {
     const percentilOMS = calcularPercentil(weeks, days, weight);
     setPercentilResult(percentilOMS);
 
-    // Generar datos para la curva de crecimiento
-    const curveData = calculateCurveData(weeks, days, weight, percentilOMS);
-    setCurveData(curveData);
+    // Extraer valor numérico del percentil (si es posible)
+    let percentilNum = 50;
+    if (typeof percentilOMS === 'string') {
+      const match = percentilOMS.match(/percentil (\d+(\.\d+)?)/i);
+      if (match && match[1]) {
+        percentilNum = parseFloat(match[1]);
+      }
+    }
+
+    // Crear datos de gráfica pre-calculados
+    const data = [
+      { semana: 14, p3: 70, p50: 100, p97: 130, actual: null },
+      { semana: 16, p3: 105, p50: 150, p97: 195, actual: null },
+      { semana: 18, p3: 170, p50: 250, p97: 325, actual: null },
+      { semana: 20, p3: 250, p50: 350, p97: 450, actual: null },
+      { semana: 22, p3: 350, p50: 500, p97: 650, actual: null },
+      { semana: 24, p3: 470, p50: 650, p97: 850, actual: null },
+      { semana: 26, p3: 600, p50: 850, p97: 1100, actual: null },
+      { semana: 28, p3: 750, p50: 1050, p97: 1350, actual: null },
+      { semana: 30, p3: 900, p50: 1250, p97: 1600, actual: null },
+      { semana: 32, p3: 1100, p50: 1500, p97: 1900, actual: null },
+      { semana: 34, p3: 1350, p50: 1900, p97: 2450, actual: null },
+      { semana: 36, p3: 1650, p50: 2350, p97: 3050, actual: null },
+      { semana: 38, p3: 1950, p50: 2700, p97: 3450, actual: null },
+      { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null },
+    ];
+
+    // Encontrar el índice de la semana más cercana
+    const weekIndex = data.findIndex(d => d.semana === Math.round(weeks + days/7));
+    if (weekIndex !== -1) {
+      // Calcular la posición visual del punto según el percentil
+      let visualPos;
+      if (percentilNum <= 3) {
+        visualPos = data[weekIndex].p3;
+      } else if (percentilNum < 50) {
+        // Entre p3 y p50
+        const ratio = (percentilNum - 3) / (50 - 3);
+        visualPos = data[weekIndex].p3 + ratio * (data[weekIndex].p50 - data[weekIndex].p3);
+      } else if (percentilNum === 50) {
+        visualPos = data[weekIndex].p50;
+      } else if (percentilNum < 97) {
+        // Entre p50 y p97
+        const ratio = (percentilNum - 50) / (97 - 50);
+        visualPos = data[weekIndex].p50 + ratio * (data[weekIndex].p97 - data[weekIndex].p50);
+      } else {
+        visualPos = data[weekIndex].p97;
+      }
+
+      // Crear una copia para no mutar el original
+      const newData = [...data];
+      newData[weekIndex] = {
+        ...newData[weekIndex],
+        actual: Math.round(visualPos)
+      };
+
+      setCurveData(newData);
+    } else {
+      setCurveData(data);
+    }
   };
 
   return (
