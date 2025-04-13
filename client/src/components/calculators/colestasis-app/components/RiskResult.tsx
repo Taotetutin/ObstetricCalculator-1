@@ -1,6 +1,9 @@
 import React from 'react';
 import { RiskAssessment } from '../utils/riskCalculator';
 import { AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 interface RiskResultProps {
   assessment: RiskAssessment;

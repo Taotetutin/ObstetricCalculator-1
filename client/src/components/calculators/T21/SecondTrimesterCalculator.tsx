@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 type SecondTrimesterResult = {
   risk: number;
@@ -328,19 +331,35 @@ export default function SecondTrimesterCalculator() {
       </Form>
 
       {result && (
-        <div className="mt-6 p-4 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Resultado:</h3>
-          <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
-          <p className={`font-medium ${
-            result.interpretation === "Alto Riesgo"
-              ? "text-red-600"
-              : result.interpretation === "Riesgo Intermedio"
-                ? "text-amber-600"
-                : "text-green-600"
-          }`}>
-            {result.interpretation}
-          </p>
-          <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+        <div className="mt-6">
+          <div id="t21-second-trimester-result" className="p-4 bg-white rounded-lg shadow">
+            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+            <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
+            <p className={`font-medium ${
+              result.interpretation === "Alto Riesgo"
+                ? "text-red-600"
+                : result.interpretation === "Riesgo Intermedio"
+                  ? "text-amber-600"
+                  : "text-green-600"
+            }`}>
+              {result.interpretation}
+            </p>
+            <p className="text-sm text-gray-600 mt-2">{result.details}</p>
+            
+            <div className="mt-6 space-y-4 print:hidden">
+              <SpeechButton 
+                text={`El riesgo ajustado del segundo trimestre es: 1 en ${Math.round(1/result.risk)}. 
+                La interpretación es: ${result.interpretation}. 
+                ${result.details}`}
+              />
+              
+              <GeneratePDFButton 
+                contentId="t21-second-trimester-result" 
+                fileName={`riesgo-t21-segundo-trimestre-${format(new Date(), "yyyyMMdd")}`}
+                label="📄 GENERAR INFORME PDF"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

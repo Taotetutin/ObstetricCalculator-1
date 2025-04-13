@@ -137,19 +137,18 @@ export default function FPPCalculator() {
                     </div>
                   </div>
                   
-                  <div className="mt-6 print:hidden">
+                  <div className="mt-6 space-y-4 print:hidden">
                     <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
-                    <div className="flex space-x-2">
-                      <SpeechButton
-                        text={`Resultados de cálculo de fecha probable de parto: 
-                        La fecha probable de parto es ${format(result.fpp, "dd 'de' MMMM 'de' yyyy", { locale: es })}.
-                        La fecha probable de concepción es ${format(result.concepcion, "dd 'de' MMMM 'de' yyyy", { locale: es })}.`}
-                      />
-                      <GeneratePDFButton
-                        contentId="fpp-pdf-content"
-                        fileName="Fecha_Probable_Parto"
-                      />
-                    </div>
+                    <SpeechButton
+                      text={`Resultados de cálculo de fecha probable de parto: 
+                      La fecha probable de parto es ${format(result.fpp, "dd 'de' MMMM 'de' yyyy", { locale: es })}.
+                      La fecha probable de concepción es ${format(result.concepcion, "dd 'de' MMMM 'de' yyyy", { locale: es })}.`}
+                    />
+                    <GeneratePDFButton
+                      contentId="fpp-pdf-content"
+                      fileName={`fecha-probable-parto-${format(new Date(), "yyyyMMdd")}`}
+                      label="📄 GENERAR INFORME PDF"
+                    />
                   </div>
                 </div>
               )}
