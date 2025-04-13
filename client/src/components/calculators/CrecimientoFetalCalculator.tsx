@@ -4,31 +4,33 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter } from 'recharts';
-
-// Definir el tipo para los datos de la curva
-type CurveDataPoint = {
-  semana: number;
-  p3: number;
-  p50: number;
-  p97: number;
-  actual?: number | null;
-};
-
-// Definir interfaz para propiedades del shape
-interface ShapeProps {
-  cx?: number;
-  cy?: number;
-  [key: string]: any;
-}
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter, Label } from 'recharts';
 
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
   const [gestationalDays, setGestationalDays] = useState("");
   const [fetalWeight, setFetalWeight] = useState("");
   const [percentilResult, setPercentilResult] = useState("");
-  const [curveData, setCurveData] = useState<CurveDataPoint[]>([]);
-  const [singlePoint, setSinglePoint] = useState<{x: number, y: number} | null>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [pointData, setPointData] = useState<any[]>([]);
+
+  // Datos base de las curvas de crecimiento
+  const baseData = [
+    { week: 14, p3: 70, p50: 100, p97: 130 },
+    { week: 16, p3: 105, p50: 150, p97: 195 },
+    { week: 18, p3: 170, p50: 250, p97: 325 },
+    { week: 20, p3: 250, p50: 350, p97: 450 },
+    { week: 22, p3: 350, p50: 500, p97: 650 },
+    { week: 24, p3: 470, p50: 650, p97: 850 },
+    { week: 26, p3: 600, p50: 850, p97: 1100 },
+    { week: 28, p3: 750, p50: 1050, p97: 1350 },
+    { week: 30, p3: 900, p50: 1250, p97: 1600 },
+    { week: 32, p3: 1100, p50: 1500, p97: 1900 },
+    { week: 34, p3: 1350, p50: 1900, p97: 2450 },
+    { week: 36, p3: 1650, p50: 2350, p97: 3050 },
+    { week: 38, p3: 1950, p50: 2700, p97: 3450 },
+    { week: 40, p3: 2200, p50: 3100, p97: 4000 },
+  ];
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -45,25 +47,7 @@ export default function CrecimientoFetalCalculator() {
     const percentilOMS = calcularPercentil(weeks, days, weight);
     setPercentilResult(percentilOMS);
 
-    // Datos básicos de las curvas de percentiles
-    const basicData: CurveDataPoint[] = [
-      { semana: 14, p3: 70, p50: 100, p97: 130 },
-      { semana: 16, p3: 105, p50: 150, p97: 195 },
-      { semana: 18, p3: 170, p50: 250, p97: 325 },
-      { semana: 20, p3: 250, p50: 350, p97: 450 },
-      { semana: 22, p3: 350, p50: 500, p97: 650 },
-      { semana: 24, p3: 470, p50: 650, p97: 850 },
-      { semana: 26, p3: 600, p50: 850, p97: 1100 },
-      { semana: 28, p3: 750, p50: 1050, p97: 1350 },
-      { semana: 30, p3: 900, p50: 1250, p97: 1600 },
-      { semana: 32, p3: 1100, p50: 1500, p97: 1900 },
-      { semana: 34, p3: 1350, p50: 1900, p97: 2450 },
-      { semana: 36, p3: 1650, p50: 2350, p97: 3050 },
-      { semana: 38, p3: 1950, p50: 2700, p97: 3450 },
-      { semana: 40, p3: 2200, p50: 3100, p97: 4000 },
-    ];
-
-    // Extraer el percentil numérico si existe
+    // Extraer percentil numérico
     let percentilNum = 50;
     if (typeof percentilOMS === 'string') {
       const match = percentilOMS.match(/percentil (\d+(\.\d+)?)/i);
@@ -73,27 +57,17 @@ export default function CrecimientoFetalCalculator() {
       }
     }
 
-    // Actualizar los datos de la curva
-    setCurveData(basicData);
+    // Configurar los datos para el gráfico
+    setChartData(baseData);
+
+    // Calcular la semana exacta
+    const exactWeek = Math.round(weeks + days/7);
     
-    // Calcular la semana exacta (sin redondear para mayor precisión)
-    const exactWeek = weeks + days/7;
+    // Crear un punto para representar el peso actual
+    const point = { week: exactWeek, weight: weight };
+    setPointData([point]);
     
-    // Encontrar los datos de referencia para esa semana
-    // Buscar la semana exacta o la más cercana
-    let weekIndex = basicData.findIndex(d => d.semana === Math.round(exactWeek));
-    if (weekIndex === -1) {
-      weekIndex = basicData.findIndex(d => d.semana >= Math.round(exactWeek));
-    }
-    
-    if (weekIndex !== -1) {
-      // Solo para mostrar en la gráfica
-      setSinglePoint({ x: Math.round(exactWeek), y: weight });
-      
-      console.log(`Semana: ${Math.round(exactWeek)}, Peso: ${weight}, Percentil: ${percentilNum}`);
-    } else {
-      setSinglePoint(null);
-    }
+    console.log(`Peso representado en gráfico: Semana ${exactWeek}, Peso ${weight}g, Percentil ${percentilNum}`);
   };
 
   return (
@@ -175,97 +149,105 @@ export default function CrecimientoFetalCalculator() {
             </CardContent>
           </Card>
 
-          {curveData.length > 0 && (
+          {chartData.length > 0 && (
             <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  El gráfico muestra las curvas de percentiles 3, 50 y 97, con el peso actual marcado en azul.
+                  La gráfica muestra las curvas de percentiles 3, 50 y 97, con el peso fetal actual marcado como un punto azul.
                 </p>
                 <div className="w-full h-[400px] bg-white p-2 rounded-lg border border-blue-100">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                    <ComposedChart
+                      margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
-                        dataKey="semana" 
+                        dataKey="week" 
                         type="number"
-                        domain={[14, 40]}
-                        label={{
-                          value: 'Semanas de Gestación',
-                          position: 'insideBottom',
-                          offset: -5
-                        }}
-                        allowDataOverflow
-                      />
+                        domain={[12, 42]}
+                        allowDecimals={false}
+                      >
+                        <Label value="Semanas de Gestación" offset={-10} position="insideBottom" />
+                      </XAxis>
                       <YAxis 
+                        yAxisId="left"
+                        orientation="left"
                         type="number"
                         domain={[0, 4500]}
-                        label={{
-                          value: 'Peso (g)',
-                          angle: -90,
-                          position: 'insideLeft'
+                      >
+                        <Label value="Peso Fetal (g)" angle={-90} position="insideLeft" />
+                      </YAxis>
+                      <Tooltip 
+                        formatter={(value: any, name: string) => {
+                          if (name === "Peso Fetal") return [`${value}g`, name];
+                          return [`${value}g`, name];
                         }}
-                        allowDataOverflow
+                        labelFormatter={(label) => `Semana ${label}`}
                       />
-                      <Tooltip />
                       <Legend />
                       
-                      {/* Líneas de percentiles */}
+                      {/* Líneas percentiles */}
                       <Line
-                        name="Percentil 3"
-                        data={curveData}
+                        yAxisId="left"
+                        type="monotone"
                         dataKey="p3"
+                        data={chartData}
+                        name="Percentil 3"
                         stroke="#ffa726"
-                        strokeWidth={2}
                         dot={false}
-                        type="monotone"
+                        strokeWidth={2}
                         isAnimationActive={false}
                       />
                       <Line
-                        name="Percentil 50"
-                        data={curveData}
+                        yAxisId="left"
+                        type="monotone"
                         dataKey="p50"
+                        data={chartData}
+                        name="Percentil 50"
                         stroke="#66bb6a"
-                        strokeWidth={2}
                         dot={false}
-                        type="monotone"
+                        strokeWidth={2}
                         isAnimationActive={false}
                       />
                       <Line
-                        name="Percentil 97"
-                        data={curveData}
-                        dataKey="p97"
-                        stroke="#ef5350"
-                        strokeWidth={2}
-                        dot={false}
+                        yAxisId="left"
                         type="monotone"
+                        dataKey="p97"
+                        data={chartData}
+                        name="Percentil 97"
+                        stroke="#ef5350"
+                        dot={false}
+                        strokeWidth={2}
                         isAnimationActive={false}
                       />
                       
-                      {/* Punto de peso fetal */}
-                      {singlePoint && (
+                      {/* Punto para el peso actual */}
+                      {pointData.length > 0 && (
                         <Scatter
+                          yAxisId="left"
                           name="Peso Fetal"
-                          data={[singlePoint]}
+                          data={pointData}
                           fill="#2196f3"
-                          shape={(props: ShapeProps) => {
+                          line={false}
+                          shape={(props: any) => {
                             const { cx, cy } = props;
                             return (
                               <circle 
                                 cx={cx} 
                                 cy={cy} 
-                                r={8} 
-                                stroke="#2196f3" 
+                                r={10} 
+                                stroke="#1565C0" 
                                 strokeWidth={2} 
                                 fill="#2196f3" 
                               />
                             );
                           }}
+                          dataKey={(entry) => entry.weight}
+                          isAnimationActive={false}
                         />
                       )}
-                    </LineChart>
+                    </ComposedChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>
