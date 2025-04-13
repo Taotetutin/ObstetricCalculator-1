@@ -11,7 +11,15 @@ export default function CrecimientoFetalCalculator() {
   const [gestationalDays, setGestationalDays] = useState("");
   const [fetalWeight, setFetalWeight] = useState("");
   const [percentilResult, setPercentilResult] = useState("");
-  const [curveData, setCurveData] = useState<any[]>([]);
+  const [curveData, setCurveData] = useState<Array<{
+    semana: number;
+    p3: number;
+    p50: number;
+    p97: number;
+    actual: number | null;
+    p19: number | null;
+    miPeso: number | null;
+  }>>([]);
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -28,6 +36,24 @@ export default function CrecimientoFetalCalculator() {
     const percentilOMS = calcularPercentil(weeks, days, weight);
     setPercentilResult(percentilOMS);
 
+    // Crear datos de gráfica pre-calculados
+    const data = [
+      { semana: 14, p3: 70, p50: 100, p97: 130, actual: null, p19: null, miPeso: null },
+      { semana: 16, p3: 105, p50: 150, p97: 195, actual: null, p19: null, miPeso: null },
+      { semana: 18, p3: 170, p50: 250, p97: 325, actual: null, p19: null, miPeso: null },
+      { semana: 20, p3: 250, p50: 350, p97: 450, actual: null, p19: null, miPeso: null },
+      { semana: 22, p3: 350, p50: 500, p97: 650, actual: null, p19: null, miPeso: null },
+      { semana: 24, p3: 470, p50: 650, p97: 850, actual: null, p19: null, miPeso: null },
+      { semana: 26, p3: 600, p50: 850, p97: 1100, actual: null, p19: null, miPeso: null },
+      { semana: 28, p3: 750, p50: 1050, p97: 1350, actual: null, p19: null, miPeso: null },
+      { semana: 30, p3: 900, p50: 1250, p97: 1600, actual: null, p19: null, miPeso: null },
+      { semana: 32, p3: 1100, p50: 1500, p97: 1900, actual: null, p19: null, miPeso: null },
+      { semana: 34, p3: 1350, p50: 1900, p97: 2450, actual: null, p19: null, miPeso: null },
+      { semana: 36, p3: 1650, p50: 2350, p97: 3050, actual: null, p19: null, miPeso: null },
+      { semana: 38, p3: 1950, p50: 2700, p97: 3450, actual: null, p19: null, miPeso: null },
+      { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null, p19: null, miPeso: null },
+    ];
+
     // Extraer valor numérico del percentil (si es posible)
     let percentilNum = 50;
     if (typeof percentilOMS === 'string') {
@@ -37,51 +63,42 @@ export default function CrecimientoFetalCalculator() {
       }
     }
 
-    // Crear datos de gráfica pre-calculados
-    const data = [
-      { semana: 14, p3: 70, p50: 100, p97: 130, actual: null },
-      { semana: 16, p3: 105, p50: 150, p97: 195, actual: null },
-      { semana: 18, p3: 170, p50: 250, p97: 325, actual: null },
-      { semana: 20, p3: 250, p50: 350, p97: 450, actual: null },
-      { semana: 22, p3: 350, p50: 500, p97: 650, actual: null },
-      { semana: 24, p3: 470, p50: 650, p97: 850, actual: null },
-      { semana: 26, p3: 600, p50: 850, p97: 1100, actual: null },
-      { semana: 28, p3: 750, p50: 1050, p97: 1350, actual: null },
-      { semana: 30, p3: 900, p50: 1250, p97: 1600, actual: null },
-      { semana: 32, p3: 1100, p50: 1500, p97: 1900, actual: null },
-      { semana: 34, p3: 1350, p50: 1900, p97: 2450, actual: null },
-      { semana: 36, p3: 1650, p50: 2350, p97: 3050, actual: null },
-      { semana: 38, p3: 1950, p50: 2700, p97: 3450, actual: null },
-      { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null },
-    ];
+    console.log("Percentil detectado:", percentilNum); // Para depuración
 
-    // Encontrar el índice de la semana más cercana
+    // Encontrar la semana más cercana
     const weekIndex = data.findIndex(d => d.semana === Math.round(weeks + days/7));
     if (weekIndex !== -1) {
-      // Calcular la posición visual del punto según el percentil
-      let visualPos;
-      if (percentilNum <= 3) {
-        visualPos = data[weekIndex].p3;
-      } else if (percentilNum < 50) {
-        // Entre p3 y p50
-        const ratio = (percentilNum - 3) / (50 - 3);
-        visualPos = data[weekIndex].p3 + ratio * (data[weekIndex].p50 - data[weekIndex].p3);
-      } else if (percentilNum === 50) {
-        visualPos = data[weekIndex].p50;
-      } else if (percentilNum < 97) {
-        // Entre p50 y p97
-        const ratio = (percentilNum - 50) / (97 - 50);
-        visualPos = data[weekIndex].p50 + ratio * (data[weekIndex].p97 - data[weekIndex].p50);
-      } else {
-        visualPos = data[weekIndex].p97;
-      }
+      // Crear una línea para el percentil específico del paciente
+      const newData = data.map(item => {
+        // Calcular el valor del percentil específico para cada semana
+        let percentilValue;
+        if (percentilNum <= 3) {
+          percentilValue = item.p3;
+        } else if (percentilNum < 50) {
+          const ratio = (percentilNum - 3) / (50 - 3);
+          percentilValue = item.p3 + ratio * (item.p50 - item.p3);
+        } else if (percentilNum === 50) {
+          percentilValue = item.p50;
+        } else if (percentilNum < 97) {
+          const ratio = (percentilNum - 50) / (97 - 50);
+          percentilValue = item.p50 + ratio * (item.p97 - item.p50);
+        } else {
+          percentilValue = item.p97;
+        }
 
-      // Crear una copia para no mutar el original
-      const newData = [...data];
-      newData[weekIndex] = {
-        ...newData[weekIndex],
-        actual: Math.round(visualPos)
-      };
+        // Para la semana actual, agregar el peso real
+        if (item.semana === data[weekIndex].semana) {
+          return {
+            ...item,
+            p19: Math.round(percentilValue), // Línea de percentil específico
+            miPeso: weight                   // Peso real del paciente
+          };
+        }
+        return {
+          ...item,
+          p19: Math.round(percentilValue)    // Solo línea de percentil para otras semanas
+        };
+      });
 
       setCurveData(newData);
     } else {
@@ -186,7 +203,8 @@ export default function CrecimientoFetalCalculator() {
                       <Line type="monotone" dataKey="p3" stroke="#ffa726" name="P3" strokeWidth={2} />
                       <Line type="monotone" dataKey="p50" stroke="#66bb6a" name="P50" strokeWidth={2} />
                       <Line type="monotone" dataKey="p97" stroke="#ef5350" name="P97" strokeWidth={2} />
-                      <Line type="monotone" dataKey="actual" stroke="#2196f3" name="Actual" dot={{ r: 5 }} strokeWidth={2} />
+                      <Line type="monotone" dataKey="p19" stroke="#9c27b0" name="Percentil Específico" strokeDasharray="5 5" strokeWidth={2} />
+                      <Line type="monotone" dataKey="miPeso" stroke="#2196f3" name="Peso Real" dot={{ r: 6 }} strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
