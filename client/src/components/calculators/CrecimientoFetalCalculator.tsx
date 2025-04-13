@@ -214,22 +214,28 @@ export default function CrecimientoFetalCalculator() {
                 <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
               </div>
               
-              <div className="mt-4 space-y-3">
-                <button 
+              <div className="mt-6 space-y-4">
+                <div 
                   onClick={speakResult}
-                  className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md border-2 border-blue-400 shadow-md"
-                  style={{ display: 'block', visibility: 'visible' }}
+                  className="w-full text-center py-4 px-4 bg-blue-500 text-white font-bold rounded border-2 border-blue-600 cursor-pointer hover:bg-blue-600 transition-colors"
+                  style={{ 
+                    display: 'block', 
+                    pointerEvents: 'auto'
+                  }}
                 >
-                  🔊 Leer resultado en voz alta
-                </button>
+                  🔊 LEER RESULTADO EN VOZ ALTA
+                </div>
                 
-                <button 
+                <div 
                   onClick={generatePDF}
-                  className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md border-2 border-blue-400 shadow-md"
-                  style={{ display: 'block', visibility: 'visible' }}
+                  className="w-full text-center py-4 px-4 bg-green-500 text-white font-bold rounded border-2 border-green-600 cursor-pointer hover:bg-green-600 transition-colors"
+                  style={{ 
+                    display: 'block', 
+                    pointerEvents: 'auto'
+                  }}
                 >
-                  📄 Generar informe PDF
-                </button>
+                  📄 GENERAR INFORME PDF
+                </div>
               </div>
             </CardContent>
           </Card>
