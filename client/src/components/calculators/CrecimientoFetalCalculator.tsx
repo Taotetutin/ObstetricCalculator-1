@@ -4,48 +4,28 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-// Interfaz para los datos de la gráfica
-interface ChartPoint {
-  semana: number;
-  p3: number;
-  p50: number;
-  p97: number;
-}
-
-// Interfaz para el punto de peso fetal
-interface FetalWeightPoint {
-  semana: number;
-  peso: number;
-  percentil: number;
-}
+import {
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer,
+  ScatterChart,
+  Scatter,
+  ReferenceLine,
+  ZAxis
+} from 'recharts';
 
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
   const [gestationalDays, setGestationalDays] = useState("");
   const [fetalWeight, setFetalWeight] = useState("");
   const [percentilResult, setPercentilResult] = useState("");
-  const [chartData, setChartData] = useState<ChartPoint[]>([]);
-  const [fetalPoint, setFetalPoint] = useState<FetalWeightPoint | null>(null);
-
-  // Datos base de las curvas de crecimiento
-  const baseData: ChartPoint[] = [
-    { semana: 14, p3: 70, p50: 100, p97: 130 },
-    { semana: 16, p3: 105, p50: 150, p97: 195 },
-    { semana: 18, p3: 170, p50: 250, p97: 325 },
-    { semana: 20, p3: 250, p50: 350, p97: 450 },
-    { semana: 22, p3: 350, p50: 500, p97: 650 },
-    { semana: 24, p3: 470, p50: 650, p97: 850 },
-    { semana: 26, p3: 600, p50: 850, p97: 1100 },
-    { semana: 28, p3: 750, p50: 1050, p97: 1350 },
-    { semana: 30, p3: 900, p50: 1250, p97: 1600 },
-    { semana: 32, p3: 1100, p50: 1500, p97: 1900 },
-    { semana: 34, p3: 1350, p50: 1900, p97: 2450 },
-    { semana: 36, p3: 1650, p50: 2350, p97: 3050 },
-    { semana: 38, p3: 1950, p50: 2700, p97: 3450 },
-    { semana: 40, p3: 2200, p50: 3100, p97: 4000 },
-  ];
+  const [curveData, setCurveData] = useState<any[]>([]);
+  const [pointData, setPointData] = useState<any[]>([]);
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -62,62 +42,33 @@ export default function CrecimientoFetalCalculator() {
     const percentilOMS = calcularPercentil(weeks, days, weight);
     setPercentilResult(percentilOMS);
 
-    // Extraer percentil numérico
-    let percentilNum = 50;
-    if (typeof percentilOMS === 'string') {
-      const match = percentilOMS.match(/percentil (\d+(\.\d+)?)/i);
-      if (match && match[1]) {
-        percentilNum = parseFloat(match[1]);
-        console.log("Percentil detectado:", percentilNum);
-      }
-    }
+    // Datos para las curvas
+    const data = [
+      { semana: 14, p3: 70, p50: 100, p97: 130 },
+      { semana: 16, p3: 105, p50: 150, p97: 195 },
+      { semana: 18, p3: 170, p50: 250, p97: 325 },
+      { semana: 20, p3: 250, p50: 350, p97: 450 },
+      { semana: 22, p3: 350, p50: 500, p97: 650 },
+      { semana: 24, p3: 470, p50: 650, p97: 850 },
+      { semana: 26, p3: 600, p50: 850, p97: 1100 },
+      { semana: 28, p3: 750, p50: 1050, p97: 1350 },
+      { semana: 30, p3: 900, p50: 1250, p97: 1600 },
+      { semana: 32, p3: 1100, p50: 1500, p97: 1900 },
+      { semana: 34, p3: 1350, p50: 1900, p97: 2450 },
+      { semana: 36, p3: 1650, p50: 2350, p97: 3050 },
+      { semana: 38, p3: 1950, p50: 2700, p97: 3450 },
+      { semana: 40, p3: 2200, p50: 3100, p97: 4000 },
+    ];
 
-    // Calcular la semana exacta
-    const exactWeek = Math.round(weeks + days/7);
-    
-    // Actualizar los datos para el gráfico
-    // Crear una copia de los datos base
-    const updatedChartData = baseData.map(point => ({...point}));
-    
-    // Encontrar el índice de la semana actual
-    const weekIndex = updatedChartData.findIndex(d => d.semana === exactWeek);
-    
-    if (weekIndex !== -1) {
-      // Marcar el punto específico
-      updatedChartData[weekIndex] = {
-        ...updatedChartData[weekIndex],
-        pesoFetal: weight  // Añadir el peso fetal como un punto directo en la gráfica
-      };
-    }
-    
-    setChartData(updatedChartData);
-    setFetalPoint({
-      semana: exactWeek,
-      peso: weight,
-      percentil: percentilNum
-    });
-    
-    console.log(`Peso fetal: Semana ${exactWeek}, Peso ${weight}g, Percentil ${percentilNum}`);
-  };
+    setCurveData(data);
 
-  // Renderizar un punto personalizado para el peso fetal
-  const CustomDot = (props: any) => {
-    const { cx, cy, payload } = props;
+    // Datos para el punto
+    const exactWeek = Math.floor(weeks) + days/7;
+    const roundedWeek = Math.round(exactWeek);
     
-    if (payload.pesoFetal) {
-      return (
-        <circle 
-          cx={cx} 
-          cy={cy} 
-          r={8} 
-          fill="#2196f3" 
-          stroke="#1565c0"
-          strokeWidth={2} 
-        />
-      );
-    }
-    
-    return null;
+    // Crear datos para el punto de peso
+    // Usamos un arreglo simple con un solo objeto
+    setPointData([{ x: roundedWeek, y: weight }]);
   };
 
   return (
@@ -199,17 +150,19 @@ export default function CrecimientoFetalCalculator() {
             </CardContent>
           </Card>
 
-          {chartData.length > 0 && (
+          {curveData.length > 0 && (
             <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento</h3>
                 <p className="text-sm text-gray-500 mb-4">
                   La gráfica muestra las curvas de percentiles 3, 50 y 97. El punto azul indica el peso fetal actual.
                 </p>
+                
+                {/* Gráfico de Líneas */}
                 <div className="w-full h-[400px] bg-white p-2 rounded-lg border border-blue-100">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
-                      data={chartData}
+                      data={curveData}
                       margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -218,24 +171,15 @@ export default function CrecimientoFetalCalculator() {
                         type="number"
                         domain={[14, 40]}
                         label={{ value: 'Semanas', position: 'insideBottom', offset: -5 }}
-                        padding={{ left: 10, right: 10 }}
                       />
                       <YAxis 
                         type="number"
                         domain={[0, 4200]}
                         label={{ value: 'Peso (g)', angle: -90, position: 'insideLeft' }}
-                        padding={{ top: 10, bottom: 10 }}
                       />
-                      <Tooltip 
-                        formatter={(value: any, name: string) => {
-                          if (name === "Peso Fetal") return [`${value}g`, name];
-                          return [`${value}g`, name];
-                        }}
-                        labelFormatter={(label) => `Semana ${label}`}
-                      />
+                      <Tooltip formatter={(value) => `${value}g`} />
                       <Legend verticalAlign="top" height={36} />
                       
-                      {/* Líneas de percentiles */}
                       <Line
                         type="monotone"
                         dataKey="p3"
@@ -243,7 +187,6 @@ export default function CrecimientoFetalCalculator() {
                         stroke="#ffa726"
                         strokeWidth={2}
                         dot={false}
-                        activeDot={false}
                       />
                       <Line
                         type="monotone"
@@ -252,7 +195,6 @@ export default function CrecimientoFetalCalculator() {
                         stroke="#66bb6a"
                         strokeWidth={2}
                         dot={false}
-                        activeDot={false}
                       />
                       <Line
                         type="monotone"
@@ -261,23 +203,60 @@ export default function CrecimientoFetalCalculator() {
                         stroke="#ef5350"
                         strokeWidth={2}
                         dot={false}
-                        activeDot={false}
                       />
-                      
-                      {/* Punto para el peso fetal */}
-                      {fetalPoint && (
-                        <Line
-                          type="monotone"
-                          dataKey="pesoFetal"
-                          name="Peso Fetal"
-                          stroke="#2196f3"
-                          strokeWidth={0}
-                          dot={<CustomDot />}
-                        />
-                      )}
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
+                
+                {/* Gráfico de Puntos - Este se superpondrá visualmente sobre el primero */}
+                {pointData.length > 0 && (
+                  <div className="w-full h-[400px] -mt-[400px] p-2">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ScatterChart
+                        margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
+                      >
+                        <CartesianGrid opacity={0} /> {/* Grid transparente para que no interfiera */}
+                        <XAxis 
+                          type="number"
+                          dataKey="x"
+                          domain={[14, 40]}
+                          hide={true} // Ocultar eje para que no se duplique
+                        />
+                        <YAxis 
+                          type="number"
+                          dataKey="y"
+                          domain={[0, 4200]}
+                          hide={true} // Ocultar eje para que no se duplique
+                        />
+                        <ZAxis range={[100]} />
+                        <Tooltip 
+                          cursor={{strokeDasharray: '3 3'}}
+                          formatter={(value, name) => [`${value}g`, 'Peso Fetal']}
+                          labelFormatter={(label) => `Semana ${label}`}
+                        />
+                        <Scatter 
+                          name="Peso Fetal" 
+                          data={pointData} 
+                          fill="#2196f3"
+                          shape={(props) => {
+                            const { cx, cy } = props;
+                            return (
+                              <circle
+                                cx={cx}
+                                cy={cy}
+                                r={10}
+                                stroke="#1565c0"
+                                strokeWidth={2}
+                                fill="#2196f3"
+                              />
+                            );
+                          }}
+                        />
+                      </ScatterChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+                
               </CardContent>
             </Card>
           )}
