@@ -13,24 +13,41 @@ export default function CrecimientoFetalCalculator() {
   const [percentilResult, setPercentilResult] = useState("");
   const [curveData, setCurveData] = useState<any[]>([]);
 
+  // Esta función genera datos de ejemplo para la curva de crecimiento
   const calculateCurveData = (weeks: number, days: number, weight: number) => {
-    const data = [];
-    const currentWeek = weeks + days/7;
-
-    // Generar datos para la curva de crecimiento
-    for (let w = Math.max(14, Math.floor(currentWeek - 4)); w <= Math.min(40, Math.ceil(currentWeek + 4)); w++) {
-      const percentil3 = calcularPercentil(w, 0, Math.round(weight * 0.7));
-      const percentil50 = calcularPercentil(w, 0, weight);
-      const percentil97 = calcularPercentil(w, 0, Math.round(weight * 1.3));
-
-      data.push({
-        semana: w,
-        p3: typeof percentil3 === 'string' ? null : percentil3,
-        p50: typeof percentil50 === 'string' ? null : percentil50,
-        p97: typeof percentil97 === 'string' ? null : percentil97,
-        actual: w === weeks && days === 0 ? weight : null
-      });
+    // Datos de curva simplificados para prueba
+    const data = [
+      { semana: 14, p3: 70, p50: 100, p97: 130, actual: null },
+      { semana: 16, p3: 105, p50: 150, p97: 195, actual: null },
+      { semana: 18, p3: 170, p50: 250, p97: 325, actual: null },
+      { semana: 20, p3: 250, p50: 350, p97: 450, actual: null },
+      { semana: 22, p3: 350, p50: 500, p97: 650, actual: null },
+      { semana: 24, p3: 470, p50: 650, p97: 850, actual: null },
+      { semana: 26, p3: 600, p50: 850, p97: 1100, actual: null },
+      { semana: 28, p3: 750, p50: 1050, p97: 1350, actual: null },
+      { semana: 30, p3: 900, p50: 1250, p97: 1600, actual: null },
+      { semana: 32, p3: 1100, p50: 1500, p97: 1900, actual: null },
+      { semana: 34, p3: 1350, p50: 1900, p97: 2450, actual: null },
+      { semana: 36, p3: 1650, p50: 2350, p97: 3050, actual: null },
+      { semana: 38, p3: 1950, p50: 2700, p97: 3450, actual: null },
+      { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null },
+    ];
+    
+    // Colocar el peso actual en la semana correspondiente
+    const w = Math.floor(weeks);
+    const closestWeekIndex = data.findIndex(item => item.semana === w) !== -1 
+      ? data.findIndex(item => item.semana === w)
+      : data.findIndex(item => item.semana >= w);
+    
+    if (closestWeekIndex !== -1) {
+      const newData = [...data];
+      newData[closestWeekIndex] = {
+        ...newData[closestWeekIndex],
+        actual: weight
+      };
+      return newData;
     }
+    
     return data;
   };
 
@@ -141,72 +158,17 @@ export default function CrecimientoFetalCalculator() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={curveData}
-                      margin={{ top: 15, right: 30, left: 20, bottom: 15 }}
+                      margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis 
-                        dataKey="semana" 
-                        label={{ 
-                          value: 'Semanas de Gestación', 
-                          position: 'insideBottom', 
-                          offset: -5,
-                          style: { fill: '#4b5563' }
-                        }} 
-                        tick={{ fill: '#4b5563' }}
-                      />
-                      <YAxis 
-                        label={{ 
-                          value: 'Peso (g)', 
-                          angle: -90, 
-                          position: 'insideLeft',
-                          style: { fill: '#4b5563' }
-                        }} 
-                        tick={{ fill: '#4b5563' }}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '1px solid #dbeafe',
-                          borderRadius: '6px' 
-                        }} 
-                      />
-                      <Legend 
-                        wrapperStyle={{ 
-                          paddingTop: '10px' 
-                        }} 
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="p3" 
-                        stroke="#ffa726" 
-                        name="Percentil 3" 
-                        dot={false}
-                        strokeWidth={2}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="p50" 
-                        stroke="#66bb6a" 
-                        name="Percentil 50" 
-                        dot={false}
-                        strokeWidth={2}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="p97" 
-                        stroke="#ef5350" 
-                        name="Percentil 97" 
-                        dot={false}
-                        strokeWidth={2}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="actual" 
-                        stroke="#2196f3" 
-                        name="Peso Actual" 
-                        dot={{ r: 6, strokeWidth: 2, fill: 'white' }}
-                        strokeWidth={2}
-                      />
+                      <XAxis dataKey="semana" />
+                      <YAxis />
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="p3" stroke="#ffa726" name="P3" strokeWidth={2} />
+                      <Line type="monotone" dataKey="p50" stroke="#66bb6a" name="P50" strokeWidth={2} />
+                      <Line type="monotone" dataKey="p97" stroke="#ef5350" name="P97" strokeWidth={2} />
+                      <Line type="monotone" dataKey="actual" stroke="#2196f3" name="Actual" dot={{ r: 5 }} strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
