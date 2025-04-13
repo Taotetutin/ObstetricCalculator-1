@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {
   LineChart, 
   Line, 
@@ -33,6 +35,63 @@ export default function CrecimientoFetalCalculator() {
   const [percentilResult, setPercentilResult] = useState("");
   const [curveData, setCurveData] = useState<any[]>([]);
   const [pointData, setPointData] = useState<any[]>([]);
+  
+  // Referencia para el contenedor de resultados (para PDF)
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Función para generar PDF
+  const generatePDF = useCallback(async () => {
+    if (!resultsRef.current || !percentilResult) return;
+    
+    try {
+      const canvas = await html2canvas(resultsRef.current);
+      const imgData = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Título del PDF
+      pdf.setFontSize(18);
+      pdf.setTextColor(0, 60, 143);
+      pdf.text('Reporte de Crecimiento Fetal OMS', pdfWidth / 2, 20, { align: 'center' });
+      
+      // Añadir fecha
+      pdf.setFontSize(10);
+      pdf.setTextColor(100, 100, 100);
+      const date = new Date().toLocaleDateString('es-ES');
+      pdf.text(`Fecha: ${date}`, pdfWidth - 20, 30, { align: 'right' });
+      
+      // Ajustar imagen para que ocupe el ancho de la página pero mantenga proporción
+      const imgWidth = pdfWidth - 40; // Margen de 20mm en cada lado
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 20, 40, imgWidth, imgHeight);
+      
+      // Añadir texto informativo
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text('Este reporte muestra la evaluación del crecimiento fetal según estándares OMS.', 20, imgHeight + 50);
+      
+      pdf.save('reporte-crecimiento-fetal.pdf');
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+    }
+  }, [percentilResult]);
+
+  // Función para leer resultado en voz alta
+  const speakResult = useCallback(() => {
+    if (!percentilResult) return;
+    
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = percentilResult;
+    speech.lang = 'es-ES';
+    speech.volume = 1;
+    speech.rate = 0.9;
+    speech.pitch = 1;
+    
+    window.speechSynthesis.speak(speech);
+  }, [percentilResult]);
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -147,12 +206,40 @@ export default function CrecimientoFetalCalculator() {
       </Card>
 
       {percentilResult && (
-        <div className="space-y-6">
+        <div className="space-y-6" ref={resultsRef}>
           <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
             <CardContent className="p-6">
               <h3 className="text-xl font-semibold mb-3 text-blue-700">Resultado del Análisis</h3>
               <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
                 <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
+              </div>
+              
+              <div className="flex gap-3 mt-4">
+                <Button 
+                  onClick={speakResult}
+                  className="bg-blue-600 hover:bg-blue-700 flex-1"
+                  type="button"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                  </svg>
+                  Leer en voz alta
+                </Button>
+                
+                <Button 
+                  onClick={generatePDF}
+                  className="bg-blue-600 hover:bg-blue-700 flex-1"
+                  type="button"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Generar PDF
+                </Button>
               </div>
             </CardContent>
           </Card>
