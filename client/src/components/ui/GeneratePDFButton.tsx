@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { FileDown } from 'lucide-react';
+import { ActionButton } from '@/components/ui/action-button';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
@@ -13,7 +12,7 @@ interface GeneratePDFButtonProps {
 export default function GeneratePDFButton({ 
   contentId, 
   fileName, 
-  label = "Generar PDF" 
+  label = "📄 GENERAR INFORME PDF" 
 }: GeneratePDFButtonProps) {
   
   const generatePDF = async () => {
@@ -47,10 +46,22 @@ export default function GeneratePDFButton({
         unit: 'mm',
       });
       
+      // Añadir título y fecha al PDF
+      pdf.setFontSize(18);
+      pdf.setTextColor(0, 60, 143);
+      pdf.text('Informe Médico Obsterix', pdf.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      // Añadir fecha
+      pdf.setFontSize(10);
+      pdf.setTextColor(100, 100, 100);
+      const date = new Date().toLocaleDateString('es-ES');
+      pdf.text(`Fecha: ${date}`, pdf.internal.pageSize.getWidth() - 20, 25, { align: 'right' });
+      
       const imgWidth = pdf.internal.pageSize.getWidth();
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      // Ajustar posición Y para dejar espacio para el título
+      pdf.addImage(imgData, 'PNG', 0, 30, imgWidth, imgHeight);
       pdf.save(`${fileName}.pdf`);
       
     } catch (error) {
@@ -60,14 +71,8 @@ export default function GeneratePDFButton({
   };
 
   return (
-    <Button 
-      onClick={generatePDF} 
-      variant="outline" 
-      size="sm"
-      className="flex items-center gap-2"
-    >
-      <FileDown className="h-4 w-4" />
+    <ActionButton onClick={generatePDF} color="green">
       {label}
-    </Button>
+    </ActionButton>
   );
 }

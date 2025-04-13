@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ActionButton } from "@/components/ui/action-button";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -215,14 +216,17 @@ export default function CrecimientoFetalCalculator() {
                 <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
               </div>
               
-              <div className="mt-6 space-y-4">
-                <ActionButton onClick={speakResult} color="blue">
-                  🔊 LEER RESULTADO EN VOZ ALTA
-                </ActionButton>
+              <div className="mt-6 space-y-4" id="resultado-crecimiento-fetal">
+                <SpeechButton 
+                  text={percentilResult} 
+                  label="🔊 LEER RESULTADO EN VOZ ALTA" 
+                />
                 
-                <ActionButton onClick={generatePDF} color="green">
-                  📄 GENERAR INFORME PDF
-                </ActionButton>
+                <GeneratePDFButton 
+                  contentId="resultado-crecimiento-fetal" 
+                  fileName="crecimiento-fetal-informe" 
+                  label="📄 GENERAR INFORME PDF" 
+                />
               </div>
             </CardContent>
           </Card>
