@@ -160,9 +160,9 @@ export default function CrecimientoFetalCalculator() {
           {curveData.length > 0 && (
             <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento</h3>
+                <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento OMS</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  La gráfica muestra las curvas de percentiles 3, 50 y 97. El punto azul indica el peso fetal actual.
+                  La gráfica muestra las curvas de percentiles 3, 50 y 97 según estándares OMS. El punto azul indica el peso fetal actual.
                 </p>
                 
                 {/* Gráfico de Líneas */}
