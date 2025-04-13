@@ -300,25 +300,25 @@ export default function MEFICalculator() {
                   </ul>
                 </div>
                 
-                <div className="mt-4 print:hidden">
+                <div className="mt-6 space-y-4 print:hidden">
                   <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
-                  <div className="flex space-x-2">
-                    <SpeechButton
-                      text={`Resultado del Monitoreo Fetal Intraparto: ${result.classification}. 
-                      ${result.pathology}. 
-                      Nivel de riesgo: ${result.riskLevel}. 
-                      Criterios diagnósticos: ${result.guidelines.join(', ')}. 
-                      Recomendaciones: ${result.recommendations.join(', ')}.
-                      ${result.ctgAnalysis ? `Confianza del análisis: ${Math.round(result.ctgAnalysis.confidence)}%. 
-                      Basado en ${result.ctgAnalysis.similarCases} casos similares.
-                      ${result.ctgAnalysis.historicalOutcome ? `Recomendación adicional: ${result.ctgAnalysis.historicalOutcome}` : ''}` : ''}`}
-                    />
-                    <GeneratePDFButton
-                      contentId="pdf-content"
-                      fileName="MEFI_Resultado"
-                      label="Generar PDF"
-                    />
-                  </div>
+                  
+                  <SpeechButton
+                    text={`Resultado del Monitoreo Fetal Intraparto: ${result.classification}. 
+                    ${result.pathology}. 
+                    Nivel de riesgo: ${result.riskLevel}. 
+                    Criterios diagnósticos: ${result.guidelines.join(', ')}. 
+                    Recomendaciones: ${result.recommendations.join(', ')}.
+                    ${result.ctgAnalysis ? `Confianza del análisis: ${Math.round(result.ctgAnalysis.confidence)}%. 
+                    Basado en ${result.ctgAnalysis.similarCases} casos similares.
+                    ${result.ctgAnalysis.historicalOutcome ? `Recomendación adicional: ${result.ctgAnalysis.historicalOutcome}` : ''}` : ''}`}
+                  />
+                  
+                  <GeneratePDFButton
+                    contentId="pdf-content"
+                    fileName="MEFI_Resultado"
+                    label="📄 GENERAR INFORME PDF"
+                  />
                 </div>
               </div>
             </div>

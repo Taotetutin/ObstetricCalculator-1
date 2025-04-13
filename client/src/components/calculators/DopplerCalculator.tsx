@@ -275,23 +275,24 @@ export default function DopplerCalculator() {
               </div>
             </div>
             
-            <div className="mt-6 print:hidden">
+            <div className="mt-6 space-y-4 print:hidden">
               <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
-              <div className="flex space-x-2">
-                <SpeechButton
-                  text={`Resultados del Doppler Fetal:
-                    Índices Doppler: Arteria Umbilical IP: ${result.percentiles.auPi}%, 
-                    Arteria Cerebral Media IP: ${result.percentiles.acmPi}%, 
-                    Arteria Cerebral Media Velocidad Pico Sistólica: ${result.percentiles.acmPsv}%.
-                    Índice Cerebro-Placentario: ${result.cpr.toFixed(2)}, en percentil ${result.cprPercentile}%.
-                    Estado: ${result.evaluation}.
-                    Recomendaciones: ${result.recommendations}`}
-                />
-                <GeneratePDFButton
-                  contentId="doppler-pdf-content"
-                  fileName="Doppler_Fetal_Resultado"
-                />
-              </div>
+              
+              <SpeechButton
+                text={`Resultados del Doppler Fetal:
+                  Índices Doppler: Arteria Umbilical IP: ${result.percentiles.auPi}%, 
+                  Arteria Cerebral Media IP: ${result.percentiles.acmPi}%, 
+                  Arteria Cerebral Media Velocidad Pico Sistólica: ${result.percentiles.acmPsv}%.
+                  Índice Cerebro-Placentario: ${result.cpr.toFixed(2)}, en percentil ${result.cprPercentile}%.
+                  Estado: ${result.evaluation}.
+                  Recomendaciones: ${result.recommendations}`}
+              />
+              
+              <GeneratePDFButton
+                contentId="doppler-pdf-content"
+                fileName="Doppler_Fetal_Resultado"
+                label="📄 GENERAR INFORME PDF"
+              />
             </div>
           </CardContent>
         </Card>
