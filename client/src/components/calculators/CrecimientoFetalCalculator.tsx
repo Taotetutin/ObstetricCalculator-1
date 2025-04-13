@@ -11,12 +11,33 @@ export default function CrecimientoFetalCalculator() {
   const [gestationalDays, setGestationalDays] = useState("");
   const [fetalWeight, setFetalWeight] = useState("");
   const [percentilResult, setPercentilResult] = useState("");
-  const [curveData, setCurveData] = useState<any[]>([]);
+  const [curveData, setCurveData] = useState<Array<{
+    semana: number;
+    p3: number;
+    p50: number;
+    p97: number;
+    actual: number | null;
+  }>>([]);
 
   // Esta función genera datos de ejemplo para la curva de crecimiento
-  const calculateCurveData = (weeks: number, days: number, weight: number) => {
-    // Datos de curva simplificados para prueba
-    const data = [
+  const calculateCurveData = (weeks: number, days: number, weight: number, percentil: string) => {
+    // Extraer el valor del percentil numérico
+    let percentilNum = 50; // Valor por defecto
+    if (percentil) {
+      const match = percentil.match(/percentil (\d+(\.\d+)?)/i);
+      if (match && match[1]) {
+        percentilNum = parseFloat(match[1]);
+      }
+    }
+    
+    // Datos de curva simplificados para mostrar en gráfica
+    const data: Array<{
+      semana: number;
+      p3: number;
+      p50: number;
+      p97: number;
+      actual: number | null;
+    }> = [
       { semana: 14, p3: 70, p50: 100, p97: 130, actual: null },
       { semana: 16, p3: 105, p50: 150, p97: 195, actual: null },
       { semana: 18, p3: 170, p50: 250, p97: 325, actual: null },
@@ -33,17 +54,37 @@ export default function CrecimientoFetalCalculator() {
       { semana: 40, p3: 2200, p50: 3100, p97: 4000, actual: null },
     ];
     
-    // Colocar el peso actual en la semana correspondiente
+    // Encontrar la semana más cercana
     const w = Math.floor(weeks);
     const closestWeekIndex = data.findIndex(item => item.semana === w) !== -1 
       ? data.findIndex(item => item.semana === w)
       : data.findIndex(item => item.semana >= w);
     
     if (closestWeekIndex !== -1) {
+      // Calcular un peso que refleje el percentil real
+      const item = data[closestWeekIndex];
+      let adjustedWeight: number;
+      
+      if (percentilNum <= 3) {
+        adjustedWeight = item.p3;
+      } else if (percentilNum < 50) {
+        // Interpolar entre p3 y p50 según el percentil
+        const ratio = (percentilNum - 3) / (50 - 3);
+        adjustedWeight = item.p3 + ratio * (item.p50 - item.p3);
+      } else if (percentilNum === 50) {
+        adjustedWeight = item.p50;
+      } else if (percentilNum < 97) {
+        // Interpolar entre p50 y p97 según el percentil
+        const ratio = (percentilNum - 50) / (97 - 50);
+        adjustedWeight = item.p50 + ratio * (item.p97 - item.p50);
+      } else {
+        adjustedWeight = item.p97;
+      }
+      
       const newData = [...data];
       newData[closestWeekIndex] = {
         ...newData[closestWeekIndex],
-        actual: weight
+        actual: adjustedWeight
       };
       return newData;
     }
@@ -67,7 +108,7 @@ export default function CrecimientoFetalCalculator() {
     setPercentilResult(percentilOMS);
 
     // Generar datos para la curva de crecimiento
-    const curveData = calculateCurveData(weeks, days, weight);
+    const curveData = calculateCurveData(weeks, days, weight, percentilOMS);
     setCurveData(curveData);
   };
 
