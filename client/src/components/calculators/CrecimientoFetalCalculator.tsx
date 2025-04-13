@@ -15,6 +15,13 @@ type CurveDataPoint = {
   actual?: number | null;
 };
 
+// Definir interfaz para propiedades del shape
+interface ShapeProps {
+  cx?: number;
+  cy?: number;
+  [key: string]: any;
+}
+
 export default function CrecimientoFetalCalculator() {
   const [gestationalWeeks, setGestationalWeeks] = useState("");
   const [gestationalDays, setGestationalDays] = useState("");
@@ -69,10 +76,24 @@ export default function CrecimientoFetalCalculator() {
     // Actualizar los datos de la curva
     setCurveData(basicData);
     
-    // Establecer el punto único que representa el peso actual
-    // Redondeamos los decimales para las semanas
-    const exactWeek = Math.round(weeks + days/7);
-    setSinglePoint({ x: exactWeek, y: weight });
+    // Calcular la semana exacta (sin redondear para mayor precisión)
+    const exactWeek = weeks + days/7;
+    
+    // Encontrar los datos de referencia para esa semana
+    // Buscar la semana exacta o la más cercana
+    let weekIndex = basicData.findIndex(d => d.semana === Math.round(exactWeek));
+    if (weekIndex === -1) {
+      weekIndex = basicData.findIndex(d => d.semana >= Math.round(exactWeek));
+    }
+    
+    if (weekIndex !== -1) {
+      // Solo para mostrar en la gráfica
+      setSinglePoint({ x: Math.round(exactWeek), y: weight });
+      
+      console.log(`Semana: ${Math.round(exactWeek)}, Peso: ${weight}, Percentil: ${percentilNum}`);
+    } else {
+      setSinglePoint(null);
+    }
   };
 
   return (
@@ -229,8 +250,19 @@ export default function CrecimientoFetalCalculator() {
                           name="Peso Fetal"
                           data={[singlePoint]}
                           fill="#2196f3"
-                          shape="circle"
-                          line={false}
+                          shape={(props: ShapeProps) => {
+                            const { cx, cy } = props;
+                            return (
+                              <circle 
+                                cx={cx} 
+                                cy={cy} 
+                                r={8} 
+                                stroke="#2196f3" 
+                                strokeWidth={2} 
+                                fill="#2196f3" 
+                              />
+                            );
+                          }}
                         />
                       )}
                     </LineChart>
