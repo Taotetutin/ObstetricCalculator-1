@@ -207,19 +207,20 @@ export default function ThrombosisCalculator() {
                 </div>
               </div>
               
-              <div className="mt-6 print:hidden">
+              <div className="mt-6 space-y-4 print:hidden">
                 <p className="text-sm text-gray-500 mb-2">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
-                <div className="flex space-x-2">
-                  <SpeechButton
-                    text={`Resultado del cálculo de riesgo tromboembólico: 
-                    Puntuación total: ${result.totalPoints} puntos. 
-                    Recomendación: ${result.prophylaxisGuideline}.`}
-                  />
-                  <GeneratePDFButton
-                    contentId="thrombosis-pdf-content"
-                    fileName="Riesgo_Tromboembolico"
-                  />
-                </div>
+                
+                <SpeechButton
+                  text={`Resultado del cálculo de riesgo tromboembólico: 
+                  Puntuación total: ${result.totalPoints} puntos. 
+                  Recomendación: ${result.prophylaxisGuideline}.`}
+                />
+                
+                <GeneratePDFButton
+                  contentId="thrombosis-pdf-content"
+                  fileName="Riesgo_Tromboembolico"
+                  label="📄 GENERAR INFORME PDF"
+                />
               </div>
             </CardContent>
           </Card>

@@ -153,17 +153,6 @@ export default function AgeCalculator() {
 
       {result && (
         <div className="mt-6">
-          <div className="flex justify-end gap-2 mb-2">
-            <SpeechButton 
-              text={`El riesgo estimado de trisomía 21 es: 1 en ${Math.round(1/result.risk)}. 
-              La interpretación es: ${result.interpretation}. 
-              ${result.details}`}
-            />
-            <GeneratePDFButton 
-              contentId="t21-result" 
-              fileName={`riesgo-t21-${format(new Date(), "yyyyMMdd")}`}
-            />
-          </div>
           <div id="t21-result" className="p-4 bg-white rounded-lg shadow">
             <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
             <p className="mb-2">Riesgo estimado: 1:{Math.round(1/result.risk)}</p>
@@ -203,6 +192,20 @@ export default function AgeCalculator() {
                   </>
                 )}
               </ul>
+            </div>
+            
+            <div className="mt-6 space-y-4 print:hidden">
+              <SpeechButton 
+                text={`El riesgo estimado de trisomía 21 es: 1 en ${Math.round(1/result.risk)}. 
+                La interpretación es: ${result.interpretation}. 
+                ${result.details}`}
+              />
+              
+              <GeneratePDFButton 
+                contentId="t21-result" 
+                fileName={`riesgo-t21-${format(new Date(), "yyyyMMdd")}`}
+                label="📄 GENERAR INFORME PDF"
+              />
             </div>
           </div>
         </div>
