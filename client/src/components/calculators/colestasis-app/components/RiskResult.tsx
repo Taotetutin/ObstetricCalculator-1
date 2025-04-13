@@ -35,28 +35,44 @@ export function RiskResult({ assessment }: RiskResultProps) {
   const Icon = style.icon;
 
   return (
-    <div className={`mt-8 p-6 rounded-xl shadow-lg ${style.bg} border-l-4 ${style.border}`}>
-      <div className="flex items-center mb-4">
-        <Icon className={`w-6 h-6 ${style.text} mr-2`} />
-        <h3 className={`text-xl font-bold ${style.text}`}>
-          Nivel de Riesgo: {assessment.level.toUpperCase()}
-        </h3>
-      </div>
-
-      {assessment.details.length > 0 && (
-        <div className="mb-4">
-          <h4 className={`font-semibold mb-2 ${style.text}`}>Factores de riesgo identificados:</h4>
-          <ul className="list-disc list-inside space-y-1 text-gray-700">
-            {assessment.details.map((detail, index) => (
-              <li key={index}>{detail}</li>
-            ))}
-          </ul>
+    <div>
+      <div id="colestasis-result" className={`mt-8 p-6 rounded-xl shadow-lg ${style.bg} border-l-4 ${style.border}`}>
+        <div className="flex items-center mb-4">
+          <Icon className={`w-6 h-6 ${style.text} mr-2`} />
+          <h3 className={`text-xl font-bold ${style.text}`}>
+            Nivel de Riesgo: {assessment.level.toUpperCase()}
+          </h3>
         </div>
-      )}
 
-      <div className="mt-4">
-        <h4 className={`font-semibold mb-2 ${style.text}`}>Recomendaciones:</h4>
-        <p className="text-gray-700 leading-relaxed">{assessment.recommendations}</p>
+        {assessment.details.length > 0 && (
+          <div className="mb-4">
+            <h4 className={`font-semibold mb-2 ${style.text}`}>Factores de riesgo identificados:</h4>
+            <ul className="list-disc list-inside space-y-1 text-gray-700">
+              {assessment.details.map((detail, index) => (
+                <li key={index}>{detail}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="mt-4">
+          <h4 className={`font-semibold mb-2 ${style.text}`}>Recomendaciones:</h4>
+          <p className="text-gray-700 leading-relaxed">{assessment.recommendations}</p>
+        </div>
+      </div>
+      
+      <div className="mt-6 space-y-4 print:hidden">
+        <SpeechButton 
+          text={`Nivel de riesgo: ${assessment.level.toUpperCase()}. 
+          ${assessment.details.length > 0 ? 'Factores de riesgo identificados: ' + assessment.details.join(', ') : ''}
+          Recomendaciones: ${assessment.recommendations}`}
+        />
+        
+        <GeneratePDFButton 
+          contentId="colestasis-result" 
+          fileName={`riesgo-colestasis-${format(new Date(), "yyyyMMdd")}`}
+          label="📄 GENERAR INFORME PDF"
+        />
       </div>
     </div>
   );

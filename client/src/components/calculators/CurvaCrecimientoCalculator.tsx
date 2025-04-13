@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 import {
   LineChart,
   Line,
@@ -131,80 +134,103 @@ export default function CurvaCrecimientoCalculator() {
       </Form>
 
       {result && (
-        <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4 text-blue-700">Curva de Crecimiento Fetal</h3>
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="semana" 
-                    label={{ value: 'Semanas de Gestación', position: 'bottom' }}
-                  />
-                  <YAxis 
-                    label={{ 
-                      value: 'Peso Fetal (g)', 
-                      angle: -90, 
-                      position: 'insideLeft'
-                    }}
-                  />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="p3" 
-                    stroke="#ff0000" 
-                    name="Percentil 3" 
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="p10" 
-                    stroke="#ff9900" 
-                    name="Percentil 10" 
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="p50" 
-                    stroke="#00ff00" 
-                    name="Percentil 50" 
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="p90" 
-                    stroke="#ff9900" 
-                    name="Percentil 90" 
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="p97" 
-                    stroke="#ff0000" 
-                    name="Percentil 97" 
-                    dot={false}
-                  />
-                  {currentPoint && (
-                    <ReferenceDot
-                      x={currentPoint.semana}
-                      y={currentPoint.peso}
-                      r={6}
-                      fill="#8884d8"
-                      stroke="none"
-                    />
-                  )}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4">
-              <p className="font-medium">Resultado:</p>
-              <p>Percentil: <span className="font-medium">{result.percentil}</span></p>
-              <p>Clasificación: <span className="font-medium">{result.clasificacion}</span></p>
-            </div>
-          </CardContent>
-        </Card>
+        <div>
+          <Card>
+            <CardContent className="pt-6">
+              <div id="curva-crecimiento-result">
+                <h3 className="text-lg font-semibold mb-4 text-blue-700">Curva de Crecimiento Fetal</h3>
+                <div className="h-[400px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="semana" 
+                        label={{ value: 'Semanas de Gestación', position: 'bottom' }}
+                      />
+                      <YAxis 
+                        label={{ 
+                          value: 'Peso Fetal (g)', 
+                          angle: -90, 
+                          position: 'insideLeft'
+                        }}
+                      />
+                      <Tooltip />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="p3" 
+                        stroke="#ff0000" 
+                        name="Percentil 3" 
+                        dot={false}
+                        strokeWidth={1.5}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="p10" 
+                        stroke="#ff9900" 
+                        name="Percentil 10" 
+                        dot={false}
+                        strokeWidth={1.5}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="p50" 
+                        stroke="#00ff00" 
+                        name="Percentil 50" 
+                        dot={false}
+                        strokeWidth={1.5}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="p90" 
+                        stroke="#ff9900" 
+                        name="Percentil 90" 
+                        dot={false}
+                        strokeWidth={1.5}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="p97" 
+                        stroke="#ff0000" 
+                        name="Percentil 97" 
+                        dot={false}
+                        strokeWidth={1.5}
+                      />
+                      {currentPoint && (
+                        <ReferenceDot
+                          x={currentPoint.semana}
+                          y={currentPoint.peso}
+                          r={6}
+                          fill="#2563eb"
+                          stroke="none"
+                        />
+                      )}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-4">
+                  <p className="font-medium">Resultado:</p>
+                  <p>Percentil: <span className="font-medium">{result.percentil}</span></p>
+                  <p>Clasificación: <span className="font-medium">{result.clasificacion}</span></p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="mt-6 space-y-4 print:hidden">
+            <SpeechButton 
+              text={`Resultado de la evaluación de crecimiento fetal: 
+              El peso fetal de ${currentPoint?.peso} gramos a las ${currentPoint?.semana} semanas está en el percentil ${result.percentil}.
+              Clasificación: ${result.clasificacion}.`}
+            />
+            
+            <GeneratePDFButton 
+              contentId="curva-crecimiento-result" 
+              fileName={`curva-crecimiento-fetal-${format(new Date(), "yyyyMMdd")}`}
+              label="📄 GENERAR INFORME PDF"
+            />
+          </div>
+        </div>
       )}
     </div>
   );
