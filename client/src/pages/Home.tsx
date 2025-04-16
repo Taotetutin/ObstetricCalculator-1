@@ -39,8 +39,25 @@ export default function Home() {
         </Card>
       </div>
 
+      {/* Sabiduría Cultural del Día */}
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-semibold text-blue-800 flex items-center gap-2">
+            <Heart className="h-5 w-5 text-rose-500" />
+            Explora Nuestra Sabiduría Cultural
+          </h2>
+          <Link 
+            href="/sabiduria-cultural"
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium underline flex items-center gap-1"
+          >
+            Ver más <span className="text-xs">→</span>
+          </Link>
+        </div>
+        <WisdomOfTheDay />
+      </div>
+
       {/* Imagen de la familia Obsterix */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-4">
         <img 
           src="/untitled6.png"
           alt="ObsteriX Legend"
