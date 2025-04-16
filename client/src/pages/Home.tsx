@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, FileText, Mail } from "lucide-react";
+import { Lock, FileText, Mail, Heart } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { WisdomOfTheDay } from "@/components/ui/WisdomOfTheDay";
+import { Link } from "wouter";
 
 export default function Home() {
   const { user } = useAuth();

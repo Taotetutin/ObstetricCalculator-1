@@ -1,4 +1,3 @@
-// Datos de sabiduría cultural sobre el embarazo de diferentes comunidades globales
 export type CulturalWisdom = {
   region: string;
   culture: string;
@@ -10,147 +9,184 @@ export type CulturalWisdom = {
 };
 
 export const culturalWisdomData: CulturalWisdom[] = [
+  // Latinoamérica
   {
     region: "Latinoamérica",
-    culture: "Maya",
-    trimester: 'all',
-    belief: "La embarazada debe evitar eclipses",
-    practice: "Durante los eclipses, las mujeres embarazadas usan una llave atada con un cordón rojo en el vientre para prevenir que el feto desarrolle labio leporino.",
-    context: "Basado en la creencia tradicional Maya que considera los eclipses como eventos que pueden afectar el desarrollo fetal."
+    culture: "Maya (Guatemala)",
+    trimester: 1,
+    belief: "La conexión con la Madre Tierra es vital durante el embarazo",
+    practice: "Las mujeres embarazadas realizan ceremonias especiales con una comadrona tradicional (iyom) para conectar con la energía de la tierra y recibir su protección.",
+    context: "En la cosmología maya, existe una fuerte relación entre la fertilidad de la mujer y la fertilidad de la tierra. Esta práctica honra esa conexión sagrada y busca armonía espiritual para la madre y el bebé.",
+    source: "Prácticas tradicionales de partería maya"
   },
   {
     region: "Latinoamérica",
-    culture: "Mexicana",
+    culture: "Quechua (Perú)",
     trimester: 2,
-    belief: "Sobada prenatal",
-    practice: "Las parteras tradicionales realizan masajes abdominales suaves para acomodar al bebé y aliviar molestias durante el embarazo.",
-    context: "Práctica ancestral que busca mantener la posición óptima del feto y mejorar la comodidad de la madre."
+    belief: "La posición del bebé puede influenciarse a través de prácticas tradicionales",
+    practice: "Las parteras tradicionales realizan el 'manteo', una técnica donde se usa un chal o manta para mecer suavemente a la madre y ayudar al bebé a encontrar la posición correcta.",
+    context: "Esta práctica ancestral andina se basa en el conocimiento empírico de las parteras sobre anatomía y posicionamiento fetal, y se considera un tratamiento no invasivo para corregir presentaciones fetales problemáticas.",
+    source: "Medicina tradicional andina"
   },
+  {
+    region: "Latinoamérica",
+    culture: "Mapuche (Chile)",
+    trimester: 3,
+    belief: "El parto es un ritual sagrado conectado con las fuerzas de la naturaleza",
+    practice: "La mujer da a luz en posición vertical o de cuclillas, guiada por una machi (curandera), quien utiliza hierbas medicinales y cánticos tradicionales para facilitar el nacimiento.",
+    context: "Para los Mapuche, el parto es un evento espiritual donde la mujer demuestra su conexión con la Ñuke Mapu (Madre Tierra). La posición vertical aprovecha la gravedad y permite que la mujer participe activamente en el proceso.",
+    source: "Sabiduría ancestral mapuche"
+  },
+  
+  // Asia
   {
     region: "Asia",
     culture: "China",
-    trimester: 'all',
-    belief: "Balance Yin-Yang",
-    practice: "Seguir una dieta equilibrada según principios de medicina tradicional china, evitando alimentos 'fríos' que podrían desequilibrar la energía.",
-    context: "Parte de la medicina tradicional china que busca mantener el equilibrio energético durante el embarazo."
+    trimester: 1,
+    belief: "El equilibrio energético es esencial para un embarazo saludable",
+    practice: "Seguir principios de alimentación basados en el balance yin-yang, evitando alimentos considerados 'fríos' y favoreciendo alimentos 'calientes' según la medicina tradicional china.",
+    context: "La medicina tradicional china clasifica los alimentos según sus propiedades energéticas. Durante el embarazo, se cree que los alimentos 'fríos' pueden causar desequilibrios y afectar negativamente al feto, mientras que los alimentos 'calientes' nutren la energía vital (qi).",
+    source: "Principios de medicina tradicional china"
   },
   {
     region: "Asia",
-    culture: "Japonesa",
-    trimester: 1,
-    belief: "Ceremonia Anzan",
-    practice: "Las mujeres embarazadas usan un Hara-Obi (banda especial para embarazadas) alrededor del abdomen desde el quinto mes de embarazo.",
-    context: "Esta tradición busca dar soporte físico y espiritual a la madre y al bebé, promoviendo un parto seguro."
+    culture: "Japón",
+    trimester: 'all',
+    belief: "La protección espiritual del bebé comienza desde la concepción",
+    practice: "Usar un 'hara-obi', una faja tradicional que se coloca alrededor del abdomen durante el quinto mes de embarazo en una ceremonia llamada 'obi-iwai'.",
+    context: "Esta tradición, que data del período Heian (794-1185), se cree que protege al bebé, apoya la espalda de la madre y previene el crecimiento excesivo del vientre. Aunque su uso diario ha disminuido, la ceremonia sigue siendo importante como ritual cultural.",
+    source: "Tradiciones japonesas de embarazo"
+  },
+  {
+    region: "Asia",
+    culture: "India (Ayurveda)",
+    trimester: 2,
+    belief: "El desarrollo del bebé está conectado con el estado mental de la madre",
+    practice: "Garbha Sanskar: practicar yoga prenatal, meditación, escuchar música clásica y leer textos sagrados para influir positivamente en el desarrollo físico y mental del bebé.",
+    context: "Esta antigua tradición ayurvédica considera que las experiencias y estados mentales de la madre impactan directamente en la personalidad y salud del bebé. Se cree que estas prácticas nutren el desarrollo intelectual y espiritual del feto.",
+    source: "Textos ayurvédicos sobre cuidado prenatal"
+  },
+  
+  // África
+  {
+    region: "África",
+    culture: "Yoruba (Nigeria)",
+    trimester: 'all',
+    belief: "El embarazo es un estado de vulnerabilidad espiritual que requiere protección",
+    practice: "Llevar amuletos específicos y participar en rituales comunitarios de protección dirigidos por curanderos tradicionales (babalawos).",
+    context: "En la tradición Yoruba, se cree que la mujer embarazada y su bebé son particularmente vulnerables a energías negativas. Estos amuletos y rituales crean un escudo espiritual que protege tanto a la madre como al bebé en desarrollo.",
+    source: "Prácticas tradicionales yoruba"
   },
   {
     region: "África",
-    culture: "Nigeria (Yoruba)",
+    culture: "Maasai (Kenia/Tanzania)",
+    trimester: 3,
+    belief: "La nutrición específica determina la fortaleza del recién nacido",
+    practice: "Durante el último trimestre, las mujeres siguen una dieta específica alta en proteínas y baja en sal, y beben una mezcla de leche, sangre de vaca y hierbas medicinales.",
+    context: "Esta práctica nutricional tradicional busca fortalecer a la madre para el parto y asegurar que el bebé nazca fuerte y saludable. Refleja la adaptación cultural a su entorno semiárido y estilo de vida pastoral.",
+    source: "Etnografía de prácticas maasai"
+  },
+  
+  // Europa
+  {
+    region: "Europa",
+    culture: "Grecia Tradicional",
     trimester: 'all',
-    belief: "Protección comunitaria",
-    practice: "La comunidad participa activamente para proteger a la madre embarazada de noticias tristes o estresantes.",
-    context: "Refleja una comprensión tradicional del impacto del estrés materno en el desarrollo fetal."
+    belief: "Los antojos de la madre deben ser satisfechos para evitar marcas de nacimiento",
+    practice: "Satisfacer todos los antojos alimenticios de la mujer embarazada, ya que se cree que ignorarlos puede resultar en que el bebé nazca con una marca de nacimiento con la forma del alimento deseado.",
+    context: "Esta creencia, común también en otras culturas mediterráneas, refleja el reconocimiento intuitivo de las necesidades nutricionales cambiantes durante el embarazo, aunque la explicación cultural se expresa a través de esta asociación simbólica.",
+    source: "Folklore griego sobre embarazo"
   },
   {
     region: "Europa",
-    culture: "Suecia",
-    trimester: 3,
-    belief: "Nästan",
-    practice: "Preparar un nido para el bebé en casa con anticipación (aunque sin exceso) antes del nacimiento.",
-    context: "Refleja la importancia del balance entre la preparación práctica y la superstición sobre no prepararse demasiado pronto."
+    culture: "Sami (Norte de Escandinavia)",
+    trimester: 1,
+    belief: "La conexión con la naturaleza fortalece el embarazo",
+    practice: "Las mujeres embarazadas pasan tiempo en lugares naturales sagrados conocidos como 'sieidi', y usan hierbas específicas recolectadas bajo la luz de ciertas fases lunares.",
+    context: "La cultura Sami mantiene una profunda conexión con la naturaleza. Esta práctica refleja la creencia de que las fuerzas naturales influyen en el desarrollo del bebé y que la conexión con lugares sagrados provee protección y fuerza vital.",
+    source: "Tradiciones Sami de cuidado prenatal"
   },
+  
+  // Oceanía
   {
     region: "Oceanía",
     culture: "Maorí (Nueva Zelanda)",
     trimester: 'all',
-    belief: "Tapu y respeto",
-    practice: "Enterrar la placenta (whenua) en la tierra ancestral, conectando al bebé con su herencia cultural y territorial.",
-    context: "Práctica que honra la conexión entre el recién nacido, la familia y la tierra ancestral."
-  },
-  {
-    region: "América del Norte",
-    culture: "Navajo",
-    trimester: 'all',
-    belief: "Armonía con la naturaleza",
-    practice: "Cantos y ceremonias específicas durante el embarazo para mantener el balance y la armonía en el cuerpo de la madre.",
-    context: "Parte de un enfoque holístico de la salud que considera la conexión espiritual con la naturaleza."
-  },
-  {
-    region: "Medio Oriente",
-    culture: "Persa/Iraní",
-    trimester: 2,
-    belief: "Influencias del entorno",
-    practice: "Exposición consciente a belleza y arte durante el embarazo para influir positivamente en el desarrollo del bebé.",
-    context: "Basado en la creencia de que las experiencias estéticas de la madre afectan al desarrollo estético y espiritual del bebé."
-  },
-  {
-    region: "Latinoamérica",
-    culture: "Andina",
-    trimester: 3,
-    belief: "Preparación para el parto",
-    practice: "Infusiones específicas de hierbas como la manzanilla y la salvia para preparar el cuerpo para el parto.",
-    context: "Conocimiento herbolario tradicional transmitido por generaciones de parteras en la región andina."
-  },
-  {
-    region: "Europa",
-    culture: "Griega",
-    trimester: 1,
-    belief: "Antojos con propósito",
-    practice: "Atender los antojos específicos de alimentos, considerados como señales del cuerpo sobre nutrientes necesarios.",
-    context: "Sabiduría tradicional que asocia los antojos con necesidades nutricionales específicas durante el embarazo."
-  },
-  {
-    region: "Asia",
-    culture: "Indígena Filipina",
-    trimester: 'all',
-    belief: "Armonía con la naturaleza",
-    practice: "Baños con hierbas medicinales específicas en diferentes etapas del embarazo para fortalecer a la madre y al bebé.",
-    context: "Prácticas transmitidas por hilots (parteras tradicionales) que utilizan recursos naturales locales."
-  },
-  {
-    region: "África",
-    culture: "Etíope",
-    trimester: 3,
-    belief: "Protección y fuerza",
-    practice: "Crear amuletos protectores específicos para la madre durante el último trimestre del embarazo.",
-    context: "Busca proteger espiritualmente a la madre durante la fase más vulnerable del embarazo."
-  },
-  {
-    region: "América del Norte",
-    culture: "Inuit",
-    trimester: 'all',
-    belief: "Conexión con los ancestros",
-    practice: "Nombrar al bebé en honor a ancestros recientemente fallecidos, transmitiendo sus cualidades a la nueva vida.",
-    context: "Refleja una visión cíclica de la vida y la importancia de la continuidad familiar."
+    belief: "El embarazo y el parto están protegidos por ancestros y divinidades",
+    practice: "Recitar karakia (oraciones) y waiata (canciones) específicas, usar colgantes de pounamu (jade) y mantener prácticas de tapu (restricciones sagradas) durante el embarazo.",
+    context: "Para los Maorí, el embarazo es un tiempo de gran mana (poder espiritual). Estas prácticas buscan conectar a la madre y al bebé con su whakapapa (linaje) y asegurar la protección de los ancestros y divinidades como Hine-te-iwaiwa, guardiana del parto.",
+    source: "Prácticas tradicionales maorí de embarazo"
   },
   {
     region: "Oceanía",
-    culture: "Aborigen Australiana",
+    culture: "Aborígenes Australianos",
     trimester: 2,
-    belief: "Tiempo del Sueño",
-    practice: "Contar historias del Tiempo del Sueño específicas para embarazadas, conectando al bebé con su herencia cultural antes del nacimiento.",
-    context: "Parte de la transmisión de conocimiento cultural y espiritual a través de narraciones orales."
+    belief: "El bebé está conectado con el 'Tiempo del Sueño' y la tierra ancestral",
+    practice: "Realizar ceremonias en lugares sagrados relacionados con el Tiempo del Sueño, donde las mujeres mayores cantan canciones ancestrales al bebé en desarrollo.",
+    context: "En la cosmología aborigen, cada bebé está conectado con el Tiempo del Sueño (Tjukurrpa), la época de creación. Estas ceremonias fortalecen esta conexión espiritual y aseguran que el bebé nazca con un fuerte sentido de identidad cultural y pertenencia a la tierra.",
+    source: "Tradiciones aborígenes de nacimiento"
+  },
+  
+  // América del Norte
+  {
+    region: "América del Norte",
+    culture: "Navajo (Diné)",
+    trimester: 'all',
+    belief: "El equilibrio, armonía y belleza (hózhǫ́) son esenciales para un embarazo saludable",
+    practice: "Las mujeres embarazadas participan en ceremonias de Blessingway (Hózhǫ́ǫ́jí) conducidas por curanderas tradicionales, utilizando polen de maíz, cantos y oraciones específicas.",
+    context: "En la tradición Navajo, mantener hózhǫ́ (balance, belleza y armonía) es fundamental durante el embarazo. Estas ceremonias buscan crear un camino armonioso para el bebé y fortalecer a la madre para el parto, honrando la conexión con Changing Woman, la deidad asociada con el nacimiento.",
+    source: "Ceremonias tradicionales navajo"
+  },
+  {
+    region: "América del Norte",
+    culture: "Inuit (Ártico Canadiense)",
+    trimester: 3,
+    belief: "Ciertos comportamientos de la madre afectan directamente el carácter del bebé",
+    practice: "Durante el último trimestre, las mujeres practican el silencio interior, la paciencia y evitan disgustarse, creyendo que estos estados de ánimo se transferirán al bebé.",
+    context: "La tradición Inuit enfatiza la importancia del comportamiento prenatal en la formación del carácter del bebé. Esta práctica refleja una comprensión intuitiva de cómo el estado emocional de la madre puede afectar el desarrollo fetal, expresada a través de un marco cultural específico.",
+    source: "Sabiduría tradicional inuit"
+  },
+  
+  // Medio Oriente
+  {
+    region: "Medio Oriente",
+    culture: "Beduinos (Península Arábica)",
+    trimester: 'all',
+    belief: "La protección contra el mal de ojo es crucial durante el embarazo",
+    practice: "Usar amuletos específicos de protección como la mano de Fátima (hamsa), evitar los elogios directos sobre el embarazo, y no compartir públicamente la fecha esperada de parto.",
+    context: "En la cultura beduina, existe la creencia de que la envidia, incluso involuntaria, puede causar daño a través del 'mal de ojo'. Estas prácticas protectoras buscan evitar llamar la atención sobre el embarazo y así proteger a la madre y al bebé de energías negativas.",
+    source: "Tradiciones beduinas de protección maternal"
+  },
+  {
+    region: "Medio Oriente",
+    culture: "Persa (Irán)",
+    trimester: 1,
+    belief: "Los primeros 40 días de embarazo son especialmente delicados y requieren cuidados especiales",
+    practice: "Durante este período, las mujeres consumen alimentos calientes y dulces según la medicina tradicional persa, y evitan situaciones emocionalmente perturbadoras.",
+    context: "La medicina tradicional persa (Tibb) clasifica los alimentos y estados emocionales en calientes/fríos y secos/húmedos. Esta práctica busca crear el equilibrio óptimo para el desarrollo inicial del embrión, período considerado crítico para establecer un embarazo saludable.",
+    source: "Medicina tradicional persa (Tibb)"
   }
 ];
 
-// Función para obtener sabiduría filtrada por trimestre o región
 export function getWisdomByTrimester(trimester: 1 | 2 | 3): CulturalWisdom[] {
-  return culturalWisdomData.filter(item => 
-    item.trimester === trimester || item.trimester === 'all'
+  return culturalWisdomData.filter(wisdom => 
+    wisdom.trimester === trimester || wisdom.trimester === 'all'
   );
 }
 
 export function getWisdomByRegion(region: string): CulturalWisdom[] {
-  return culturalWisdomData.filter(item => 
-    item.region === region
-  );
+  return culturalWisdomData.filter(wisdom => wisdom.region === region);
 }
 
-// Obtener todas las regiones disponibles
 export function getAllRegions(): string[] {
-  return [...new Set(culturalWisdomData.map(item => item.region))];
+  // Usar un enfoque alternativo para evitar problemas con Set y la compatibilidad
+  const regionsObject: {[key: string]: boolean} = {};
+  culturalWisdomData.forEach(wisdom => {
+    regionsObject[wisdom.region] = true;
+  });
+  return Object.keys(regionsObject);
 }
 
-// Obtener sabiduría aleatoria (para mostrar en la página principal)
 export function getRandomWisdom(): CulturalWisdom {
   const randomIndex = Math.floor(Math.random() * culturalWisdomData.length);
   return culturalWisdomData[randomIndex];

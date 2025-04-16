@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Calculator from "@/pages/Calculator";
 import AuthPage from "@/pages/AuthPage";
+import CulturalWisdomPage from "@/pages/CulturalWisdomPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ function Router() {
               <Route path="/auth" component={AuthPage} />
               <ProtectedRoute path="/" component={Home} />
               <ProtectedRoute path="/calculadora/:id" component={Calculator} />
+              <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
               <Route component={NotFound} />
             </Switch>
           </main>

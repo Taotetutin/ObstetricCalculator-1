@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut, Menu, Heart, Calculator } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
@@ -45,6 +45,54 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto">
+        <div className="py-2">
+          <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
+            <h3 className="text-sm font-semibold text-blue-900">Contenido Cultural</h3>
+          </div>
+          <ul className="space-y-1 px-3">
+            <li>
+              <Link 
+                href="/sabiduria-cultural"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
+                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                  "transition-colors duration-200",
+                  location === "/sabiduria-cultural" && 
+                  "bg-blue-100 text-blue-900 font-medium"
+                )}
+              >
+                <Heart className="w-5 h-5 shrink-0 text-rose-500" />
+                <span>Sabiduría Cultural</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+        
+        <div className="py-2">
+          <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
+            <h3 className="text-sm font-semibold text-blue-900">Herramientas Médicas</h3>
+          </div>
+          <ul className="space-y-1 px-3">
+            <li>
+              <Link 
+                href="/"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
+                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                  "transition-colors duration-200",
+                  location === "/" && 
+                  "bg-blue-100 text-blue-900 font-medium"
+                )}
+              >
+                <Calculator className="w-5 h-5 shrink-0 text-blue-600" />
+                <span>Todas las Calculadoras</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+        
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
           <div key={groupName} className="py-2">
             <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
