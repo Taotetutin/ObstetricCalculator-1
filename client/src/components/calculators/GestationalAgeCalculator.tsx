@@ -339,20 +339,19 @@ export default function GestationalAgeCalculator() {
               )}
             </div>
             
-            <div className="mt-6 print:hidden flex justify-center">
-              <p className="text-sm text-gray-500 mr-4">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
-              <div className="flex space-x-2">
-                <SpeechButton
-                  text={`Resultado del cálculo de edad gestacional: 
-                  ${result.weeks} semanas y ${result.days} días.
-                  Calculado por ${result.method}.
-                  ${result.estimatedLMP ? `Fecha de última menstruación estimada: ${format(result.estimatedLMP, "dd/MM/yyyy")}` : ''}`}
-                />
-                <GeneratePDFButton
-                  contentId="gestational-age-pdf-content"
-                  fileName="Edad_Gestacional"
-                />
-              </div>
+            <div className="mt-6 space-y-4 print:hidden">
+              <p className="text-sm text-gray-500">Fecha: {format(new Date(), "dd/MM/yyyy")}</p>
+              <SpeechButton
+                text={`Resultado del cálculo de edad gestacional: 
+                ${result.weeks} semanas y ${result.days} días.
+                Calculado por ${result.method}.
+                ${result.estimatedLMP ? `Fecha de última menstruación estimada: ${format(result.estimatedLMP, "dd/MM/yyyy")}` : ''}`}
+              />
+              <GeneratePDFButton
+                contentId="gestational-age-pdf-content"
+                fileName={`edad-gestacional-${format(new Date(), "yyyyMMdd")}`}
+                label="📄 GENERAR INFORME PDF"
+              />
             </div>
           </CardContent>
         </Card>

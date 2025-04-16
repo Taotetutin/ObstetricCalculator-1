@@ -7,6 +7,9 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { format } from "date-fns";
+import SpeechButton from "@/components/ui/SpeechButton";
+import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
 
 export default function LiquidoAmnioticoCalculator() {
   const [result, setResult] = useState<{ ila: number; categoria: string } | null>(null);
@@ -71,19 +74,36 @@ export default function LiquidoAmnioticoCalculator() {
       </Form>
 
       {result && (
-        <Card>
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
-            <p>
-              Índice de Líquido Amniótico:{" "}
-              <span className="font-medium">{result.ila} cm</span>
-            </p>
-            <p>
-              Clasificación:{" "}
-              <span className="font-medium">{result.categoria}</span>
-            </p>
-          </CardContent>
-        </Card>
+        <div>
+          <Card>
+            <CardContent className="pt-6">
+              <div id="liquido-amniotico-result">
+                <h3 className="text-lg font-semibold mb-2 text-blue-700">Resultado:</h3>
+                <p>
+                  Índice de Líquido Amniótico:{" "}
+                  <span className="font-medium">{result.ila} cm</span>
+                </p>
+                <p>
+                  Clasificación:{" "}
+                  <span className="font-medium">{result.categoria}</span>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="mt-6 space-y-4 print:hidden">
+            <SpeechButton 
+              text={`Resultado del índice de líquido amniótico: ${result.ila} centímetros. 
+              Clasificación: ${result.categoria}.`}
+            />
+            
+            <GeneratePDFButton 
+              contentId="liquido-amniotico-result" 
+              fileName={`liquido-amniotico-${format(new Date(), "yyyyMMdd")}`}
+              label="📄 GENERAR INFORME PDF"
+            />
+          </div>
+        </div>
       )}
     </div>
   );
