@@ -69,29 +69,7 @@ export default function Sidebar() {
           </ul>
         </div>
         
-        <div className="py-2">
-          <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
-            <h3 className="text-sm font-semibold text-blue-900">Herramientas Médicas</h3>
-          </div>
-          <ul className="space-y-1 px-3">
-            <li>
-              <Link 
-                href="/"
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
-                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
-                  "transition-colors duration-200",
-                  location === "/" && 
-                  "bg-blue-100 text-blue-900 font-medium"
-                )}
-              >
-                <Calculator className="w-5 h-5 shrink-0 text-blue-600" />
-                <span>Todas las Calculadoras</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
+        {/* Removed "Todas las Calculadoras" section */}
         
         {Object.entries(calculatorGroups).map(([groupName, groupCalculators]) => (
           <div key={groupName} className="py-2">
