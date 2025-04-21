@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, FileText, Mail, Heart } from "lucide-react";
+import { Lock, FileText, Mail, Heart, Newspaper } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { WisdomOfTheDay } from "@/components/ui/WisdomOfTheDay";
+import { NewsOfTheDay } from "@/components/ui/LatestNews";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -54,6 +55,23 @@ export default function Home() {
           </Link>
         </div>
         <WisdomOfTheDay />
+      </div>
+
+      {/* Noticias al Día */}
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-semibold text-blue-800 flex items-center gap-2">
+            <Newspaper className="h-5 w-5 text-blue-600" />
+            Explora las Noticias de la Especialidad
+          </h2>
+          <Link 
+            href="/obsterix-al-dia"
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium underline flex items-center gap-1"
+          >
+            Ver más <span className="text-xs">→</span>
+          </Link>
+        </div>
+        <NewsOfTheDay />
       </div>
 
       {/* Imagen de la familia Obsterix */}

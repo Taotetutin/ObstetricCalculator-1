@@ -47,7 +47,7 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto">
         <div className="py-2">
           <div className="mx-3 mb-2 px-3 py-2 bg-blue-50 rounded-md">
-            <h3 className="text-sm font-semibold text-blue-900">Contenido Cultural</h3>
+            <h3 className="text-sm font-semibold text-blue-900">Contenido y Noticias</h3>
           </div>
           <ul className="space-y-1 px-3">
             <li>
@@ -64,6 +64,22 @@ export default function Sidebar() {
               >
                 <Heart className="w-5 h-5 shrink-0 text-rose-500" />
                 <span>Sabiduría Cultural</span>
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/obsterix-al-dia"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
+                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                  "transition-colors duration-200",
+                  location === "/obsterix-al-dia" && 
+                  "bg-blue-100 text-blue-900 font-medium"
+                )}
+              >
+                <Newspaper className="w-5 h-5 shrink-0 text-blue-600" />
+                <span>ObsteriX al día</span>
               </Link>
             </li>
           </ul>
