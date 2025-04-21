@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, Menu, Heart, Calculator } from "lucide-react";
+import { LogOut, Menu, Heart, Calculator, Newspaper } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {

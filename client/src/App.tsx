@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import Calculator from "@/pages/Calculator";
 import AuthPage from "@/pages/AuthPage";
 import CulturalWisdomPage from "@/pages/CulturalWisdomPage";
+import NewsPage from "@/pages/NewsPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ function Router() {
               <ProtectedRoute path="/" component={Home} />
               <ProtectedRoute path="/calculadora/:id" component={Calculator} />
               <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
+              <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
               <Route component={NotFound} />
             </Switch>
           </main>
