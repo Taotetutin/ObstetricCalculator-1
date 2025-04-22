@@ -49,7 +49,7 @@ export default function Home() {
           </h2>
           <Link 
             href="/sabiduria-cultural"
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium underline flex items-center gap-1"
+            className="bg-blue-600 text-white hover:bg-blue-700 text-sm font-medium px-3 py-1.5 rounded-md flex items-center gap-1 shadow-sm"
           >
             Ver más <span className="text-xs">→</span>
           </Link>
@@ -66,7 +66,7 @@ export default function Home() {
           </h2>
           <Link 
             href="/obsterix-al-dia"
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium underline flex items-center gap-1"
+            className="bg-blue-600 text-white hover:bg-blue-700 text-sm font-medium px-3 py-1.5 rounded-md flex items-center gap-1 shadow-sm"
           >
             Ver más <span className="text-xs">→</span>
           </Link>
@@ -84,12 +84,12 @@ export default function Home() {
       </div>
 
       {/* Enlaces en el pie de página */}
-      <div className="mt-auto pt-8 pb-4 flex justify-center gap-8 text-sm text-blue-600">
+      <div className="mt-auto pt-8 pb-4 flex flex-wrap justify-center gap-4 text-sm">
         <a 
           href="http://obsterixpro.mimaternofetal.cl/politicaprivacidad.html" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+          className="flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-2 rounded-md transition-colors shadow-sm"
         >
           <Lock className="w-4 h-4" />
           Políticas de Privacidad
@@ -98,14 +98,14 @@ export default function Home() {
           href="https://obsterixpro.mimaternofetal.cl/page6.html" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+          className="flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-2 rounded-md transition-colors shadow-sm"
         >
           <FileText className="w-4 h-4" />
           Términos y Condiciones
         </a>
         <a 
           href="mailto:manuel.guerra@mimaternofetal.cl"
-          className="flex items-center gap-2 hover:text-blue-800 transition-colors"
+          className="flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-2 rounded-md transition-colors shadow-sm"
         >
           <Mail className="w-4 h-4" />
           Contacto

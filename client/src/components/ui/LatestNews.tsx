@@ -125,21 +125,21 @@ export function LatestNews() {
             {news.length > 1 && (
               <div className="flex justify-between items-center mt-4 text-xs">
                 <Button 
-                  variant="ghost" 
+                  variant="outline" 
                   size="sm" 
                   onClick={handlePrevious}
-                  className="text-blue-600 p-1 h-auto"
+                  className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 p-1 h-auto"
                 >
                   ← Anterior
                 </Button>
-                <div className="text-gray-500">
+                <div className="text-gray-600 font-medium bg-gray-100 px-2 py-1 rounded">
                   {currentIndex + 1} de {news.length}
                 </div>
                 <Button 
-                  variant="ghost" 
+                  variant="outline" 
                   size="sm" 
                   onClick={handleNext}
-                  className="text-blue-600 p-1 h-auto"
+                  className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 p-1 h-auto"
                 >
                   Siguiente →
                 </Button>
@@ -154,10 +154,10 @@ export function LatestNews() {
       </CardContent>
       <CardFooter className="pt-0 flex justify-between">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm" 
           onClick={handleRefresh}
-          className="text-blue-600 hover:bg-blue-100"
+          className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"
         >
           <RefreshCcw className="h-4 w-4 mr-1" />
           Actualizar
@@ -167,7 +167,7 @@ export function LatestNews() {
           href="https://www.acog.org/news" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-xs text-blue-600 hover:text-blue-800"
+          className="flex items-center text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors"
         >
           Visitar ACOG <ExternalLink className="h-3 w-3 ml-1" />
         </a>
@@ -187,8 +187,8 @@ export function NewsExplorer() {
     <div className="space-y-6">
       <LatestNews />
       <div className="border-t border-gray-100 pt-4 mt-6">
-        <p className="text-sm text-gray-500 italic">
-          Las noticias mostradas son obtenidas de la <a href="https://www.acog.org/news" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">American College of Obstetricians and Gynecologists (ACOG)</a> y se actualizan regularmente para mantenerle informado sobre los últimos avances en la especialidad.
+        <p className="text-sm text-gray-600 italic">
+          Las noticias mostradas son obtenidas de la <a href="https://www.acog.org/news" target="_blank" rel="noopener noreferrer" className="bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 transition-colors font-medium">American College of Obstetricians and Gynecologists (ACOG)</a> y se actualizan regularmente para mantenerle informado sobre los últimos avances en la especialidad.
         </p>
       </div>
     </div>
