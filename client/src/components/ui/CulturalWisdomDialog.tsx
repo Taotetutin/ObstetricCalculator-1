@@ -16,11 +16,13 @@ import { Heart, Globe, Calendar } from 'lucide-react';
 interface CulturalWisdomDialogProps {
   triggerText?: string;
   showIcon?: boolean;
+  buttonStyle?: 'default' | 'highlight';
 }
 
 export function CulturalWisdomDialog({ 
   triggerText = "Sabiduría Cultural del Embarazo", 
-  showIcon = true 
+  showIcon = true,
+  buttonStyle = 'default'
 }: CulturalWisdomDialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -28,8 +30,12 @@ export function CulturalWisdomDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          variant="outline"
-          className="border-blue-200 text-blue-700 hover:bg-blue-50 transition-all hover:border-blue-400"
+          variant={buttonStyle === 'highlight' ? 'default' : 'outline'}
+          className={
+            buttonStyle === 'highlight' 
+            ? "bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm" 
+            : "border-blue-200 text-blue-700 hover:bg-blue-50 transition-all hover:border-blue-400"
+          }
         >
           {showIcon && <Globe className="h-4 w-4 mr-2 text-blue-500" />}
           {triggerText}

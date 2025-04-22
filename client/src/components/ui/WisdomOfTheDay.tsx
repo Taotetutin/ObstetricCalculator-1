@@ -30,7 +30,7 @@ export function WisdomOfTheDay() {
         <div className="mb-2 space-y-1">
           <div className="flex items-start justify-between">
             <h3 className="font-medium text-blue-700">{wisdom.belief}</h3>
-            <div className="flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+            <div className="flex items-center text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-md font-medium">
               <Globe className="h-3 w-3 mr-1" />
               {wisdom.culture}
             </div>
@@ -40,15 +40,15 @@ export function WisdomOfTheDay() {
       </CardContent>
       <CardFooter className="pt-0 flex justify-between gap-2">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm" 
           onClick={refreshWisdom}
-          className="text-blue-600 hover:bg-blue-100"
+          className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"
         >
           <RefreshCcw className="h-4 w-4 mr-1" />
           Nueva
         </Button>
-        <CulturalWisdomDialog triggerText="Ver más sabidurías" showIcon={false} />
+        <CulturalWisdomDialog triggerText="Ver más sabidurías" showIcon={false} buttonStyle={'highlight'} />
       </CardFooter>
     </Card>
   );
