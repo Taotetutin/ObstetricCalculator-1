@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, FieldValues } from 'react-hook-form';
 import { LucideIcon } from 'lucide-react';
 
 interface AnimatedFormFieldProps {
-  form: UseFormReturn<any>;
+  form?: UseFormReturn<any>;
   name: string;
   label: string;
   description?: string;
@@ -24,31 +24,50 @@ export function AnimatedFormField({
   index = 0
 }: AnimatedFormFieldProps) {
   
+  // Si no hay form, simplemente renderizamos un div con estilo similar a FormItem
+  if (!form) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.1 }}
+      >
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
+          <div className="flex items-center gap-2 mb-1">
+            {Icon && <Icon className="h-4.5 w-4.5 text-blue-500" />}
+            <div className="text-blue-700 font-medium">{label}</div>
+          </div>
+          {description && (
+            <div className="text-sm text-gray-500 mb-2">
+              {description}
+            </div>
+          )}
+          <div>{control}</div>
+        </div>
+      </motion.div>
+    );
+  }
+  
+  // Con form, usamos el FormField normal
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
-      <FormField
-        control={form.control}
-        name={name}
-        render={({ field }) => (
-          <FormItem className="bg-white p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
-            <div className="flex items-center gap-2 mb-1">
-              {Icon && <Icon className="h-4.5 w-4.5 text-blue-500" />}
-              <FormLabel className="text-blue-700 font-medium">{label}</FormLabel>
-            </div>
-            {description && (
-              <FormDescription className="text-sm text-gray-500 mb-2">
-                {description}
-              </FormDescription>
-            )}
-            <FormControl>{React.cloneElement(control as React.ReactElement, { ...field })}</FormControl>
-            <FormMessage className="text-red-500 text-sm mt-1" />
-          </FormItem>
+      <FormItem className="bg-white p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
+        <div className="flex items-center gap-2 mb-1">
+          {Icon && <Icon className="h-4.5 w-4.5 text-blue-500" />}
+          <FormLabel className="text-blue-700 font-medium">{label}</FormLabel>
+        </div>
+        {description && (
+          <FormDescription className="text-sm text-gray-500 mb-2">
+            {description}
+          </FormDescription>
         )}
-      />
+        <FormControl>{control}</FormControl>
+        <FormMessage className="text-red-500 text-sm mt-1" />
+      </FormItem>
     </motion.div>
   );
 }
@@ -61,6 +80,49 @@ export function AnimatedCheckboxField({
   index = 0
 }: Omit<AnimatedFormFieldProps, 'control' | 'icon'> & { index?: number }) {
   
+  // Si no hay un formulario, simplemente mostramos un mock estático
+  if (!form) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
+      >
+        <div className="flex items-start space-x-3 space-y-0 p-3 rounded-lg hover:bg-blue-50 transition-all">
+          <div className="pt-0.5">
+            <div className="relative">
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="rounded-sm"
+              >
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 shrink-0 rounded-sm border border-blue-200 
+                    bg-white ring-offset-white focus-visible:outline-none focus-visible:ring-2 
+                    focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed"
+                  disabled
+                />
+              </motion.div>
+            </div>
+          </div>
+          <div className="space-y-1 leading-none">
+            <div className="text-sm font-medium text-gray-700">
+              {label}
+            </div>
+            {description && (
+              <div className="text-xs text-gray-500">
+                {description}
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+  
+  // Con formulario, usamos el FormField normalmente
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}

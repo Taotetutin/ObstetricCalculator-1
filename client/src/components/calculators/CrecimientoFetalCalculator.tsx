@@ -117,7 +117,6 @@ export default function CrecimientoFetalCalculator() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <AnimatedFormField
-          form={{ control: () => null }} // Mock para reutilizar el componente
           name="gestationalWeeks"
           label="Semanas de gestación"
           description="Entre 14 y 40 semanas"
@@ -137,7 +136,6 @@ export default function CrecimientoFetalCalculator() {
         />
         
         <AnimatedFormField
-          form={{ control: () => null }}
           name="gestationalDays"
           label="Días adicionales"
           description="Entre 0 y 6 días"
@@ -158,7 +156,6 @@ export default function CrecimientoFetalCalculator() {
       </div>
       
       <AnimatedFormField
-        form={{ control: () => null }}
         name="fetalWeight"
         label="Peso fetal estimado (gramos)"
         description="Peso en gramos según ecografía"
