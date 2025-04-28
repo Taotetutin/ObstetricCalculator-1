@@ -69,9 +69,9 @@ export function AnimatedResult({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-4"
+      className="space-y-3 sm:space-y-4"
     >
-      <div className="flex justify-end gap-2 mb-2">
+      <div className="flex justify-end gap-1 sm:gap-2 mb-2">
         <motion.div 
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -96,19 +96,20 @@ export function AnimatedResult({
         <Card className={`shadow-md overflow-hidden ${getRiskColor(riskLevel)}`}>
           <CardContent className="p-0">
             {riskLevel && (
-              <div className={`p-3 ${getRiskTextColor(riskLevel)} font-medium text-lg flex items-center gap-2 border-b border-gray-100`}>
-                <span className="text-xl">{getRiskIcon(riskLevel)}</span>
+              <div className={`p-2 sm:p-3 ${getRiskTextColor(riskLevel)} font-medium text-base sm:text-lg flex items-center gap-2 border-b border-gray-100`}>
+                <span className="text-lg sm:text-xl">{getRiskIcon(riskLevel)}</span>
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
+                  className="text-sm sm:text-base"
                 >
                   Nivel de riesgo: <span className="font-bold">{riskLevel}</span>
                 </motion.span>
               </div>
             )}
             
-            <div id={id} className="p-5">
+            <div id={id} className="p-3 sm:p-5">
               {children}
             </div>
           </CardContent>

@@ -32,13 +32,13 @@ export function AnimatedFormField({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: index * 0.1 }}
       >
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
           <div className="flex items-center gap-2 mb-1">
-            {Icon && <Icon className="h-4.5 w-4.5 text-blue-500" />}
-            <div className="text-blue-700 font-medium">{label}</div>
+            {Icon && <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-blue-500 flex-shrink-0" />}
+            <div className="text-blue-700 font-medium text-sm sm:text-base">{label}</div>
           </div>
           {description && (
-            <div className="text-sm text-gray-500 mb-2">
+            <div className="text-xs sm:text-sm text-gray-500 mb-2">
               {description}
             </div>
           )}
@@ -55,18 +55,18 @@ export function AnimatedFormField({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
-      <FormItem className="bg-white p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
+      <FormItem className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-blue-50 hover:border-blue-200 transition-all">
         <div className="flex items-center gap-2 mb-1">
-          {Icon && <Icon className="h-4.5 w-4.5 text-blue-500" />}
-          <FormLabel className="text-blue-700 font-medium">{label}</FormLabel>
+          {Icon && <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-blue-500 flex-shrink-0" />}
+          <FormLabel className="text-blue-700 font-medium text-sm sm:text-base">{label}</FormLabel>
         </div>
         {description && (
-          <FormDescription className="text-sm text-gray-500 mb-2">
+          <FormDescription className="text-xs sm:text-sm text-gray-500 mb-2">
             {description}
           </FormDescription>
         )}
         <FormControl>{control}</FormControl>
-        <FormMessage className="text-red-500 text-sm mt-1" />
+        <FormMessage className="text-red-500 text-xs sm:text-sm mt-1" />
       </FormItem>
     </motion.div>
   );
@@ -88,7 +88,7 @@ export function AnimatedCheckboxField({
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
       >
-        <div className="flex items-start space-x-3 space-y-0 p-3 rounded-lg hover:bg-blue-50 transition-all">
+        <div className="flex items-start space-x-2 sm:space-x-3 space-y-0 p-2 sm:p-3 rounded-lg hover:bg-blue-50 transition-all">
           <div className="pt-0.5">
             <div className="relative">
               <motion.div
@@ -108,7 +108,7 @@ export function AnimatedCheckboxField({
             </div>
           </div>
           <div className="space-y-1 leading-none">
-            <div className="text-sm font-medium text-gray-700">
+            <div className="text-xs sm:text-sm font-medium text-gray-700">
               {label}
             </div>
             {description && (
@@ -133,7 +133,7 @@ export function AnimatedCheckboxField({
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem className="flex items-start space-x-3 space-y-0 p-3 rounded-lg hover:bg-blue-50 transition-all">
+          <FormItem className="flex items-start space-x-2 sm:space-x-3 space-y-0 p-2 sm:p-3 rounded-lg hover:bg-blue-50 transition-all">
             <FormControl>
               <div className="pt-0.5">
                 <div className="relative">
@@ -168,8 +168,8 @@ export function AnimatedCheckboxField({
                 </div>
               </div>
             </FormControl>
-            <div className="space-y-1 leading-none">
-              <FormLabel className={`text-sm font-medium ${field.value ? 'text-blue-700' : 'text-gray-700'}`}>
+            <div className="space-y-0.5 sm:space-y-1 leading-tight">
+              <FormLabel className={`text-xs sm:text-sm font-medium ${field.value ? 'text-blue-700' : 'text-gray-700'}`}>
                 {label}
               </FormLabel>
               {description && (
