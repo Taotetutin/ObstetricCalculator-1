@@ -40,41 +40,41 @@ export function CulturalWisdomCard({ wisdom, showActions = true }: CulturalWisdo
 
   return (
     <Card className="overflow-hidden transition-all duration-300 border-2 border-blue-100 hover:shadow-md">
-      <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="flex justify-between items-start">
+      <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 sm:px-6 pt-3 sm:pt-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-0">
           <div>
-            <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-amber-500" />
+            <CardTitle className="text-base sm:text-lg text-blue-800 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
               <span>{wisdom.belief}</span>
             </CardTitle>
-            <CardDescription className="mt-1 font-medium flex items-center gap-1">
-              <CircleUser className="h-4 w-4 text-blue-600" /> 
+            <CardDescription className="mt-1 font-medium flex items-center gap-1 text-sm">
+              <CircleUser className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 flex-shrink-0" /> 
               <span>{wisdom.culture}</span>
             </CardDescription>
           </div>
-          <div className="flex flex-col gap-2 items-end">
-            <Badge className={getBadgeColor(wisdom.region)}>
-              <Globe className="h-3 w-3 mr-1" /> 
+          <div className="flex flex-wrap gap-1.5 mt-2 sm:mt-0 sm:flex-col sm:gap-2 sm:items-end w-full sm:w-auto">
+            <Badge className={`text-xs ${getBadgeColor(wisdom.region)}`}>
+              <Globe className="h-3 w-3 mr-1 flex-shrink-0" /> 
               {wisdom.region}
             </Badge>
             {getTrimesterBadge(wisdom.trimester)}
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
         <div className="space-y-3">
           <div>
-            <h4 className="font-medium text-sm text-blue-700 mb-1">Práctica Tradicional</h4>
-            <p className="text-gray-700">{wisdom.practice}</p>
+            <h4 className="font-medium text-xs sm:text-sm text-blue-700 mb-1">Práctica Tradicional</h4>
+            <p className="text-gray-700 text-sm sm:text-base">{wisdom.practice}</p>
           </div>
           <div>
-            <h4 className="font-medium text-sm text-blue-700 mb-1">Contexto Cultural</h4>
-            <p className="text-gray-600 text-sm">{wisdom.context}</p>
+            <h4 className="font-medium text-xs sm:text-sm text-blue-700 mb-1">Contexto Cultural</h4>
+            <p className="text-gray-600 text-xs sm:text-sm">{wisdom.context}</p>
           </div>
         </div>
       </CardContent>
       {showActions && (
-        <CardFooter className="bg-blue-50/70 border-t border-blue-100 flex justify-end">
+        <CardFooter className="bg-blue-50/70 border-t border-blue-100 flex justify-end p-2 sm:p-4">
           <div className="text-xs text-blue-600 italic">
             Sabiduría cultural - Perspectivas diversas sobre el embarazo
           </div>

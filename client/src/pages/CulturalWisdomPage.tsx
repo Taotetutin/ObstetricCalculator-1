@@ -29,36 +29,42 @@ export default function CulturalWisdomPage() {
   const regionWisdom = selectedRegion ? getWisdomByRegion(selectedRegion) : [];
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-6 sm:py-8 px-4">
       <Helmet>
         <title>Sabiduría Cultural del Embarazo | ObsteriX Legend</title>
       </Helmet>
 
-      <header className="mb-8 text-center">
-        <div className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-4">
-          <Heart className="h-8 w-8 text-red-500" />
+      <header className="mb-6 sm:mb-8 text-center">
+        <div className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-3 sm:mb-4">
+          <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-red-500" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-2">Sabiduría Cultural del Embarazo</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-800 mb-2">Sabiduría Cultural del Embarazo</h1>
+        <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
           Descubre conocimientos tradicionales y prácticas culturales de diversas comunidades alrededor del mundo relacionadas con el embarazo y el nacimiento.
         </p>
       </header>
 
       <Tabs defaultValue="explore" className="max-w-5xl mx-auto">
-        <TabsList className="w-full bg-blue-50 p-1 mb-6">
-          <TabsTrigger value="explore" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <Globe className="h-4 w-4 mr-1" /> Explorar
-          </TabsTrigger>
-          <TabsTrigger value="trimester" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <Calendar className="h-4 w-4 mr-1" /> Por Trimestre
-          </TabsTrigger>
-          <TabsTrigger value="region" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <MapPin className="h-4 w-4 mr-1" /> Por Región
-          </TabsTrigger>
-          <TabsTrigger value="faq" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-            <BookOpen className="h-4 w-4 mr-1" /> Sobre Esta Sección
-          </TabsTrigger>
-        </TabsList>
+        <ScrollArea className="w-full pb-2">
+          <TabsList className="w-full sm:w-auto bg-blue-50 p-1 mb-6 flex whitespace-nowrap">
+            <TabsTrigger value="explore" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-3 py-1.5">
+              <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 flex-shrink-0" /> 
+              <span className="text-xs sm:text-sm">Explorar</span>
+            </TabsTrigger>
+            <TabsTrigger value="trimester" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-3 py-1.5">
+              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 flex-shrink-0" /> 
+              <span className="text-xs sm:text-sm">Por Trimestre</span>
+            </TabsTrigger>
+            <TabsTrigger value="region" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-3 py-1.5">
+              <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 flex-shrink-0" /> 
+              <span className="text-xs sm:text-sm">Por Región</span>
+            </TabsTrigger>
+            <TabsTrigger value="faq" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-3 py-1.5">
+              <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 flex-shrink-0" /> 
+              <span className="text-xs sm:text-sm">Sobre Esta Sección</span>
+            </TabsTrigger>
+          </TabsList>
+        </ScrollArea>
 
         <TabsContent value="explore" className="space-y-8">
           <div className="mb-8">
