@@ -1,13 +1,10 @@
 import { useState, useRef, useCallback } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import SpeechButton from "@/components/ui/SpeechButton";
-import GeneratePDFButton from "@/components/ui/GeneratePDFButton";
-import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { format } from "date-fns";
+import { motion, AnimatePresence } from "framer-motion";
+import { Scale, Calendar, BarChart2, Weight, AlertCircle, Info } from "lucide-react";
 import {
   LineChart, 
   Line, 
@@ -23,6 +20,12 @@ import {
   ZAxis
 } from 'recharts';
 
+// Componentes personalizados con animaciones
+import { CalculatorContainer } from "@/components/ui/calculator-container";
+import { AnimatedFormField } from "@/components/ui/animated-form-field";
+import { AnimatedResult } from "@/components/ui/animated-result";
+import { calcularPercentil } from "./percentil-oms-app/utils/calculations";
+
 // Interfaces para trabajar con el gráfico
 interface DotProps {
   cx?: number;
@@ -31,69 +34,13 @@ interface DotProps {
 }
 
 export default function CrecimientoFetalCalculator() {
-  const [gestationalWeeks, setGestationalWeeks] = useState("");
-  const [gestationalDays, setGestationalDays] = useState("");
-  const [fetalWeight, setFetalWeight] = useState("");
+  const [gestationalWeeks, setGestationalWeeks] = useState<string>("28");
+  const [gestationalDays, setGestationalDays] = useState<string>("0");
+  const [fetalWeight, setFetalWeight] = useState<string>("1500");
   const [percentilResult, setPercentilResult] = useState("");
   const [curveData, setCurveData] = useState<any[]>([]);
   const [pointData, setPointData] = useState<any[]>([]);
-  
-  // Referencia para el contenedor de resultados (para PDF)
-  const resultsRef = useRef<HTMLDivElement>(null);
-
-  // Función para generar PDF
-  const generatePDF = useCallback(async () => {
-    if (!resultsRef.current || !percentilResult) return;
-    
-    try {
-      const canvas = await html2canvas(resultsRef.current);
-      const imgData = canvas.toDataURL('image/png');
-      
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      // Título del PDF
-      pdf.setFontSize(18);
-      pdf.setTextColor(0, 60, 143);
-      pdf.text('Reporte de Crecimiento Fetal OMS', pdfWidth / 2, 20, { align: 'center' });
-      
-      // Añadir fecha
-      pdf.setFontSize(10);
-      pdf.setTextColor(100, 100, 100);
-      const date = new Date().toLocaleDateString('es-ES');
-      pdf.text(`Fecha: ${date}`, pdfWidth - 20, 30, { align: 'right' });
-      
-      // Ajustar imagen para que ocupe el ancho de la página pero mantenga proporción
-      const imgWidth = pdfWidth - 40; // Margen de 20mm en cada lado
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 20, 40, imgWidth, imgHeight);
-      
-      // Añadir texto informativo
-      pdf.setFontSize(12);
-      pdf.setTextColor(0, 0, 0);
-      pdf.text('Este reporte muestra la evaluación del crecimiento fetal según estándares OMS.', 20, imgHeight + 50);
-      
-      pdf.save('reporte-crecimiento-fetal.pdf');
-    } catch (error) {
-      console.error('Error al generar PDF:', error);
-    }
-  }, [percentilResult]);
-
-  // Función para leer resultado en voz alta
-  const speakResult = useCallback(() => {
-    if (!percentilResult) return;
-    
-    const speech = new SpeechSynthesisUtterance();
-    speech.text = percentilResult;
-    speech.lang = 'es-ES';
-    speech.volume = 1;
-    speech.rate = 0.9;
-    speech.pitch = 1;
-    
-    window.speechSynthesis.speak(speech);
-  }, [percentilResult]);
+  const [isCalculated, setIsCalculated] = useState(false);
 
   const handleCalculate = () => {
     const weeks = parseInt(gestationalWeeks);
@@ -137,218 +84,325 @@ export default function CrecimientoFetalCalculator() {
     // Crear datos para el punto de peso
     // Usamos un arreglo simple con un solo objeto
     setPointData([{ x: roundedWeek, y: weight }]);
+    
+    setIsCalculated(true);
   };
 
-  return (
-    <div className="space-y-8">
-      <Alert className="bg-blue-50 border-blue-200 text-blue-700">
-        <AlertDescription className="font-medium">
-          Evaluación integral del crecimiento fetal usando percentiles OMS y curva de crecimiento
-        </AlertDescription>
-      </Alert>
+  // Interpretación del resultado para el asistente de voz
+  const getSpeechText = () => {
+    if (!percentilResult) return "";
+    
+    // Extraer información relevante del texto de resultado
+    const match = percentilResult.match(/percentil (\d+)/i);
+    const percentile = match ? match[1] : "desconocido";
+    
+    let interpretation = "";
+    const percentileNum = parseInt(percentile);
+    
+    if (percentileNum < 3) {
+      interpretation = "Se encuentra por debajo del percentil 3, lo que indica un crecimiento fetal muy por debajo de lo esperado para su edad gestacional. Se recomienda una evaluación especializada.";
+    } else if (percentileNum < 10) {
+      interpretation = "Se encuentra entre el percentil 3 y 10, lo que indica un crecimiento fetal bajo para su edad gestacional. Se recomienda seguimiento.";
+    } else if (percentileNum > 90) {
+      interpretation = "Se encuentra por encima del percentil 90, lo que indica un crecimiento fetal superior a lo esperado para su edad gestacional. Se recomienda descartar diabetes gestacional.";
+    } else {
+      interpretation = "Se encuentra dentro de los rangos normales para su edad gestacional.";
+    }
+    
+    return `${percentilResult} ${interpretation}`;
+  };
 
-      <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-        <CardContent className="p-6 space-y-6">
-          <div>
-            <h3 className="text-xl font-semibold mb-1 text-blue-700">Calculadora de Crecimiento Fetal</h3>
-            <p className="text-sm text-gray-500">Ingrese la edad gestacional y el peso fetal para evaluar su desarrollo</p>
-          </div>
+  // Contenido del formulario
+  const formContent = (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <AnimatedFormField
+          form={{ control: () => null }} // Mock para reutilizar el componente
+          name="gestationalWeeks"
+          label="Semanas de gestación"
+          description="Entre 14 y 40 semanas"
+          icon={Calendar}
+          index={0}
+          control={
+            <Input 
+              type="number"
+              value={gestationalWeeks}
+              onChange={(e) => setGestationalWeeks(e.target.value)}
+              min="14"
+              max="40"
+              placeholder="Semanas (14-40)"
+              className="border-blue-200 focus:border-blue-500"
+            />
+          }
+        />
         
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-              <label className="block text-sm font-medium text-blue-700 mb-2">
-                Edad Gestacional (Semanas)
-              </label>
-              <Input
-                type="number"
-                min="14"
-                max="40"
-                value={gestationalWeeks}
-                onChange={(e) => setGestationalWeeks(e.target.value)}
-                placeholder="14-40"
-                className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
-              />
-            </div>
-            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-              <label className="block text-sm font-medium text-blue-700 mb-2">
-                Edad Gestacional (Días)
-              </label>
-              <Input
-                type="number"
-                min="0"
-                max="6"
-                value={gestationalDays}
-                onChange={(e) => setGestationalDays(e.target.value)}
-                placeholder="0-6"
-                className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-            <label className="block text-sm font-medium text-blue-700 mb-2">
-              Peso Fetal (gramos)
-            </label>
+        <AnimatedFormField
+          form={{ control: () => null }}
+          name="gestationalDays"
+          label="Días adicionales"
+          description="Entre 0 y 6 días"
+          icon={Calendar}
+          index={1}
+          control={
             <Input
               type="number"
-              value={fetalWeight}
-              onChange={(e) => setFetalWeight(e.target.value)}
-              placeholder="Ingrese el peso fetal en gramos"
-              className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white"
+              value={gestationalDays}
+              onChange={(e) => setGestationalDays(e.target.value)}
+              min="0"
+              max="6"
+              placeholder="Días (0-6)"
+              className="border-blue-200 focus:border-blue-500"
             />
-          </div>
-
-          <Button 
-            onClick={handleCalculate}
-            className="w-full bg-blue-600 hover:bg-blue-700"
-          >
-            Calcular
-          </Button>
-        </CardContent>
-      </Card>
-
-      {percentilResult && (
-        <div className="space-y-6" ref={resultsRef}>
-          <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-3 text-blue-700">Resultado del Análisis</h3>
-              <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
-                <p className="text-lg font-medium text-blue-700">{percentilResult}</p>
-              </div>
-              
-              <div className="mt-6 space-y-4" id="resultado-crecimiento-fetal">
-                <SpeechButton 
-                  text={percentilResult} 
-                  label="🔊 LEER RESULTADO EN VOZ ALTA" 
-                />
-                
-                <GeneratePDFButton 
-                  contentId="resultado-crecimiento-fetal" 
-                  fileName="crecimiento-fetal-informe" 
-                  label="📄 GENERAR INFORME PDF" 
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {curveData.length > 0 && (
-            <Card className="border-2 border-blue-100 shadow-sm overflow-hidden">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-3 text-blue-700">Curva de Crecimiento OMS</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  La gráfica muestra las curvas de percentiles 3, 50 y 97 según estándares OMS. El punto azul indica el peso fetal actual.
-                </p>
-                
-                {/* Gráfico de Líneas */}
-                <div className="w-full h-[400px] bg-white p-2 rounded-lg border border-blue-100">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={curveData}
-                      margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis 
-                        dataKey="semana" 
-                        type="number"
-                        domain={[14, 40]}
-                        label={{ value: 'Semanas', position: 'insideBottom', offset: -5 }}
-                      />
-                      <YAxis 
-                        type="number"
-                        domain={[0, 4200]}
-                        label={{ value: 'Peso (g)', angle: -90, position: 'insideLeft' }}
-                      />
-                      <Tooltip formatter={(value) => `${value}g`} />
-                      <Legend verticalAlign="top" height={36} />
-                      
-                      <Line
-                        type="monotone"
-                        dataKey="p3"
-                        name="Percentil 3"
-                        stroke="#ffa726"
-                        strokeWidth={1.5}
-                        dot={false}
-                        strokeDasharray="0"
-                        activeDot={false}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="p50"
-                        name="Percentil 50"
-                        stroke="#66bb6a"
-                        strokeWidth={1.5}
-                        dot={false}
-                        strokeDasharray="0"
-                        activeDot={false}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="p97"
-                        name="Percentil 97"
-                        stroke="#ef5350"
-                        strokeWidth={1.5}
-                        dot={false}
-                        strokeDasharray="0"
-                        activeDot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-                
-                {/* Gráfico de Puntos - Este se superpondrá visualmente sobre el primero */}
-                {pointData.length > 0 && (
-                  <div className="w-full h-[400px] -mt-[400px] p-2">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ScatterChart
-                        margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
-                      >
-                        <CartesianGrid opacity={0} /> {/* Grid transparente para que no interfiera */}
-                        <XAxis 
-                          type="number"
-                          dataKey="x"
-                          domain={[14, 40]}
-                          hide={true} // Ocultar eje para que no se duplique
-                        />
-                        <YAxis 
-                          type="number"
-                          dataKey="y"
-                          domain={[0, 4200]}
-                          hide={true} // Ocultar eje para que no se duplique
-                        />
-                        <ZAxis range={[100]} />
-                        <Tooltip 
-                          cursor={{strokeDasharray: '3 3'}}
-                          formatter={(value, name) => [`${value}g`, 'Peso Fetal']}
-                          labelFormatter={(label) => `Semana ${label}`}
-                        />
-                        <Scatter 
-                          name="Peso Fetal" 
-                          data={pointData} 
-                          fill="#2196f3"
-                          shape={(props: DotProps) => {
-                            const { cx, cy } = props;
-                            return (
-                              <circle
-                                cx={cx}
-                                cy={cy}
-                                r={6}
-                                stroke="#1565c0"
-                                strokeWidth={1.5}
-                                fill="#2196f3"
-                              />
-                            );
-                          }}
-                        />
-                      </ScatterChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
-                
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
+          }
+        />
+      </div>
+      
+      <AnimatedFormField
+        form={{ control: () => null }}
+        name="fetalWeight"
+        label="Peso fetal estimado (gramos)"
+        description="Peso en gramos según ecografía"
+        icon={Weight}
+        index={2}
+        control={
+          <Input
+            type="number"
+            value={fetalWeight}
+            onChange={(e) => setFetalWeight(e.target.value)}
+            min="100"
+            placeholder="Peso en gramos"
+            className="border-blue-200 focus:border-blue-500"
+          />
+        }
+      />
+      
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="mt-6"
+      >
+        <Button 
+          onClick={handleCalculate} 
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 font-bold text-lg shadow-md"
+        >
+          Calcular Percentil
+        </Button>
+      </motion.div>
     </div>
+  );
+
+  // Contenido del resultado
+  const resultContent = isCalculated ? (
+    <AnimatedResult
+      id="growth-chart-container"
+      fileName={`crecimiento-fetal-${format(new Date(), "yyyyMMdd")}`}
+      speechText={getSpeechText()}
+      riskLevel=""
+    >
+      <div className="space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-blue-50 p-4 rounded-lg"
+        >
+          <h3 className="text-lg font-semibold text-blue-800 mb-2">Resultado del cálculo:</h3>
+          <p className="text-lg">{percentilResult}</p>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <h3 className="text-lg font-semibold mb-2 text-center text-blue-700">Curva de Crecimiento Fetal</h3>
+          
+          <div className="w-full h-[400px] bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={curveData}
+                margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="semana" 
+                  type="number"
+                  domain={[14, 40]}
+                  label={{ value: 'Semanas', position: 'insideBottom', offset: -5 }}
+                />
+                <YAxis 
+                  type="number"
+                  domain={[0, 4200]}
+                  label={{ value: 'Peso (g)', angle: -90, position: 'insideLeft' }}
+                />
+                <Tooltip formatter={(value) => `${value}g`} />
+                <Legend verticalAlign="top" height={36} />
+                
+                <Line
+                  type="monotone"
+                  dataKey="p3"
+                  name="Percentil 3"
+                  stroke="#ffa726"
+                  strokeWidth={1.5}
+                  dot={false}
+                  strokeDasharray="0"
+                  activeDot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="p50"
+                  name="Percentil 50"
+                  stroke="#66bb6a"
+                  strokeWidth={1.5}
+                  dot={false}
+                  strokeDasharray="0"
+                  activeDot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="p97"
+                  name="Percentil 97"
+                  stroke="#ef5350"
+                  strokeWidth={1.5}
+                  dot={false}
+                  strokeDasharray="0"
+                  activeDot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          
+          {/* Gráfico de Puntos - Este se superpondrá visualmente sobre el primero */}
+          {pointData.length > 0 && (
+            <div className="w-full h-[400px] -mt-[400px] p-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart
+                  margin={{ top: 20, right: 40, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid opacity={0} /> {/* Grid transparente para que no interfiera */}
+                  <XAxis 
+                    type="number"
+                    dataKey="x"
+                    domain={[14, 40]}
+                    hide={true} // Ocultar eje para que no se duplique
+                  />
+                  <YAxis 
+                    type="number"
+                    dataKey="y"
+                    domain={[0, 4200]}
+                    hide={true} // Ocultar eje para que no se duplique
+                  />
+                  <ZAxis range={[100]} />
+                  <Tooltip 
+                    cursor={{strokeDasharray: '3 3'}}
+                    formatter={(value, name) => [`${value}g`, 'Peso Fetal']}
+                    labelFormatter={(label) => `Semana ${label}`}
+                  />
+                  <Scatter 
+                    name="Peso Fetal" 
+                    data={pointData} 
+                    fill="#2196f3"
+                    shape={(props: DotProps) => {
+                      const { cx, cy } = props;
+                      return (
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r={8}
+                          stroke="#1565c0"
+                          strokeWidth={2}
+                          fill="#2196f3"
+                        />
+                      );
+                    }}
+                  />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-sm text-gray-500 mt-3 flex items-start space-x-2"
+          >
+            <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <p>Este gráfico muestra la posición del peso fetal actual dentro de la curva de percentiles. Los rangos normales se encuentran generalmente entre el percentil 10 y 90.</p>
+          </motion.div>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-sm text-gray-500 mt-4 pt-2 border-t border-gray-100"
+        >
+          <p>Fecha del cálculo: {format(new Date(), "dd/MM/yyyy")}</p>
+        </motion.div>
+      </div>
+    </AnimatedResult>
+  ) : null;
+
+  // Contenido de información
+  const infoContent = (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-blue-800">Acerca de esta calculadora</h3>
+      
+      <p>
+        Esta herramienta calcula el percentil de crecimiento fetal según las curvas de la Organización Mundial de la Salud (OMS).
+        Es útil para evaluar si el crecimiento del feto está dentro de los rangos esperados para su edad gestacional.
+      </p>
+      
+      <h4 className="font-medium text-blue-700 mt-4">Interpretación de los percentiles:</h4>
+      
+      <div className="grid grid-cols-1 gap-3 mt-2">
+        <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+          <h5 className="font-medium text-red-600 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" /> Percentil &lt; 3
+          </h5>
+          <p className="text-sm text-gray-700">Crecimiento muy por debajo de lo esperado, requiere evaluación especializada para descartar restricción severa del crecimiento intrauterino.</p>
+        </div>
+        
+        <div className="bg-orange-50 p-3 rounded-lg border border-orange-100">
+          <h5 className="font-medium text-orange-600 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" /> Percentil 3-10
+          </h5>
+          <p className="text-sm text-gray-700">Crecimiento por debajo de lo esperado, requiere seguimiento cercano para evaluar la progresión del crecimiento.</p>
+        </div>
+        
+        <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+          <h5 className="font-medium text-green-600 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" /> Percentil 10-90
+          </h5>
+          <p className="text-sm text-gray-700">Crecimiento normal. Dentro del rango esperado para la edad gestacional.</p>
+        </div>
+        
+        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+          <h5 className="font-medium text-blue-600 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" /> Percentil &gt; 90
+          </h5>
+          <p className="text-sm text-gray-700">Crecimiento por encima de lo esperado, considerar evaluación para descartar diabetes gestacional o macrosomía fetal.</p>
+        </div>
+      </div>
+      
+      <div className="text-sm text-gray-500 mt-6 pt-4 border-t border-gray-100">
+        <p>
+          <strong>Referencias:</strong> Tablas de crecimiento fetal de la OMS (Organización Mundial de la Salud) y FIGO (Federación Internacional de Ginecología y Obstetricia).
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <CalculatorContainer
+      title="Calculadora de Percentil de Crecimiento Fetal"
+      description="Evalúa si el crecimiento del feto está dentro de los rangos esperados"
+      icon={BarChart2}
+      formContent={formContent}
+      resultContent={resultContent}
+      showResults={isCalculated}
+      infoContent={infoContent}
+    />
   );
 }
