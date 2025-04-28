@@ -84,80 +84,112 @@ export function LatestNews() {
   };
 
   return (
-    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 transition-all duration-300 hover:shadow-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
-          <Newspaper className="h-5 w-5 text-blue-500" />
+    <Card className="bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 border-blue-200 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500 opacity-10 rounded-full -mr-8 -mt-8 z-0"></div>
+      <div className="absolute bottom-0 left-0 w-16 h-16 bg-indigo-500 opacity-10 rounded-full -ml-6 -mb-6 z-0"></div>
+      
+      <CardHeader className="pb-2 relative z-10">
+        <CardTitle className="text-xl text-blue-800 flex items-center gap-2 font-bold">
+          <div className="bg-blue-600 text-white p-1.5 rounded-lg shadow-sm">
+            <Newspaper className="h-5 w-5" />
+          </div>
           Noticias al Día
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      
+      <CardContent className="relative z-10">
         {loading ? (
-          <div className="space-y-3">
-            <Skeleton className="h-6 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
+          <div className="space-y-3 p-2">
+            <Skeleton className="h-6 w-full rounded-md" />
+            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-4 w-3/4 rounded-md" />
+            <Skeleton className="h-4 w-1/2 rounded-md" />
+            <div className="flex justify-center mt-4">
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
           </div>
         ) : error ? (
-          <div className="text-center py-4">
-            <p className="text-red-500">{error}</p>
+          <div className="text-center py-6 px-4 bg-red-50 rounded-lg border border-red-100">
+            <p className="text-red-600 font-medium">{error}</p>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={handleRefresh}
-              className="mt-2"
+              className="mt-3 bg-white border-red-200 hover:bg-red-50 text-red-600"
             >
               <RefreshCcw className="h-4 w-4 mr-1" />
               Reintentar
             </Button>
           </div>
         ) : news.length > 0 ? (
-          <div className="min-h-[150px]">
-            <div className="mb-2 space-y-1">
-              <div className="flex justify-between">
-                <h3 className="font-medium text-blue-700">{news[currentIndex].title}</h3>
-                <div className="text-xs text-gray-500">{news[currentIndex].date}</div>
+          <div className="min-h-[180px] relative">
+            <div className="p-3 bg-white bg-opacity-70 backdrop-blur-sm rounded-lg shadow-sm border border-blue-100 mb-4">
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-start justify-between">
+                  <div className="inline-flex items-center gap-1.5">
+                    <span className="inline-block w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
+                      Actualidad
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full font-medium">
+                    {news[currentIndex].date}
+                  </div>
+                </div>
+                
+                <h3 className="font-semibold text-blue-800">{news[currentIndex].title}</h3>
+                <p className="text-sm text-gray-700 line-clamp-3">{news[currentIndex].description}</p>
+                
+                <a 
+                  href={news[currentIndex].link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:text-blue-800 transition-colors flex items-center mt-1 font-medium"
+                >
+                  Leer completo <ExternalLink className="h-3 w-3 ml-1" />
+                </a>
               </div>
-              <p className="text-sm text-gray-700 line-clamp-3">{news[currentIndex].description}</p>
             </div>
             
             {news.length > 1 && (
-              <div className="flex justify-between items-center mt-4 text-xs">
+              <div className="flex justify-between items-center">
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={handlePrevious}
-                  className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 p-1 h-auto"
+                  className="bg-white text-blue-600 border-blue-200 hover:bg-blue-50 rounded-full p-1 h-8 w-8 flex items-center justify-center"
+                  aria-label="Noticia anterior"
                 >
-                  ← Anterior
+                  ←
                 </Button>
-                <div className="text-gray-600 font-medium bg-gray-100 px-2 py-1 rounded">
+                <div className="text-xs text-gray-600 font-medium bg-white px-2 py-1 rounded-full border border-gray-200 shadow-sm">
                   {currentIndex + 1} de {news.length}
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={handleNext}
-                  className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 p-1 h-auto"
+                  className="bg-white text-blue-600 border-blue-200 hover:bg-blue-50 rounded-full p-1 h-8 w-8 flex items-center justify-center"
+                  aria-label="Siguiente noticia"
                 >
-                  Siguiente →
+                  →
                 </Button>
               </div>
             )}
           </div>
         ) : (
-          <div className="text-center py-4">
-            <p className="text-gray-500">No hay noticias disponibles en este momento.</p>
+          <div className="text-center py-6 bg-gray-50 rounded-lg border border-gray-100">
+            <p className="text-gray-500 font-medium">No hay noticias disponibles en este momento.</p>
           </div>
         )}
       </CardContent>
-      <CardFooter className="pt-0 flex justify-between">
+      
+      <CardFooter className="pt-0 flex justify-between items-center relative z-10">
         <Button 
           variant="outline" 
           size="sm" 
           onClick={handleRefresh}
-          className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"
+          className="bg-white text-blue-600 border-blue-200 hover:bg-blue-50 rounded-md"
         >
           <RefreshCcw className="h-4 w-4 mr-1" />
           Actualizar
@@ -167,7 +199,7 @@ export function LatestNews() {
           href="https://www.acog.org/news" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors"
+          className="flex items-center text-xs bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors shadow-sm"
         >
           Visitar ACOG <ExternalLink className="h-3 w-3 ml-1" />
         </a>
@@ -186,10 +218,35 @@ export function NewsExplorer() {
   return (
     <div className="space-y-6">
       <LatestNews />
-      <div className="border-t border-gray-100 pt-4 mt-6">
-        <p className="text-sm text-gray-600 italic">
-          Las noticias mostradas son obtenidas de la <a href="https://www.acog.org/news" target="_blank" rel="noopener noreferrer" className="bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 transition-colors font-medium">American College of Obstetricians and Gynecologists (ACOG)</a> y se actualizan regularmente para mantenerle informado sobre los últimos avances en la especialidad.
-        </p>
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-200 shadow-sm mt-6">
+        <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-200 opacity-30 rounded-full"></div>
+        <div className="absolute -left-4 -top-4 w-16 h-16 bg-indigo-200 opacity-30 rounded-full"></div>
+        
+        <div className="relative z-10">
+          <h3 className="text-blue-800 font-bold mb-2 flex items-center gap-2">
+            <div className="p-1 bg-blue-700 text-white rounded-md">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            Fuente de información
+          </h3>
+          
+          <p className="text-sm text-gray-700 mb-3 leading-relaxed max-w-2xl">
+            Las noticias mostradas son obtenidas de la <a href="https://www.acog.org/news" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md hover:bg-blue-200 transition-colors font-medium">American College of Obstetricians and Gynecologists <ExternalLink className="h-3 w-3" /></a> y se actualizan regularmente para mantenerle informado sobre los últimos avances en la especialidad.
+          </p>
+          
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex -space-x-2">
+              <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-sm text-xs">N</div>
+              <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-white shadow-sm text-xs">O</div>
+              <div className="w-7 h-7 rounded-full bg-blue-400 flex items-center justify-center text-white shadow-sm text-xs">T</div>
+            </div>
+            <span className="text-xs font-medium text-gray-600 bg-white px-2 py-0.5 rounded-full shadow-sm border border-gray-200">
+              Actualizado diariamente
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
