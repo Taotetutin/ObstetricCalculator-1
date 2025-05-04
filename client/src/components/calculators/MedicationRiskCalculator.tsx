@@ -54,27 +54,43 @@ export function MedicationRiskCalculator() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Función para realizar la búsqueda manual cuando se hace clic en OK
+  // Función para realizar la búsqueda y mostrar automáticamente el primer resultado
   const handleSearch = () => {
     // Si hay un término de búsqueda válido, realizar búsqueda por nombre
     if (searchTerm.trim().length > 2) {
       const results = searchMedicationsByName(searchTerm);
       
-      // Si además hay categoría seleccionada, filtrar resultados por categoría
+      // Filtrar por categoría si es necesario
+      let filteredResults = results;
       if (selectedCategory && selectedCategory !== 'all') {
-        setSearchResults(results.filter(med => med.category === selectedCategory));
+        filteredResults = results.filter(med => med.category === selectedCategory);
+      }
+      
+      setSearchResults(filteredResults);
+      
+      // Si hay resultados, seleccionar automáticamente el primero
+      if (filteredResults.length > 0) {
+        setSelectedMedication(filteredResults[0]);
       } else {
-        setSearchResults(results);
+        setSelectedMedication(null);
       }
     } 
     // Si no hay término de búsqueda pero hay categoría seleccionada
     else if (selectedCategory && selectedCategory !== 'all') {
       const results = getMedicationsByCategory(selectedCategory as FDACategory);
       setSearchResults(results);
+      
+      // Seleccionar el primer resultado si existe
+      if (results.length > 0) {
+        setSelectedMedication(results[0]);
+      } else {
+        setSelectedMedication(null);
+      }
     } 
     // Si no hay término ni categoría específica
     else {
       setSearchResults([]);
+      setSelectedMedication(null);
     }
   };
   
@@ -281,23 +297,25 @@ export function MedicationRiskCalculator() {
                 transition={{ duration: 0.3 }}
               >
                 <Card className="border-blue-100 shadow">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+                  <CardHeader 
+                    className={`${getCategoryColor(selectedMedication.category)} bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100`}
+                  >
                     <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
                       <div className="flex items-start gap-3 w-full">
-                        <div className={`p-2 rounded-full ${getCategoryColor(selectedMedication.category)} flex-shrink-0`}>
+                        <div className={`p-3 rounded-full bg-white shadow-inner flex-shrink-0`}>
                           {getCategoryIcon(selectedMedication.category)}
                         </div>
                         <div className="flex-1">
-                          <CardTitle className="text-xl text-blue-800 break-words">{selectedMedication.name}</CardTitle>
-                          <CardDescription className="text-sm text-blue-700 mt-1">
+                          <CardTitle className="text-xl text-blue-900 break-words font-bold">{selectedMedication.name}</CardTitle>
+                          <CardDescription className="text-sm text-blue-800 mt-1 font-medium">
                             {selectedMedication.description}
                           </CardDescription>
                         </div>
                       </div>
                       <Badge 
-                        className={`text-xs ${getCategoryColor(selectedMedication.category)} px-3 py-1 self-start mt-1 sm:mt-0 sm:ml-2 flex-shrink-0`}
+                        className={`text-sm ${getCategoryColor(selectedMedication.category)} px-4 py-1.5 self-start mt-1 sm:mt-0 sm:ml-2 flex-shrink-0 font-bold shadow-sm`}
                       >
-                        FDA Categoría {selectedMedication.category}
+                        FDA {selectedMedication.category}
                       </Badge>
                     </div>
                   </CardHeader>
@@ -326,30 +344,30 @@ export function MedicationRiskCalculator() {
                       </TabsList>
 
                       <TabsContent value="risks" className="p-6">
-                        <div className="space-y-4">
-                          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-md">
-                            <h3 className="font-semibold text-yellow-800 flex items-center gap-2">
-                              <AlertTriangle className="h-4 w-4" />
+                        <div className="space-y-5">
+                          <div className={`${getCategoryColor(selectedMedication.category)} p-5 rounded-lg shadow-md border border-blue-200`}>
+                            <h3 className="font-bold text-blue-900 flex items-center gap-2 text-lg mb-2">
+                              <AlertTriangle className="h-5 w-5" />
                               Resumen de seguridad
                             </h3>
-                            <p className="text-sm text-yellow-700 mt-1">
+                            <p className="text-blue-800 mt-1 font-medium">
                               {getSafetySummary(selectedMedication.category)}
                             </p>
                           </div>
 
-                          <div>
-                            <h3 className="font-semibold text-blue-800 mb-2">Riesgos Potenciales</h3>
-                            <p className="text-gray-700 text-sm leading-relaxed">
+                          <div className="bg-white p-5 rounded-lg shadow-sm border border-blue-100">
+                            <h3 className="font-bold text-blue-800 mb-3 text-lg">Riesgos Potenciales</h3>
+                            <p className="text-gray-700 leading-relaxed">
                               {selectedMedication.risks}
                             </p>
                           </div>
 
-                          <div className="bg-blue-50 p-4 rounded-md">
-                            <h3 className="font-semibold text-blue-800 mb-1 flex items-center gap-2">
-                              <Info className="h-4 w-4 text-blue-600" />
+                          <div className="bg-blue-50 p-5 rounded-lg shadow-sm border border-blue-200">
+                            <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2 text-lg">
+                              <Info className="h-5 w-5 text-blue-600" />
                               Detalles de la categoría
                             </h3>
-                            <p className="text-sm text-gray-700">
+                            <p className="text-gray-700">
                               {fdaCategoryDescriptions[selectedMedication.category]}
                             </p>
                           </div>
