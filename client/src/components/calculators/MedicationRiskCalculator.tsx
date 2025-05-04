@@ -196,22 +196,22 @@ export function MedicationRiskCalculator() {
             >
               <Card className="border-blue-100 shadow w-full">
                 <CardHeader 
-                  className={`${getCategoryColor(selectedMedication.category)} bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100`}
+                  className={`${getCategoryColor(selectedMedication.category)} bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 p-4 sm:p-6`}
                 >
-                  <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                     <div className="flex items-start gap-3 w-full">
-                      <div className={`p-3 rounded-full bg-white shadow-inner flex-shrink-0`}>
+                      <div className={`p-2.5 sm:p-3 rounded-full bg-white shadow-inner flex-shrink-0`}>
                         {getCategoryIcon(selectedMedication.category)}
                       </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl text-blue-900 break-words font-bold">{selectedMedication.name}</CardTitle>
-                        <CardDescription className="text-sm text-blue-800 mt-1 font-medium">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg sm:text-xl text-blue-900 break-words font-bold leading-tight">{selectedMedication.name}</CardTitle>
+                        <CardDescription className="text-xs sm:text-sm text-blue-800 mt-1 font-medium line-clamp-2 sm:line-clamp-none">
                           {selectedMedication.description}
                         </CardDescription>
                       </div>
                     </div>
                     <Badge 
-                      className={`text-sm ${getCategoryColor(selectedMedication.category)} px-4 py-1.5 self-start mt-1 sm:mt-0 sm:ml-2 flex-shrink-0 font-bold shadow-sm`}
+                      className={`text-sm ${getCategoryColor(selectedMedication.category)} px-3 py-1 sm:px-4 sm:py-1.5 self-start mt-1 sm:mt-0 flex-shrink-0 font-bold shadow-sm`}
                     >
                       FDA {selectedMedication.category}
                     </Badge>
@@ -223,68 +223,68 @@ export function MedicationRiskCalculator() {
                     <TabsList className="w-full overflow-x-auto flex-nowrap bg-blue-50 rounded-none border-b border-blue-100 p-0">
                       <TabsTrigger
                         value="risks"
-                        className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                        className="text-xs sm:text-sm px-3 sm:px-6 py-2 sm:py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                       >
                         Riesgos
                       </TabsTrigger>
                       <TabsTrigger
                         value="recommendations"
-                        className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                        className="text-xs sm:text-sm px-3 sm:px-6 py-2 sm:py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                       >
                         Recomendaciones
                       </TabsTrigger>
                       <TabsTrigger
                         value="alternatives"
-                        className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                        className="text-xs sm:text-sm px-3 sm:px-6 py-2 sm:py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                       >
                         Alternativas
                       </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="risks" className="p-6">
-                      <div className="space-y-5">
-                        <div className={`${getCategoryColor(selectedMedication.category)} p-5 rounded-lg shadow-md border border-blue-200`}>
-                          <h3 className="font-bold text-blue-900 flex items-center gap-2 text-lg mb-2">
-                            <AlertTriangle className="h-5 w-5" />
+                    <TabsContent value="risks" className="p-3 sm:p-6">
+                      <div className="space-y-4 sm:space-y-5">
+                        <div className={`${getCategoryColor(selectedMedication.category)} p-4 sm:p-5 rounded-lg shadow-md border border-blue-200`}>
+                          <h3 className="font-bold text-blue-900 flex items-center gap-2 text-base sm:text-lg mb-1 sm:mb-2">
+                            <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5" />
                             Resumen de seguridad
                           </h3>
-                          <p className="text-blue-800 mt-1 font-medium">
+                          <p className="text-blue-800 mt-1 font-medium text-sm sm:text-base">
                             {getSafetySummary(selectedMedication.category)}
                           </p>
                         </div>
 
-                        <div className="bg-white p-5 rounded-lg shadow-sm border border-blue-100">
-                          <h3 className="font-bold text-blue-800 mb-3 text-lg">Riesgos Potenciales</h3>
-                          <p className="text-gray-700 leading-relaxed">
+                        <div className="bg-white p-4 sm:p-5 rounded-lg shadow-sm border border-blue-100">
+                          <h3 className="font-bold text-blue-800 mb-2 sm:mb-3 text-base sm:text-lg">Riesgos Potenciales</h3>
+                          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                             {selectedMedication.risks}
                           </p>
                         </div>
 
-                        <div className="bg-blue-50 p-5 rounded-lg shadow-sm border border-blue-200">
-                          <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2 text-lg">
-                            <Info className="h-5 w-5 text-blue-600" />
+                        <div className="bg-blue-50 p-4 sm:p-5 rounded-lg shadow-sm border border-blue-200">
+                          <h3 className="font-bold text-blue-800 mb-1 sm:mb-2 flex items-center gap-2 text-base sm:text-lg">
+                            <Info className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                             Detalles de la categoría
                           </h3>
-                          <p className="text-gray-700">
+                          <p className="text-gray-700 text-sm sm:text-base">
                             {fdaCategoryDescriptions[selectedMedication.category]}
                           </p>
                         </div>
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="recommendations" className="p-6">
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-blue-800 mb-1">Recomendaciones Clínicas</h3>
-                        <p className="text-gray-700 text-sm leading-relaxed">
+                    <TabsContent value="recommendations" className="p-3 sm:p-6">
+                      <div className="space-y-3 sm:space-y-4">
+                        <h3 className="font-semibold text-blue-800 mb-1 text-base sm:text-lg">Recomendaciones Clínicas</h3>
+                        <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
                           {selectedMedication.recommendations}
                         </p>
 
-                        <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-md mt-4">
-                          <h3 className="font-semibold text-indigo-800 mb-2 flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4 text-indigo-600" />
+                        <div className="bg-indigo-50 border border-indigo-100 p-3 sm:p-4 rounded-md mt-3 sm:mt-4">
+                          <h3 className="font-semibold text-indigo-800 mb-1 sm:mb-2 flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
+                            <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-600" />
                             Consideraciones importantes
                           </h3>
-                          <ul className="text-sm text-gray-700 space-y-2 list-disc pl-5">
+                          <ul className="text-xs sm:text-sm text-gray-700 space-y-1 sm:space-y-2 list-disc pl-4 sm:pl-5">
                             <li>Todos los medicamentos deben utilizarse solo bajo supervisión médica durante el embarazo.</li>
                             <li>El riesgo y beneficio deben ser evaluados individualmente por un profesional de la salud.</li>
                             <li>La información proporcionada tiene fines educativos y no reemplaza el consejo médico profesional.</li>
@@ -294,30 +294,30 @@ export function MedicationRiskCalculator() {
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="alternatives" className="p-6">
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-blue-800 mb-1">Alternativas Potenciales</h3>
+                    <TabsContent value="alternatives" className="p-3 sm:p-6">
+                      <div className="space-y-3 sm:space-y-4">
+                        <h3 className="font-semibold text-blue-800 mb-1 text-base sm:text-lg">Alternativas Potenciales</h3>
 
                         {selectedMedication.alternatives.length > 0 ? (
-                          <div className="grid grid-cols-1 gap-3">
+                          <div className="grid grid-cols-1 gap-2 sm:gap-3">
                             {selectedMedication.alternatives.map((alternative, index) => (
                               <div 
                                 key={index} 
-                                className="bg-white border border-blue-100 rounded-md p-3 shadow-sm"
+                                className="bg-white border border-blue-100 rounded-md p-2 sm:p-3 shadow-sm"
                               >
-                                <p className="text-gray-700 text-sm">• {alternative}</p>
+                                <p className="text-gray-700 text-xs sm:text-sm">• {alternative}</p>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <p className="text-gray-500 italic text-sm">
+                          <p className="text-gray-500 italic text-xs sm:text-sm">
                             No se han especificado alternativas para este medicamento.
                           </p>
                         )}
 
-                        <div className="bg-blue-50 border border-blue-100 p-4 rounded-md mt-6">
-                          <h3 className="font-semibold text-blue-800 mb-2">Nota importante</h3>
-                          <p className="text-sm text-gray-700">
+                        <div className="bg-blue-50 border border-blue-100 p-3 sm:p-4 rounded-md mt-4 sm:mt-6">
+                          <h3 className="font-semibold text-blue-800 mb-1 sm:mb-2 text-sm sm:text-base">Nota importante</h3>
+                          <p className="text-xs sm:text-sm text-gray-700">
                             Las alternativas listadas son solo sugerencias generales. La elección de un medicamento 
                             alternativo debe realizarse en consulta con un profesional de salud, considerando 
                             la condición específica de la paciente, la etapa del embarazo y otros factores relevantes.
@@ -355,23 +355,23 @@ export function MedicationRiskCalculator() {
             >
               {/* Mostrar categorías FDA cuando no hay resultado seleccionado */}
               <Card className="bg-blue-50/30 border-blue-100 shadow-sm w-full mt-4">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-blue-800">Categorías de la FDA</CardTitle>
-                  <CardDescription>
+                <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-4">
+                  <CardTitle className="text-sm sm:text-base text-blue-800">Categorías de la FDA</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
                     Estas categorías ayudan a entender el nivel de riesgo de los medicamentos durante el embarazo
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-2 sm:p-3">
                   <Accordion type="single" collapsible className="w-full bg-white rounded-lg overflow-hidden">
                     {(Object.keys(fdaCategoryDescriptions) as FDACategory[]).map((category) => (
                       <AccordionItem key={category} value={category} className="border-blue-100">
-                        <AccordionTrigger className={`text-sm px-3 py-2 ${getCategoryColor(category)}`}>
-                          <div className="flex items-center gap-2">
+                        <AccordionTrigger className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 ${getCategoryColor(category)}`}>
+                          <div className="flex items-center gap-1.5 sm:gap-2">
                             {getCategoryIcon(category)}
                             <span>Categoría {category}</span>
                           </div>
                         </AccordionTrigger>
-                        <AccordionContent className="px-3 py-2 text-xs text-gray-700">
+                        <AccordionContent className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs text-gray-700">
                           {fdaCategoryDescriptions[category]}
                         </AccordionContent>
                       </AccordionItem>
@@ -383,9 +383,9 @@ export function MedicationRiskCalculator() {
           )}
         </AnimatePresence>
 
-        <div className="mt-8 bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-gray-600">
-          <h3 className="font-semibold text-blue-800 mb-2">Descargo de responsabilidad</h3>
-          <p className="mb-2">
+        <div className="mt-6 sm:mt-8 bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm text-gray-600">
+          <h3 className="font-semibold text-blue-800 mb-1 sm:mb-2 text-sm sm:text-base">Descargo de responsabilidad</h3>
+          <p className="mb-1 sm:mb-2">
             Esta herramienta proporciona información con fines educativos y no reemplaza el consejo médico profesional. 
             Todas las decisiones sobre medicamentos durante el embarazo deben ser tomadas junto con un profesional de la salud.
           </p>
