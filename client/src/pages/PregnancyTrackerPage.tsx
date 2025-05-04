@@ -148,16 +148,7 @@ export default function PregnancyTrackerPage() {
                   <span className="text-sm text-pink-800">Considera tomar clases de preparación para el parto.</span>
                 </li>
               </ul>
-              <div className="mt-4">
-                <Link href="/calculadora/riesgo-medicamentos">
-                  <Button
-                    variant="outline"
-                    className="w-full border-pink-200 text-pink-700 hover:bg-pink-50 hover:text-pink-800"
-                  >
-                    Verificar Medicamentos Seguros
-                  </Button>
-                </Link>
-              </div>
+              {/* Sección de verificación de medicamentos eliminada */}
             </CardContent>
           </Card>
         </div>
