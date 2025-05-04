@@ -42,13 +42,22 @@ async function main() {
     
     console.log('Users table created successfully');
     
-    // Crear un usuario de prueba
-    const password = '$2a$10$MOwB1yoH1ZdCpOoNFhPkPulxjdH0UWkW85ELA9Hm4u4XG5nzpYMV.'; // hash para "123456"
+    // Crear un usuario de prueba con criptografía compatible con nuestra función de autenticación
+    // Utilizamos scrypt como se hace en auth.ts
+    const crypto = await import('crypto');
+    const { scrypt, randomBytes } = crypto;
+    const { promisify } = await import('util');
+    
+    const scryptAsync = promisify(scrypt);
+    const salt = randomBytes(16).toString("hex");
+    const buf = await scryptAsync("123456", salt, 64);
+    const hashedPassword = `${buf.toString("hex")}.${salt}`;
+    
     await pool.query(`
       INSERT INTO users (email, password, name, role)
       VALUES ('test@example.com', $1, 'Usuario de Prueba', 'user')
       ON CONFLICT (email) DO NOTHING;
-    `, [password]);
+    `, [hashedPassword]);
     
     console.log('Test user created successfully');
     
