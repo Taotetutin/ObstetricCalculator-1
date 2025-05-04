@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function MedicationGeminiCalculator() {
@@ -7,6 +7,9 @@ function MedicationGeminiCalculator() {
   const [selectedMedication, setSelectedMedication] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [geminiResult, setGeminiResult] = useState(null);
+  const [streamingResponse, setStreamingResponse] = useState("");
+  const [activeTab, setActiveTab] = useState("gemini"); // "gemini" o "fda"
 
   // Descripción de las categorías FDA
   const fdaCategories = {
@@ -17,8 +20,41 @@ function MedicationGeminiCalculator() {
     X: "Contraindicado en el embarazo. Estudios en animales o humanos han demostrado anormalidades fetales o hay evidencia de riesgo fetal basada en la experiencia humana, y los riesgos superan claramente cualquier posible beneficio."
   };
 
+  // Función para buscar medicamentos usando Google Gemini (como lo hace Create)
+  const searchWithGemini = async () => {
+    if (!searchTerm.trim()) return;
+
+    setLoading(true);
+    setError("");
+    setGeminiResult(null);
+    setStreamingResponse("");
+
+    try {
+      console.log("Consultando información sobre:", searchTerm);
+      const response = await axios.post('/api/medications/gemini', {
+        term: searchTerm
+      });
+      
+      console.log("Respuesta recibida de Gemini:", response.data);
+      
+      if (response.data.sections) {
+        setGeminiResult({
+          name: response.data.medicationName,
+          ...response.data.sections
+        });
+      } else {
+        setError("No se pudo procesar la información recibida.");
+      }
+    } catch (error) {
+      console.error("Error consultando a Gemini:", error);
+      setError("Error al obtener información. Por favor, intente de nuevo más tarde.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Función para buscar en OpenFDA API a través de nuestro backend
-  const searchMedications = async () => {
+  const searchWithFDA = async () => {
     if (!searchTerm.trim()) return;
 
     setLoading(true);
@@ -27,7 +63,7 @@ function MedicationGeminiCalculator() {
 
     try {
       // Consultar a nuestro propio backend, que a su vez consulta a la API de OpenFDA
-      console.log("Buscando medicamento:", searchTerm);
+      console.log("Buscando medicamento en FDA:", searchTerm);
       const response = await axios.get(`/api/medications/search?term=${encodeURIComponent(searchTerm)}`);
       
       if (response.data.medications && response.data.medications.length > 0) {
@@ -58,6 +94,15 @@ function MedicationGeminiCalculator() {
       setError("Error al comunicarse con la API. Por favor, intente de nuevo más tarde.");
     } finally {
       setLoading(false);
+    }
+  };
+  
+  // Función principal de búsqueda que decide qué método usar
+  const searchMedications = () => {
+    if (activeTab === "gemini") {
+      searchWithGemini();
+    } else {
+      searchWithFDA();
     }
   };
 
@@ -138,6 +183,30 @@ function MedicationGeminiCalculator() {
       </div>
       
       <div className="p-5">
+        {/* Selector de métodos de búsqueda */}
+        <div className="flex mb-4 border-b">
+          <button
+            onClick={() => setActiveTab("gemini")}
+            className={`px-4 py-2 font-medium text-sm ${
+              activeTab === "gemini"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Búsqueda inteligente
+          </button>
+          <button
+            onClick={() => setActiveTab("fda")}
+            className={`px-4 py-2 font-medium text-sm ${
+              activeTab === "fda"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Base de datos FDA
+          </button>
+        </div>
+        
         <div className="mb-4">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="relative flex-grow">

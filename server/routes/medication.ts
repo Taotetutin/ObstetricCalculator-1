@@ -3,7 +3,82 @@ import axios from 'axios';
 
 const router = Router();
 
-// Endpoint para buscar medicamentos en la API de la FDA
+// Endpoint para buscar medicamentos usando Gemini (Método que usa Create.xyz)
+router.post('/api/medications/gemini', async (req, res) => {
+  const { term } = req.body;
+  
+  if (!term || typeof term !== 'string') {
+    return res.status(400).json({ error: 'Se requiere un término de búsqueda válido' });
+  }
+  
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  if (!GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'API key de Gemini no configurada' });
+  }
+  
+  try {
+    const prompt = `Actúa como un experto farmacéutico y proporciona información sobre la clasificación FDA del medicamento "${term}" durante el embarazo. Responde en español, con el siguiente formato exacto:
+
+Categoría FDA: [categoría]
+Descripción: [descripción detallada de la categoría]
+Riesgos: [lista de riesgos potenciales]
+Recomendaciones: [recomendaciones específicas]`;
+
+    console.log(`Consultando a Gemini sobre: ${term}`);
+    
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              { text: prompt }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        }
+      }
+    );
+    
+    // Extraer el texto de la respuesta
+    const responseText = response.data.candidates[0].content.parts[0].text;
+    console.log("Respuesta recibida de Gemini");
+    
+    // Procesar la respuesta para extraer las secciones
+    const sections = responseText.split("\n").reduce((acc: any, line: string) => {
+      if (line.toLowerCase().includes("categoría fda:")) {
+        acc.categoria = line.split(":")[1].trim();
+      } else if (line.toLowerCase().includes("descripción:")) {
+        acc.descripcion = line.split(":")[1].trim();
+      } else if (line.toLowerCase().includes("riesgos:")) {
+        acc.riesgos = line.split(":")[1].trim();
+      } else if (line.toLowerCase().includes("recomendaciones:")) {
+        acc.recomendaciones = line.split(":")[1].trim();
+      }
+      return acc;
+    }, {});
+    
+    res.json({ 
+      sections,
+      medicationName: term,
+      rawText: responseText
+    });
+    
+  } catch (error: any) {
+    console.error('Error consultando a Gemini:', error.message);
+    res.status(500).json({ 
+      error: 'Error consultando la información del medicamento',
+      details: error.message
+    });
+  }
+});
+
+// Endpoint para buscar medicamentos en la API de la FDA (método original)
 router.get('/api/medications/search', async (req, res) => {
   const { term } = req.query;
   
