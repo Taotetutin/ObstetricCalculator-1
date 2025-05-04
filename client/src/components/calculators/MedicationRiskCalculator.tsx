@@ -38,6 +38,8 @@ export function MedicationRiskCalculator() {
   const [searchResults, setSearchResults] = useState<MedicationInfo[]>([]);
   const [selectedMedication, setSelectedMedication] = useState<MedicationInfo | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSearchingFDA, setIsSearchingFDA] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   useEffect(() => {
     // Detectar si es dispositivo móvil
@@ -56,24 +58,57 @@ export function MedicationRiskCalculator() {
   }, []);
 
   // Función para realizar la búsqueda y mostrar automáticamente el primer resultado
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    // Resetear errores previos
+    setSearchError(null);
+    
     // Si hay un término de búsqueda válido, realizar búsqueda por nombre
     if (searchTerm.trim().length > 2) {
-      const results = searchMedicationsByName(searchTerm);
+      // Primero buscar en la base de datos local
+      const localResults = searchMedicationsByName(searchTerm);
       
       // Filtrar por categoría si es necesario
-      let filteredResults = results;
+      let filteredResults = localResults;
       if (selectedCategory && selectedCategory !== 'all') {
-        filteredResults = results.filter(med => med.category === selectedCategory);
+        filteredResults = localResults.filter(med => med.category === selectedCategory);
       }
       
-      setSearchResults(filteredResults);
-      
-      // Si hay resultados, seleccionar automáticamente el primero
+      // Si encontramos resultados localmente, los mostramos
       if (filteredResults.length > 0) {
+        setSearchResults(filteredResults);
         setSelectedMedication(filteredResults[0]);
-      } else {
+        return;
+      }
+      
+      // Si no hay resultados locales, buscar en la API de la FDA
+      try {
+        setIsSearchingFDA(true);
+        const fdaMedication = await searchMedicationInFDA(searchTerm);
+        
+        if (fdaMedication) {
+          // Si encontramos el medicamento en la FDA y cumple con el filtro de categoría
+          if (selectedCategory === 'all' || fdaMedication.category === selectedCategory) {
+            setSearchResults([fdaMedication]);
+            setSelectedMedication(fdaMedication);
+          } else {
+            // Si el medicamento no cumple con el filtro de categoría
+            setSearchResults([]);
+            setSelectedMedication(null);
+            setSearchError(`No se encontraron medicamentos de categoría ${selectedCategory} para "${searchTerm}".`);
+          }
+        } else {
+          // No se encontró el medicamento ni localmente ni en la FDA
+          setSearchResults([]);
+          setSelectedMedication(null);
+          setSearchError(`No se encontró información para "${searchTerm}" en nuestra base de datos ni en la FDA.`);
+        }
+      } catch (error) {
+        console.error("Error al buscar en la API de la FDA:", error);
+        setSearchResults([]);
         setSelectedMedication(null);
+        setSearchError("Error al conectar con la base de datos de la FDA. Por favor, intente nuevamente más tarde.");
+      } finally {
+        setIsSearchingFDA(false);
       }
     } 
     // Si no hay término de búsqueda pero hay categoría seleccionada
@@ -86,12 +121,14 @@ export function MedicationRiskCalculator() {
         setSelectedMedication(results[0]);
       } else {
         setSelectedMedication(null);
+        setSearchError(`No se encontraron medicamentos de categoría ${selectedCategory}.`);
       }
     } 
     // Si no hay término ni categoría específica
     else {
       setSearchResults([]);
       setSelectedMedication(null);
+      setSearchError("Por favor, ingrese al menos 3 caracteres para buscar un medicamento.");
     }
   };
   
@@ -105,7 +142,7 @@ export function MedicationRiskCalculator() {
     
     document.addEventListener('keydown', handleEnterKey);
     return () => document.removeEventListener('keydown', handleEnterKey);
-  }, [searchTerm]);
+  }, [searchTerm, selectedCategory]);
 
 
 
@@ -178,9 +215,26 @@ export function MedicationRiskCalculator() {
                     handleSearch();
                   }
                 }}
+                disabled={isSearchingFDA}
               >
-                OK
+                {isSearchingFDA ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Buscando en FDA...
+                  </>
+                ) : (
+                  "OK"
+                )}
               </Button>
+              
+              {searchError && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700 text-sm">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-500 mt-0.5" />
+                    <p>{searchError}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -211,11 +265,20 @@ export function MedicationRiskCalculator() {
                         </CardDescription>
                       </div>
                     </div>
-                    <Badge 
-                      className={`text-sm ${getCategoryColor(selectedMedication.category)} px-3 py-1 sm:px-4 sm:py-1.5 self-start mt-1 sm:mt-0 flex-shrink-0 font-bold shadow-sm`}
-                    >
-                      FDA {selectedMedication.category}
-                    </Badge>
+                    <div className="flex flex-col gap-1.5">
+                      <Badge 
+                        className={`text-sm ${getCategoryColor(selectedMedication.category)} px-3 py-1 sm:px-4 sm:py-1.5 self-start mt-1 sm:mt-0 flex-shrink-0 font-bold shadow-sm`}
+                      >
+                        FDA {selectedMedication.category}
+                      </Badge>
+                      
+                      {selectedMedication.isFromFDA && (
+                        <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700 flex items-center gap-1 px-2 py-0.5">
+                          <Database className="h-3 w-3" />
+                          Datos FDA
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
 
