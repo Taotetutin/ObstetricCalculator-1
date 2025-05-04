@@ -38,9 +38,10 @@ export interface MedicationInfo {
   risks: string;
   recommendations: string;
   alternatives: string[];
+  isFromFDA?: boolean; // Indica si los datos provienen de la API de la FDA
 }
 
-// Descripciones de las categorías FDA
+// Base de conocimiento sobre categorías de la FDA
 export const fdaCategoryDescriptions: Record<FDACategory, string> = {
   [FDACategory.A]: "Estudios adecuados y bien controlados no han demostrado un riesgo para el feto en el primer trimestre del embarazo (y no hay evidencia de riesgo en trimestres posteriores).",
   [FDACategory.B]: "Estudios en animales no han demostrado un riesgo para el feto, pero no hay estudios adecuados y bien controlados en mujeres embarazadas; o estudios en animales han mostrado un efecto adverso, pero estudios adecuados y bien controlados en mujeres embarazadas no han demostrado riesgo para el feto.",
@@ -50,7 +51,7 @@ export const fdaCategoryDescriptions: Record<FDACategory, string> = {
   [FDACategory.NA]: "La FDA no ha asignado una categoría de embarazo específica para este medicamento. Se recomienda consultar con un profesional de la salud."
 };
 
-// Base de datos de medicamentos comunes
+// Database of common medications with FDA pregnancy categories
 const commonMedications: MedicationInfo[] = [
   {
     name: "Paracetamol (Acetaminofén)",
@@ -179,6 +180,47 @@ const commonMedications: MedicationInfo[] = [
     risks: "El uso durante el embarazo puede asociarse con labio/paladar hendido, especialmente si se usa en el primer trimestre. El uso cerca del parto puede causar hipotonía, depresión respiratoria y síndrome de abstinencia neonatal.",
     recommendations: "Evitar durante el embarazo si es posible, especialmente durante el primer trimestre. Si es necesario, usar la dosis más baja efectiva y evitar el uso prolongado.",
     alternatives: ["Terapia cognitivo-conductual", "Inhibidores selectivos de la recaptación de serotonina (para trastornos de ansiedad)", "Anticonvulsivos con mejor perfil de seguridad (para epilepsia)"]
+  },
+  // Nuevos medicamentos añadidos
+  {
+    name: "Omeprazol",
+    category: FDACategory.C,
+    description: "Inhibidor de la bomba de protones utilizado para reducir la producción de ácido gástrico en condiciones como la enfermedad por reflujo gastroesofágico y úlceras pépticas.",
+    risks: "Los estudios no han demostrado un aumento claro en el riesgo de malformaciones congénitas, pero algunos estudios sugieren un posible aumento en el riesgo de asma infantil con exposición durante el embarazo.",
+    recommendations: "Usar solo cuando sea médicamente necesario y los beneficios superen los riesgos. Considerar opciones con mayor historial de seguridad durante el embarazo como alternativa de primera línea.",
+    alternatives: ["Antiácidos (calcio, magnesio)", "Antagonistas de los receptores H2 como ranitidina", "Cambios en la dieta y estilo de vida"]
+  },
+  {
+    name: "Diazepam",
+    category: FDACategory.D,
+    description: "Benzodiazepina utilizada para tratar la ansiedad, espasmos musculares, convulsiones y síntomas de abstinencia alcohólica.",
+    risks: "El uso en el primer trimestre puede asociarse con un mayor riesgo de malformaciones congénitas como labio/paladar hendido. Uso cercano al parto puede causar hipotonía, depresión respiratoria y síndrome de abstinencia neonatal.",
+    recommendations: "Evitar durante el embarazo, especialmente en el primer trimestre. Si es absolutamente necesario, usar la dosis más baja efectiva por el menor tiempo posible y evitar cerca del término.",
+    alternatives: ["Terapia cognitivo-conductual", "Técnicas de relajación", "Antidepresivos con mejor perfil de seguridad (para ansiedad)", "Consultar al especialista para alternativas específicas"]
+  },
+  {
+    name: "Doxiciclina",
+    category: FDACategory.D,
+    description: "Antibiótico de amplio espectro del grupo de las tetraciclinas utilizado para tratar diversas infecciones bacterianas.",
+    risks: "Puede causar decoloración permanente de los dientes y alteración del desarrollo óseo en el feto cuando se usa después de la semana 20 de gestación. También puede causar hepatotoxicidad materna.",
+    recommendations: "Evitar durante el embarazo, especialmente después del segundo trimestre. Utilizar antibióticos alternativos con mejor perfil de seguridad durante el embarazo.",
+    alternatives: ["Penicilinas", "Cefalosporinas", "Eritromicina", "Azitromicina"]
+  },
+  {
+    name: "Loratadina",
+    category: FDACategory.B,
+    description: "Antihistamínico de segunda generación utilizado para tratar síntomas de alergias como rinitis alérgica y urticaria.",
+    risks: "Los estudios no han demostrado un aumento en el riesgo de malformaciones congénitas. Menos sedante que los antihistamínicos de primera generación.",
+    recommendations: "Puede considerarse cuando el tratamiento de los síntomas alérgicos es necesario durante el embarazo. Preferible a los antihistamínicos de primera generación.",
+    alternatives: ["Cetirizina", "Medidas no farmacológicas como evitar alérgenos", "Soluciones salinas nasales para rinitis"]
+  },
+  {
+    name: "Sertralina",
+    category: FDACategory.C,
+    description: "Inhibidor selectivo de la recaptación de serotonina (ISRS) utilizado para tratar la depresión, trastornos de ansiedad, trastorno obsesivo-compulsivo y trastorno de estrés postraumático.",
+    risks: "Estudios no han mostrado un aumento significativo en el riesgo de malformaciones congénitas. El uso cerca del término puede estar asociado con el síndrome de adaptación neonatal (problemas respiratorios, irritabilidad, problemas de alimentación).",
+    recommendations: "Cuando el tratamiento antidepresivo es necesario durante el embarazo, la sertralina es considerada una de las opciones más seguras entre los ISRS. La decisión debe basarse en un análisis riesgo-beneficio individualizado.",
+    alternatives: ["Psicoterapia", "Terapia cognitivo-conductual", "Apoyo social", "Otros ISRS con perfil de seguridad similar"]
   }
 ];
 
