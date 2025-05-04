@@ -434,12 +434,7 @@ export function MedicationRiskCalculator() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-              >
-                <Card className="border-blue-100 shadow-sm h-full bg-gradient-to-br from-blue-50/70 to-indigo-50/70">
-                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-                  </div>
-                </Card>
-              </motion.div>
+              ></motion.div>
             )}
           </AnimatePresence>
         </div>
