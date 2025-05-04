@@ -58,14 +58,14 @@ export function MedicationRiskCalculator() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Función para realizar la búsqueda y mostrar automáticamente el primer resultado
+  // Función para realizar la búsqueda y mostrar los resultados
   const handleSearch = async () => {
     // Resetear errores previos
     setSearchError(null);
     
     // Si hay un término de búsqueda válido, realizar búsqueda por nombre
-    if (searchTerm.trim().length > 2) {
-      // Primero buscar en la base de datos local
+    if (searchTerm.trim().length >= 2) {
+      // Primero buscar en la base de datos local usando nuestra función mejorada con sinónimos
       const localResults = searchMedicationsByName(searchTerm);
       
       // Filtrar por categoría si es necesario
@@ -77,7 +77,8 @@ export function MedicationRiskCalculator() {
       // Si encontramos resultados localmente, los mostramos
       if (filteredResults.length > 0) {
         setSearchResults(filteredResults);
-        setSelectedMedication(filteredResults[0]);
+        // Si hay un solo resultado, seleccionarlo automáticamente, sino mostrar lista
+        setSelectedMedication(filteredResults.length === 1 ? filteredResults[0] : null);
         return;
       }
       
@@ -260,7 +261,7 @@ export function MedicationRiskCalculator() {
   // Añadir event listener para la tecla Enter
   useEffect(() => {
     const handleEnterKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' && searchTerm.trim().length >= 3) {
+      if (e.key === 'Enter' && searchTerm.trim().length >= 2) {
         handleSearch();
       }
     };
