@@ -437,10 +437,6 @@ export function MedicationRiskCalculator() {
               >
                 <Card className="border-blue-100 shadow-sm h-full bg-gradient-to-br from-blue-50/70 to-indigo-50/70">
                   <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-                    <div className="bg-blue-100 p-3 rounded-full mb-4">
-                      <Pill className="h-10 w-10 text-blue-600" />
-                    </div>
-
                   </div>
                 </Card>
               </motion.div>
