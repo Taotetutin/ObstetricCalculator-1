@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, AlertCircle, Pill, ShieldCheck, AlertTriangle, FileWarning, FileX, Info } from 'lucide-react';
+import { Search, AlertCircle, Pill, ShieldCheck, AlertTriangle, FileWarning, FileX, Info, Database, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -30,6 +30,7 @@ import {
   getCategoryColor,
   getSafetySummary
 } from '@/data/fda-pregnancy-categories';
+import { searchMedicationInFDA } from '@/services/fdaService';
 
 export function MedicationRiskCalculator() {
   const [searchTerm, setSearchTerm] = useState('');

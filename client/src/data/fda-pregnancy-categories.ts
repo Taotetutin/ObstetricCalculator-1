@@ -14,6 +14,7 @@ export interface MedicationInfo {
   risks: string;
   recommendations: string;
   alternatives: string[];
+  isFromFDA?: boolean; // Indica si los datos provienen de la API de la FDA
 }
 
 // Base de conocimiento sobre categorías de la FDA
