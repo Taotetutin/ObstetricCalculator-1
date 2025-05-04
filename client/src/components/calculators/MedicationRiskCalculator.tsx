@@ -140,13 +140,13 @@ export function MedicationRiskCalculator() {
             </CardHeader>
             <CardContent>
               {/* Buscador por nombre */}
-              <div className="flex gap-2">
-                <div className="relative flex-grow">
+              <div className="space-y-2">
+                <div className="relative w-full">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
                   <Input
                     type="text"
                     placeholder="Nombre del medicamento..."
-                    className="pl-9 border-blue-200"
+                    className="pl-9 border-blue-200 w-full"
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
@@ -158,7 +158,7 @@ export function MedicationRiskCalculator() {
                   />
                 </div>
                 <Button 
-                  className="bg-blue-600 hover:bg-blue-700 text-white" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white w-full" 
                   onClick={() => {
                     if (searchTerm.length >= 3) {
                       handleSearch();
