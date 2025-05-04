@@ -37,7 +37,58 @@ function MedicationGeminiCalculator() {
     }
   };
 
-  // Base de datos local de medicamentos comunes y sus categorías
+  // Función para buscar medicamentos en la API de la FDA
+  const searchMedications = async (term) => {
+    if (!term.trim()) return;
+    
+    setLoading(true);
+    setError("");
+    setSearchPerformed(true);
+    
+    try {
+      // Consultar la API del backend que se conecta con la FDA
+      const response = await axios.get(`/api/medications/search?term=${encodeURIComponent(term)}`);
+      
+      if (response.data.medications && response.data.medications.length > 0) {
+        setResults(response.data.medications.map(med => ({
+          name: med.name,
+          category: med.category,
+          information: med.information,
+          warnings: med.warnings,
+          route: med.route,
+          // Guardamos el objeto completo como data para usarlo cuando se seleccione
+          data: med
+        })));
+      } else {
+        // Si no hay resultados de la API de la FDA, buscamos en la base de datos local
+        const localResults = searchLocalDatabase(term);
+        
+        if (localResults.length > 0) {
+          setResults(localResults);
+        } else {
+          setResults([{
+            name: `${term} (sin resultados detallados)`,
+            key: "not_found"
+          }]);
+        }
+      }
+    } catch (err) {
+      console.error("Error searching medications:", err);
+      
+      // Si hay un error con la API, intentamos con la base de datos local
+      const localResults = searchLocalDatabase(term);
+      
+      if (localResults.length > 0) {
+        setResults(localResults);
+      } else {
+        setError("Error al buscar medicamentos. Por favor, intente de nuevo.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Base de datos local como respaldo
   const commonMeds = {
     "paracetamol": { name: "Paracetamol (Acetaminofén)", category: "B", risks: "Uso prolongado o en dosis altas puede estar asociado con algunos riesgos." },
     "ibuprofeno": { name: "Ibuprofeno", category: "C/D", risks: "Categoría C en el primer y segundo trimestre. Categoría D en el tercer trimestre. Puede causar cierre prematuro del conducto arterioso fetal." },
@@ -77,43 +128,14 @@ function MedicationGeminiCalculator() {
       )
       .map(([key, med]) => ({
         name: med.name,
-        key: key
+        key: key,
+        isLocal: true
       }));
   };
 
-  // Función para buscar medicamentos en la API de la FDA
-  const searchFDA = async (term) => {
-    if (!term.trim()) return;
-    
-    setLoading(true);
-    setError("");
-    setSearchPerformed(true);
-    
-    try {
-      // Primero buscamos en nuestra base de datos local
-      const localResults = searchLocalDatabase(term);
-      setResults(localResults);
-      
-      if (localResults.length === 0) {
-        // Si no encontramos nada localmente, intentamos con la API de la FDA
-        // Nota: Esto requeriría implementar un backend proxy para evitar CORS
-        // y manejar las llamadas a la API de la FDA
-        setResults([{
-          name: `${term} (sin resultados detallados)`,
-          key: "not_found"
-        }]);
-      }
-    } catch (err) {
-      console.error("Error searching medications:", err);
-      setError("Error al buscar medicamentos. Por favor, intente de nuevo.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Manejador para cuando se selecciona un medicamento
-  const handleSelectMedication = (key) => {
-    if (key === "not_found") {
+  const handleSelectMedication = (med) => {
+    if (med.key === "not_found") {
       setSelectedMed({
         name: "Medicamento no encontrado",
         category: "N",
@@ -122,7 +144,18 @@ function MedicationGeminiCalculator() {
       return;
     }
     
-    setSelectedMed(commonMeds[key]);
+    if (med.isLocal) {
+      // Si es un medicamento de la base de datos local
+      setSelectedMed(commonMeds[med.key]);
+    } else {
+      // Si es un medicamento de la API
+      setSelectedMed({
+        name: med.name,
+        category: med.category || "N",
+        risks: med.warnings || "No hay información específica sobre riesgos disponible.",
+        information: med.information
+      });
+    }
   };
 
   // Función para obtener el color basado en la categoría
@@ -137,7 +170,7 @@ function MedicationGeminiCalculator() {
     };
     
     // Si la categoría es compuesta (como C/D), usamos el color más severo
-    if (category.includes("/")) {
+    if (category && category.includes("/")) {
       const cats = category.split("/");
       const lastCat = cats[cats.length - 1];
       return colorMap[lastCat] || "gray";
@@ -148,7 +181,7 @@ function MedicationGeminiCalculator() {
 
   // Función para ejecutar la búsqueda
   const handleSearch = () => {
-    searchFDA(query);
+    searchMedications(query);
   };
 
   // Manejo de la tecla Enter
@@ -217,9 +250,9 @@ function MedicationGeminiCalculator() {
                   <li 
                     key={index}
                     className="py-2 cursor-pointer hover:bg-blue-50 transition px-3 rounded"
-                    onClick={() => handleSelectMedication(med.key)}
+                    onClick={() => handleSelectMedication(med)}
                   >
-                    {med.name}
+                    {med.name} {med.isLocal && <span className="text-xs text-blue-500 ml-1">(Base de datos local)</span>}
                   </li>
                 ))}
               </ul>
@@ -265,7 +298,7 @@ function MedicationGeminiCalculator() {
                 </div>
               </div>
               
-              {categories[selectedMed.category.split('/')[0]] && (
+              {categories[selectedMed.category?.split('/')[0]] && (
                 <div className="mb-4 p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-medium text-gray-800 mb-2">Descripción de la categoría</h4>
                   <p className="text-gray-700 mb-3">{categories[selectedMed.category.split('/')[0]].description}</p>
@@ -274,9 +307,16 @@ function MedicationGeminiCalculator() {
                 </div>
               )}
               
+              {selectedMed.information && (
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-800 mb-2">Información sobre embarazo</h4>
+                  <p className="text-gray-700">{selectedMed.information}</p>
+                </div>
+              )}
+              
               {selectedMed.risks && (
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-800 mb-2">Riesgos potenciales</h4>
+                  <h4 className="font-medium text-gray-800 mb-2">Advertencias y riesgos potenciales</h4>
                   <p className="text-gray-700">{selectedMed.risks}</p>
                 </div>
               )}

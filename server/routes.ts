@@ -3,8 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertCalculationSchema, insertPatientSchema, calculatorTypes } from "@shared/schema";
 import { desc } from "drizzle-orm";
+import medicationRoutes from "./routes/medication";
 
 export function registerRoutes(app: Express): Server {
+  // Registramos las rutas de medicación
+  app.use(medicationRoutes);
   // API routes for calculator operations
   app.post("/api/calculations", async (req, res) => {
     try {
