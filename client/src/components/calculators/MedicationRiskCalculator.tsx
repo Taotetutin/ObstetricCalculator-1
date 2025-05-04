@@ -26,6 +26,7 @@ import {
   fdaCategoryDescriptions, 
   searchMedicationsByName,
   getMedicationsByCategory,
+  getAllMedications,
   getSafeMedications,
   getCategoryColor,
   getSafetySummary
@@ -243,6 +244,7 @@ export function MedicationRiskCalculator() {
     } 
     // Si la categoría es "all" (todos los medicamentos)
     else if (selectedCategory === 'all') {
+      // Usar la función getAllMedications para obtener todos los medicamentos
       const allMedications = getAllMedications();
       setSearchResults(allMedications);
       setSelectedMedication(null);
@@ -681,13 +683,18 @@ export function MedicationRiskCalculator() {
                 </CardContent>
 
                 <CardFooter className="border-t border-blue-100 p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-3">
                     <Button 
                       variant="outline" 
-                      className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                      className="text-blue-600 border-blue-200 hover:bg-blue-50 flex items-center"
                       onClick={handleClearSelection}
                     >
-                      Volver a la búsqueda
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      {searchResults.length > 1 
+                        ? "Volver a la lista" 
+                        : selectedCategory !== 'all' 
+                          ? `Ver categoría ${selectedCategory}`
+                          : "Nueva búsqueda"}
                     </Button>
                     
                     <div className="text-xs text-blue-500 italic">
