@@ -399,7 +399,7 @@ const medicationSynonyms: Record<string, string[]> = {
 function findMedicationsByTerms(searchTerm: string): MedicationInfo[] {
   const normalizedSearchTerm = searchTerm.toLowerCase().trim();
   
-  if (!normalizedSearchTerm) {
+  if (!normalizedSearchTerm || normalizedSearchTerm.length < 2) {
     return [];
   }
   
@@ -416,7 +416,7 @@ function findMedicationsByTerms(searchTerm: string): MedicationInfo[] {
   // Si no hay resultados directos, buscar por sinónimos
   const matchedMedications = new Set<MedicationInfo>();
   
-  // Buscar en el mapa de sinónimos
+  // Buscar en el mapa de sinónimos - permitir coincidencias de solo 2 caracteres
   for (const [genericName, synonyms] of Object.entries(medicationSynonyms)) {
     if (synonyms.some(synonym => synonym.includes(normalizedSearchTerm)) || 
         genericName.includes(normalizedSearchTerm)) {

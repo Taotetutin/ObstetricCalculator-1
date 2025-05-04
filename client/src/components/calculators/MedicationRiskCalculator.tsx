@@ -254,7 +254,7 @@ export function MedicationRiskCalculator() {
     else {
       setSearchResults([]);
       setSelectedMedication(null);
-      setSearchError("Por favor, ingrese al menos 3 caracteres para buscar un medicamento o seleccione una categoría.");
+      setSearchError("Por favor, ingrese al menos 2 caracteres para buscar un medicamento o seleccione una categoría.");
     }
   };
   
