@@ -123,7 +123,7 @@ export function MedicationRiskCalculator() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-blue-800">Buscar Medicamento</CardTitle>
               <CardDescription>
-                Ingresa el nombre del medicamento o selecciona una categoría de la FDA
+                Ingresa el nombre del medicamento para buscar
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -145,31 +145,7 @@ export function MedicationRiskCalculator() {
                 />
               </div>
 
-              {/* Selector de categoría */}
-              <div>
-                <Select 
-                  value={selectedCategory} 
-                  onValueChange={(value) => {
-                    if (value === 'all' || value === '') {
-                      setSelectedCategory(value);
-                    } else {
-                      setSelectedCategory(value as FDACategory);
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-full border-blue-200">
-                    <SelectValue placeholder="Filtrar por categoría FDA" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas las categorías</SelectItem>
-                    <SelectItem value={FDACategory.A}>Categoría A</SelectItem>
-                    <SelectItem value={FDACategory.B}>Categoría B</SelectItem>
-                    <SelectItem value={FDACategory.C}>Categoría C</SelectItem>
-                    <SelectItem value={FDACategory.D}>Categoría D</SelectItem>
-                    <SelectItem value={FDACategory.X}>Categoría X</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
 
               {/* Categorías de la FDA con explicación */}
               <div className="pt-2">
@@ -258,7 +234,7 @@ export function MedicationRiskCalculator() {
                         ? "Ingresa al menos 3 caracteres para buscar"
                         : searchTerm.length >= 3
                         ? "No se encontraron medicamentos que coincidan con tu búsqueda"
-                        : "Busca un medicamento por nombre o selecciona una categoría FDA"}
+                        : "Busca un medicamento por nombre para ver información"}
                     </p>
                   </div>
                 )}
