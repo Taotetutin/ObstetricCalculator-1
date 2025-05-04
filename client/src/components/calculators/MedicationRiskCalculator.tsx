@@ -114,15 +114,7 @@ export function MedicationRiskCalculator() {
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-blue-800 mb-2">
-          Evaluación de Riesgos de Medicamentos en el Embarazo
-        </h2>
-        <p className="text-gray-600 max-w-3xl mx-auto text-sm sm:text-base">
-          Consulta información sobre la seguridad de medicamentos durante el embarazo según la clasificación de la FDA, 
-          riesgos potenciales y alternativas más seguras si están disponibles.
-        </p>
-      </div>
+      {/* Encabezado eliminado según instrucciones */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Panel de búsqueda y exploración */}
