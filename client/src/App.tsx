@@ -10,6 +10,7 @@ import AuthPage from "@/pages/AuthPage";
 import CulturalWisdomPage from "@/pages/CulturalWisdomPage";
 import NewsPage from "@/pages/NewsPage";
 import MedicationRiskPage from "@/pages/MedicationRiskPage";
+import PregnancyTrackerPage from "@/pages/PregnancyTrackerPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ function Router() {
               <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
               <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
               <ProtectedRoute path="/riesgo-medicamentos" component={MedicationRiskPage} />
+              <ProtectedRoute path="/seguimiento-embarazo" component={PregnancyTrackerPage} />
               <Route component={NotFound} />
             </Switch>
           </main>
