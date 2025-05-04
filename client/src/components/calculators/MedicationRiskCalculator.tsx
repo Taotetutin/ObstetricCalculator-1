@@ -194,28 +194,6 @@ export function MedicationRiskCalculator() {
         return;
       }
       
-      // Metamizol (Dipirona)
-      if (lowerSearch.includes('metamizol') || lowerSearch.includes('dipirona') || lowerSearch.includes('nolotil')) {
-        const metamizol: MedicationInfo = {
-          name: "Metamizol (Dipirona)",
-          category: FDACategory.C,
-          description: "Analgésico, antipirético y espasmolítico no opioide. Vía de administración: oral, intramuscular, intravenosa.",
-          risks: "Posible asociación con agranulocitosis, especialmente en tratamientos prolongados. Algunos estudios sugieren que su uso en el primer trimestre podría aumentar ligeramente el riesgo de defectos congénitos, aunque la evidencia no es concluyente. En el tercer trimestre, como otros AINEs, podría estar asociado con el cierre prematuro del conducto arterioso.",
-          recommendations: "Debe evitarse en el tercer trimestre de embarazo. En el primer y segundo trimestre, usar solo si es claramente necesario y por el período más corto posible. Considerar alternativas con mejor perfil de seguridad durante el embarazo como paracetamol.",
-          alternatives: [
-            "Paracetamol (más seguro durante todo el embarazo)",
-            "Medidas no farmacológicas para control del dolor y fiebre",
-            "Consultar con su médico para alternativas específicas según su condición"
-          ],
-          isFromFDA: true
-        };
-        
-        setSearchResults([metamizol]);
-        setSelectedMedication(metamizol);
-        setIsSearchingFDA(false);
-        return;
-      }
-      
       // Para otras búsquedas, intentar buscar en la FDA
       try {
         console.log("Buscando en la FDA:", searchTerm);
