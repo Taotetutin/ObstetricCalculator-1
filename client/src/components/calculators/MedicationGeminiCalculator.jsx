@@ -291,7 +291,7 @@ function MedicationGeminiCalculator() {
                 {geminiResult.name || searchTerm}
               </h3>
               <p className="text-xs text-gray-500 mt-1">
-                Información generada por IA avanzada
+                Información generada mediante tecnología avanzada
               </p>
             </div>
             
@@ -338,7 +338,7 @@ function MedicationGeminiCalculator() {
               
               <div className="mt-3 pt-3 border-t border-gray-200">
                 <p className="text-xs text-gray-500 italic">
-                  La información proporcionada es orientativa y ha sido generada por IA. No sustituye el consejo médico profesional.
+                  La información proporcionada es orientativa. No sustituye el consejo médico profesional.
                   Consulte siempre con su médico antes de tomar cualquier medicamento durante el embarazo.
                 </p>
               </div>
