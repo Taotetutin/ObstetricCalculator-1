@@ -280,20 +280,20 @@ export function MedicationRiskCalculator() {
               >
                 <Card className="border-blue-100 shadow">
                   <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-start gap-3">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                      <div className="flex items-start gap-3 w-full">
                         <div className={`p-2 rounded-full ${getCategoryColor(selectedMedication.category)} flex-shrink-0`}>
                           {getCategoryIcon(selectedMedication.category)}
                         </div>
-                        <div>
-                          <CardTitle className="text-xl text-blue-800">{selectedMedication.name}</CardTitle>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl text-blue-800 break-words">{selectedMedication.name}</CardTitle>
                           <CardDescription className="text-sm text-blue-700 mt-1">
                             {selectedMedication.description}
                           </CardDescription>
                         </div>
                       </div>
                       <Badge 
-                        className={`text-xs ${getCategoryColor(selectedMedication.category)} px-3 py-1 ml-2 flex-shrink-0`}
+                        className={`text-xs ${getCategoryColor(selectedMedication.category)} px-3 py-1 self-start mt-1 sm:mt-0 sm:ml-2 flex-shrink-0`}
                       >
                         FDA Categoría {selectedMedication.category}
                       </Badge>
@@ -302,22 +302,22 @@ export function MedicationRiskCalculator() {
 
                   <CardContent className="p-0">
                     <Tabs defaultValue="risks" className="w-full">
-                      <TabsList className="w-full justify-start bg-blue-50 rounded-none border-b border-blue-100 p-0">
+                      <TabsList className="w-full overflow-x-auto flex-nowrap bg-blue-50 rounded-none border-b border-blue-100 p-0">
                         <TabsTrigger
                           value="risks"
-                          className="px-6 py-2.5 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                          className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                         >
                           Riesgos
                         </TabsTrigger>
                         <TabsTrigger
                           value="recommendations"
-                          className="px-6 py-2.5 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                          className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                         >
                           Recomendaciones
                         </TabsTrigger>
                         <TabsTrigger
                           value="alternatives"
-                          className="px-6 py-2.5 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
+                          className="px-4 sm:px-6 py-2.5 rounded-none border-b-2 border-transparent flex-shrink-0 data-[state=active]:border-blue-500 data-[state=active]:bg-white data-[state=active]:rounded-b-none"
                         >
                           Alternativas
                         </TabsTrigger>
@@ -411,7 +411,7 @@ export function MedicationRiskCalculator() {
                   </CardContent>
 
                   <CardFooter className="border-t border-blue-100 p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <div className="flex justify-between items-center w-full">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-4">
                       <Button 
                         variant="outline" 
                         className="text-blue-600 border-blue-200 hover:bg-blue-50"
