@@ -56,8 +56,7 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
-import { MedicationRiskCalculator } from "./MedicationRiskCalculator";
-import { SimpleMedicationRiskCalculator } from "./SimpleMedicationRiskCalculator";
+// Medicamentos calculators eliminados
 
 export const calculators = [
   {
@@ -214,11 +213,5 @@ export const calculators = [
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
   },
-  {
-    id: "medicamentos-embarazo",
-    name: "Medicamentos en Embarazo",
-    description: "Evaluación de riesgos de medicamentos durante el embarazo según categorías FDA",
-    icon: Pill,
-    component: MedicationRiskCalculator,
-  }
+  // Calculadora de medicamentos eliminada
 ];
