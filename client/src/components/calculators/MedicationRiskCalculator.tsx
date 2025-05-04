@@ -440,18 +440,7 @@ export function MedicationRiskCalculator() {
                     <div className="bg-blue-100 p-3 rounded-full mb-4">
                       <Pill className="h-10 w-10 text-blue-600" />
                     </div>
-                    <div className="flex flex-col gap-4 items-center">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex flex-col items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                          <ShieldCheck className="h-6 w-6 text-green-500 mb-1" />
-                          <span className="text-xs font-medium text-green-700">Seguro</span>
-                        </div>
-                        <div className="flex flex-col items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                          <FileX className="h-6 w-6 text-red-500 mb-1" />
-                          <span className="text-xs font-medium text-red-700">Contraindicado</span>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
                 </Card>
               </motion.div>
