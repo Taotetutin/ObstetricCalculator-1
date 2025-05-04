@@ -29,7 +29,7 @@ export default function CulturalWisdomPage() {
   const regionWisdom = selectedRegion ? getWisdomByRegion(selectedRegion) : [];
 
   return (
-    <div className="container mx-auto py-6 sm:py-8 px-4">
+    <div className="container mx-auto py-6 sm:py-8 px-3 sm:px-4 max-w-full overflow-hidden">
       <Helmet>
         <title>Sabiduría Cultural del Embarazo | ObsteriX Legend</title>
       </Helmet>
@@ -44,9 +44,9 @@ export default function CulturalWisdomPage() {
         </p>
       </header>
 
-      <Tabs defaultValue="explore" className="max-w-5xl mx-auto">
+      <Tabs defaultValue="explore" className="max-w-full sm:max-w-5xl mx-auto">
         <ScrollArea className="w-full pb-2">
-          <TabsList className="w-full sm:w-auto bg-blue-50 p-1 mb-6 flex whitespace-nowrap">
+          <TabsList className="w-full bg-blue-50 p-1 mb-6 flex whitespace-nowrap">
             <TabsTrigger value="explore" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-3 py-1.5">
               <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 flex-shrink-0" /> 
               <span className="text-xs sm:text-sm">Explorar</span>

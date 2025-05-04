@@ -82,7 +82,7 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-3 sm:px-4 max-w-full overflow-hidden">
       <Helmet>
         <title>ObsteriX al Día | Noticias de Obstetricia y Ginecología</title>
       </Helmet>
@@ -106,7 +106,7 @@ export default function NewsPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="latest" className="max-w-5xl mx-auto">
+      <Tabs defaultValue="latest" className="max-w-full sm:max-w-5xl mx-auto">
         <TabsList className="w-full bg-gradient-to-r from-blue-100 to-indigo-100 p-1.5 mb-8 rounded-xl shadow-sm">
           <TabsTrigger 
             value="latest" 
