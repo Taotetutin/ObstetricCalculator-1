@@ -233,19 +233,25 @@ export function MedicationRiskCalculator() {
       const results = getMedicationsByCategory(selectedCategory as FDACategory);
       setSearchResults(results);
       
-      // Seleccionar el primer resultado si existe
+      // Mostrar la lista de resultados sin seleccionar automáticamente
       if (results.length > 0) {
-        setSelectedMedication(results[0]);
+        setSelectedMedication(null); // No seleccionamos automáticamente para mostrar la lista
       } else {
         setSelectedMedication(null);
         setSearchError(`No se encontraron medicamentos de categoría ${selectedCategory}.`);
       }
     } 
+    // Si la categoría es "all" (todos los medicamentos)
+    else if (selectedCategory === 'all') {
+      const allMedications = getAllMedications();
+      setSearchResults(allMedications);
+      setSelectedMedication(null);
+    }
     // Si no hay término ni categoría específica
     else {
       setSearchResults([]);
       setSelectedMedication(null);
-      setSearchError("Por favor, ingrese al menos 3 caracteres para buscar un medicamento.");
+      setSearchError("Por favor, ingrese al menos 3 caracteres para buscar un medicamento o seleccione una categoría.");
     }
   };
   
