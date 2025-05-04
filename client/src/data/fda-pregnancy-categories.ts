@@ -362,19 +362,79 @@ export const commonMedications: MedicationInfo[] = [
     recommendations: "Recomendada para maduración pulmonar fetal entre las semanas 24-34 de gestación cuando hay riesgo de parto prematuro. El régimen estándar consiste en dos dosis con 24 horas de diferencia.",
     alternatives: ["Dexametasona", "Para otras indicaciones no obstétricas, considerar corticosteroides menos potentes o tratamientos no esteroideos"]
   },
+  {
+    name: "Ketoprofeno",
+    category: FDACategory.C,
+    description: "Antiinflamatorio no esteroideo (AINE) utilizado para aliviar el dolor y la inflamación en diversas condiciones. Vía de administración: oral, tópica.",
+    risks: "Como otros AINEs, su uso en el tercer trimestre se asocia con cierre prematuro del conducto arterioso fetal y posible prolongación del trabajo de parto. También puede aumentar el riesgo de sangrado durante el parto y afectar la función renal fetal y neonatal.",
+    recommendations: "Evitar completamente durante el tercer trimestre. Durante el primer y segundo trimestre, usar sólo si es estrictamente necesario, a la dosis efectiva más baja y por el menor tiempo posible. Preferible usar alternativas más seguras cuando sea posible.",
+    alternatives: [
+      "Paracetamol (más seguro durante todo el embarazo)",
+      "Medidas no farmacológicas: terapia física, compresas frías/calientes",
+      "Consultar al médico para alternativas específicas según la condición"
+    ]
+  },
 ];
 
 // Función para buscar medicamentos por nombre (inclusivo)
-export function searchMedicationsByName(searchTerm: string): MedicationInfo[] {
+// Mapa de sinónimos para facilitar búsquedas comunes
+const medicationSynonyms: Record<string, string[]> = {
+  "ketoprofeno": ["keto", "ketonal", "profenid"],
+  "paracetamol": ["acetaminofen", "tylenol", "acetaminofeno", "tempra", "panadol"],
+  "ibuprofeno": ["ibu", "advil", "motrin", "nurofen", "buprex"],
+  "amoxicilina": ["amox", "amoxil", "amoxidal"],
+  "aspirina": ["asa", "ácido acetilsalicílico", "bayaspirina", "adiro"],
+  "ondansetrón": ["ondasetron", "zofran"],
+  "warfarina": ["coumadin"],
+  "metformina": ["glucophage"],
+  "omeprazol": ["omepral", "losec", "prilosec"],
+  "diazepam": ["valium"],
+  "fluoxetina": ["prozac"],
+  "atorvastatina": ["lipitor"],
+  "misoprostol": ["cytotec"],
+  "metildopa": ["aldomet"]
+};
+
+// Función auxiliar para buscar medicamentos por nombre, incluyendo sinónimos
+function findMedicationsByTerms(searchTerm: string): MedicationInfo[] {
   const normalizedSearchTerm = searchTerm.toLowerCase().trim();
   
   if (!normalizedSearchTerm) {
     return [];
   }
   
-  return commonMedications.filter(med => 
+  // Buscar medicamentos cuyo nombre incluya el término de búsqueda
+  const directMatches = commonMedications.filter(med => 
     med.name.toLowerCase().includes(normalizedSearchTerm)
   );
+  
+  // Si ya tenemos resultados directos, los devolvemos
+  if (directMatches.length > 0) {
+    return directMatches;
+  }
+  
+  // Si no hay resultados directos, buscar por sinónimos
+  const matchedMedications = new Set<MedicationInfo>();
+  
+  // Buscar en el mapa de sinónimos
+  for (const [genericName, synonyms] of Object.entries(medicationSynonyms)) {
+    if (synonyms.some(synonym => synonym.includes(normalizedSearchTerm)) || 
+        genericName.includes(normalizedSearchTerm)) {
+      // Buscar el medicamento genérico correspondiente
+      const medication = commonMedications.find(med => 
+        med.name.toLowerCase().includes(genericName)
+      );
+      if (medication) {
+        matchedMedications.add(medication);
+      }
+    }
+  }
+  
+  return Array.from(matchedMedications);
+}
+
+export function searchMedicationsByName(searchTerm: string): MedicationInfo[] {
+  return findMedicationsByTerms(searchTerm);
 }
 
 // Función para obtener medicamentos por categoría

@@ -356,36 +356,43 @@ export function MedicationRiskCalculator() {
               <TabsContent value="search">
                 {/* Buscador por nombre */}
                 <div className="space-y-2">
-                  <div className="relative w-full">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                    <Input
-                      type="text"
-                      placeholder="Nombre del medicamento..."
-                      className="pl-9 border-blue-200 w-full"
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        // Si se escribe en el buscador, reiniciamos la categoría
-                        if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
-                          setSelectedCategory('all');
-                        }
-                      }}
-                    />
+                  <div className="space-y-2">
+                    <div className="relative w-full">
+                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                      <Input
+                        type="text"
+                        placeholder="Nombre del medicamento..."
+                        className="pl-9 border-blue-200 w-full"
+                        value={searchTerm}
+                        onChange={(e) => {
+                          setSearchTerm(e.target.value);
+                          // Si se escribe en el buscador, reiniciamos la categoría
+                          if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
+                            setSelectedCategory('all');
+                          }
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-blue-600 italic">
+                      Busque por nombre genérico o comercial (p.ej. "paracetamol" o "tylenol")
+                    </p>
                   </div>
                   <Button 
                     className="bg-blue-600 hover:bg-blue-700 text-white w-full" 
                     onClick={() => {
-                      if (searchTerm.length >= 3) {
+                      if (searchTerm.length >= 2) { // Reducido a 2 caracteres para facilitar búsquedas
                         handleSearch();
                       }
                     }}
-                    disabled={isSearchingFDA}
+                    disabled={isSearchingFDA || searchTerm.length < 2}
                   >
                     {isSearchingFDA ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Buscando en FDA...
                       </>
+                    ) : searchTerm.length < 2 ? (
+                      "Ingrese al menos 2 caracteres"
                     ) : (
                       "Buscar"
                     )}
