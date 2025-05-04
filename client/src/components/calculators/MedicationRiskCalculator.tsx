@@ -54,9 +54,9 @@ export function MedicationRiskCalculator() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Realizar búsqueda combinada cuando cambia el término o la categoría
-  useEffect(() => {
-    // Si hay un término de búsqueda válido, priorizar búsqueda por nombre
+  // Función para realizar la búsqueda manual cuando se hace clic en OK
+  const handleSearch = () => {
+    // Si hay un término de búsqueda válido, realizar búsqueda por nombre
     if (searchTerm.trim().length > 2) {
       const results = searchMedicationsByName(searchTerm);
       
@@ -76,7 +76,19 @@ export function MedicationRiskCalculator() {
     else {
       setSearchResults([]);
     }
-  }, [searchTerm, selectedCategory]);
+  };
+  
+  // Añadir event listener para la tecla Enter
+  useEffect(() => {
+    const handleEnterKey = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && searchTerm.trim().length >= 3) {
+        handleSearch();
+      }
+    };
+    
+    document.addEventListener('keydown', handleEnterKey);
+    return () => document.removeEventListener('keydown', handleEnterKey);
+  }, [searchTerm]);
 
 
 
@@ -126,45 +138,35 @@ export function MedicationRiskCalculator() {
                 Ingresa el nombre del medicamento para buscar
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               {/* Buscador por nombre */}
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  type="text"
-                  placeholder="Nombre del medicamento..."
-                  className="pl-9 border-blue-200"
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    // Si se escribe en el buscador, reiniciamos la categoría
-                    if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
-                      setSelectedCategory('all');
+              <div className="flex gap-2">
+                <div className="relative flex-grow">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input
+                    type="text"
+                    placeholder="Nombre del medicamento..."
+                    className="pl-9 border-blue-200"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      // Si se escribe en el buscador, reiniciamos la categoría
+                      if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
+                        setSelectedCategory('all');
+                      }
+                    }}
+                  />
+                </div>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white" 
+                  onClick={() => {
+                    if (searchTerm.length >= 3) {
+                      handleSearch();
                     }
                   }}
-                />
-              </div>
-
-
-
-              {/* Categorías de la FDA con explicación */}
-              <div className="pt-2">
-                <h3 className="font-medium text-blue-700 mb-2 text-sm">Categorías de la FDA</h3>
-                <Accordion type="single" collapsible className="w-full bg-white rounded-lg overflow-hidden">
-                  {(Object.keys(fdaCategoryDescriptions) as FDACategory[]).map((category) => (
-                    <AccordionItem key={category} value={category} className="border-blue-100">
-                      <AccordionTrigger className={`text-sm px-3 py-2 ${getCategoryColor(category)}`}>
-                        <div className="flex items-center gap-2">
-                          {getCategoryIcon(category)}
-                          <span>Categoría {category}</span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-3 py-2 text-xs text-gray-700">
-                        {fdaCategoryDescriptions[category]}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                >
+                  OK
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -241,6 +243,30 @@ export function MedicationRiskCalculator() {
               </CardContent>
             </Card>
           )}
+          
+          {/* Categorías de la FDA con explicación - Movida a la parte inferior */}
+          <Card className="mt-4 bg-blue-50/30 border-blue-100 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base text-blue-800">Categorías de la FDA</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full bg-white rounded-lg overflow-hidden">
+                {(Object.keys(fdaCategoryDescriptions) as FDACategory[]).map((category) => (
+                  <AccordionItem key={category} value={category} className="border-blue-100">
+                    <AccordionTrigger className={`text-sm px-3 py-2 ${getCategoryColor(category)}`}>
+                      <div className="flex items-center gap-2">
+                        {getCategoryIcon(category)}
+                        <span>Categoría {category}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-3 py-2 text-xs text-gray-700">
+                      {fdaCategoryDescriptions[category]}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Panel de detalles del medicamento */}
