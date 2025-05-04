@@ -156,6 +156,119 @@ export const commonMedications: MedicationInfo[] = [
     recommendations: "Evitar durante el embarazo si es posible, especialmente durante el primer trimestre. Si es necesario, usar la dosis más baja efectiva y evitar el uso prolongado.",
     alternatives: ["Terapia cognitivo-conductual", "Inhibidores selectivos de la recaptación de serotonina (para trastornos de ansiedad)", "Anticonvulsivos con mejor perfil de seguridad (para epilepsia)"]
   },
+  // Nuevos medicamentos añadidos
+  {
+    name: "Omeprazol",
+    category: FDACategory.C,
+    description: "Inhibidor de la bomba de protones utilizado para reducir la producción de ácido gástrico en condiciones como la enfermedad por reflujo gastroesofágico y úlceras pépticas.",
+    risks: "Los estudios no han demostrado un aumento claro en el riesgo de malformaciones congénitas, pero algunos estudios sugieren un posible aumento en el riesgo de asma infantil con exposición durante el embarazo.",
+    recommendations: "Usar solo cuando sea médicamente necesario y los beneficios superen los riesgos. Considerar opciones con mayor historial de seguridad durante el embarazo como alternativa de primera línea.",
+    alternatives: ["Antiácidos (calcio, magnesio)", "Antagonistas de los receptores H2 como ranitidina", "Cambios en la dieta y estilo de vida"]
+  },
+  {
+    name: "Diazepam",
+    category: FDACategory.D,
+    description: "Benzodiazepina utilizada para tratar la ansiedad, espasmos musculares, convulsiones y síntomas de abstinencia alcohólica.",
+    risks: "El uso en el primer trimestre puede asociarse con un mayor riesgo de malformaciones congénitas como labio/paladar hendido. Uso cercano al parto puede causar hipotonía, depresión respiratoria y síndrome de abstinencia neonatal.",
+    recommendations: "Evitar durante el embarazo, especialmente en el primer trimestre. Si es absolutamente necesario, usar la dosis más baja efectiva por el menor tiempo posible y evitar cerca del término.",
+    alternatives: ["Terapia cognitivo-conductual", "Técnicas de relajación", "Antidepresivos con mejor perfil de seguridad (para ansiedad)", "Consultar al especialista para alternativas específicas"]
+  },
+  {
+    name: "Doxiciclina",
+    category: FDACategory.D,
+    description: "Antibiótico de amplio espectro del grupo de las tetraciclinas utilizado para tratar diversas infecciones bacterianas.",
+    risks: "Puede causar decoloración permanente de los dientes y alteración del desarrollo óseo en el feto cuando se usa después de la semana 20 de gestación. También puede causar hepatotoxicidad materna.",
+    recommendations: "Evitar durante el embarazo, especialmente después del segundo trimestre. Utilizar antibióticos alternativos con mejor perfil de seguridad durante el embarazo.",
+    alternatives: ["Penicilinas", "Cefalosporinas", "Eritromicina", "Azitromicina"]
+  },
+  {
+    name: "Loratadina",
+    category: FDACategory.B,
+    description: "Antihistamínico de segunda generación utilizado para tratar síntomas de alergias como rinitis alérgica y urticaria.",
+    risks: "Los estudios no han demostrado un aumento en el riesgo de malformaciones congénitas. Menos sedante que los antihistamínicos de primera generación.",
+    recommendations: "Puede considerarse cuando el tratamiento de los síntomas alérgicos es necesario durante el embarazo. Preferible a los antihistamínicos de primera generación.",
+    alternatives: ["Cetirizina", "Medidas no farmacológicas como evitar alérgenos", "Soluciones salinas nasales para rinitis"]
+  },
+  {
+    name: "Sertralina",
+    category: FDACategory.C,
+    description: "Inhibidor selectivo de la recaptación de serotonina (ISRS) utilizado para tratar la depresión, trastornos de ansiedad, trastorno obsesivo-compulsivo y trastorno de estrés postraumático.",
+    risks: "Estudios no han mostrado un aumento significativo en el riesgo de malformaciones congénitas. El uso cerca del término puede estar asociado con el síndrome de adaptación neonatal (problemas respiratorios, irritabilidad, problemas de alimentación).",
+    recommendations: "Cuando el tratamiento antidepresivo es necesario durante el embarazo, la sertralina es considerada una de las opciones más seguras entre los ISRS. La decisión debe basarse en un análisis riesgo-beneficio individualizado.",
+    alternatives: ["Psicoterapia", "Terapia cognitivo-conductual", "Apoyo social", "Otros ISRS con perfil de seguridad similar"]
+  },
+  {
+    name: "Metoclopramida",
+    category: FDACategory.B,
+    description: "Procinético y antiemético utilizado para tratar náuseas, vómitos y trastornos de la motilidad gastrointestinal.",
+    risks: "No se ha demostrado un aumento en el riesgo de malformaciones congénitas. Ampliamente utilizado durante el embarazo para el tratamiento de náuseas y vómitos.",
+    recommendations: "Puede usarse durante el embarazo cuando las medidas no farmacológicas son insuficientes para controlar las náuseas y vómitos. Usar la dosis efectiva más baja por el menor tiempo posible.",
+    alternatives: ["Vitamina B6 (piridoxina)", "Jengibre", "Cambios en la dieta", "Doxilamina"]
+  },
+  {
+    name: "Ciprofloxacino",
+    category: FDACategory.C,
+    description: "Antibiótico fluoroquinolona de amplio espectro utilizado para tratar diversas infecciones bacterianas.",
+    risks: "Estudios en animales han mostrado daño al cartílago en desarrollo. Aunque los estudios en humanos no han demostrado un claro aumento en el riesgo de malformaciones, existe preocupación por los posibles efectos sobre el cartílago y las articulaciones fetales.",
+    recommendations: "Evitar durante el embarazo si existen alternativas más seguras. Usar solo si el beneficio potencial justifica el riesgo potencial para el feto.",
+    alternatives: ["Penicilinas", "Cefalosporinas", "Azitromicina", "Consultar al médico para alternativas específicas según el tipo de infección"]
+  },
+  {
+    name: "Metronidazol",
+    category: FDACategory.B,
+    description: "Antibiótico y antiparasitario utilizado para tratar infecciones por bacterias anaerobias y ciertos parásitos.",
+    risks: "Los estudios no han demostrado un aumento en el riesgo de malformaciones congénitas con el uso oral. Existe cierta preocupación sobre el uso durante el primer trimestre, pero la evidencia de riesgo no es concluyente.",
+    recommendations: "El uso oral para infecciones sistémicas debe evitarse durante el primer trimestre si es posible. El tratamiento de la vaginosis bacteriana y otras infecciones puede ser necesario y los beneficios pueden superar los riesgos.",
+    alternatives: ["Clindamicina (para vaginosis bacteriana)", "Amoxicilina-clavulánico (para algunas infecciones)", "Consultar al médico para alternativas específicas"]
+  },
+  {
+    name: "Atorvastatina",
+    category: FDACategory.X,
+    description: "Estatina utilizada para reducir los niveles de colesterol y prevenir enfermedades cardiovasculares.",
+    risks: "Las estatinas pueden interferir con la síntesis de colesterol, que es esencial para el desarrollo fetal. Existe preocupación sobre posibles anomalías congénitas y efectos adversos sobre el desarrollo fetal.",
+    recommendations: "Contraindicada durante el embarazo. Debe suspenderse antes de la concepción o tan pronto como se confirme el embarazo. Las mujeres en edad fértil que toman estatinas deben utilizar métodos anticonceptivos eficaces.",
+    alternatives: ["Cambios en la dieta y estilo de vida", "Resinas secuestradoras de ácidos biliares (en casos seleccionados)", "Monitoreo clínico de lípidos durante el embarazo sin tratamiento farmacológico"]
+  },
+  {
+    name: "Hidroclorotiazida",
+    category: FDACategory.C,
+    description: "Diurético tiazídico utilizado para tratar la hipertensión y el edema.",
+    risks: "Puede causar desequilibrios electrolíticos, disminución del volumen plasmático y reducción de la perfusión placentaria. También existe preocupación por posibles efectos sobre el metabolismo de la glucosa y los electrolitos fetales.",
+    recommendations: "Generalmente no es el antihipertensivo de primera elección durante el embarazo. Usar solo cuando los beneficios superen claramente los riesgos y no haya alternativas más seguras disponibles.",
+    alternatives: ["Labetalol", "Metildopa", "Nifedipino", "Hidralazina"]
+  },
+  {
+    name: "Propranolol",
+    category: FDACategory.C,
+    description: "Betabloqueante no selectivo utilizado para tratar la hipertensión, arritmias, migraña, temblor esencial y ansiedad situacional.",
+    risks: "Uso durante el segundo y tercer trimestre puede asociarse con restricción del crecimiento intrauterino, bradicardia fetal e hipoglucemia neonatal. El uso durante el trabajo de parto puede causar depresión respiratoria neonatal.",
+    recommendations: "Puede usarse durante el embarazo cuando está médicamente indicado y los beneficios superan los riesgos. Monitoreo fetal y neonatal estricto es recomendado.",
+    alternatives: ["Labetalol", "Metildopa", "Betabloqueantes más selectivos como metoprolol"]
+  },
+  {
+    name: "Valproato de sodio",
+    category: FDACategory.X,
+    description: "Anticonvulsivo y estabilizador del estado de ánimo utilizado para tratar la epilepsia, trastorno bipolar y migraña.",
+    risks: "Alto riesgo de malformaciones congénitas (10-20%), incluyendo defectos del tubo neural, cardíacos, craneofaciales y de las extremidades. También se asocia con deterioro cognitivo y trastornos del espectro autista en niños expuestos prenatalmente.",
+    recommendations: "Debe evitarse durante el embarazo, especialmente durante el primer trimestre. Las mujeres en edad fértil con epilepsia deben considerar alternativas terapéuticas antes de quedar embarazadas y utilizar métodos anticonceptivos eficaces.",
+    alternatives: ["Lamotrigina", "Levetiracetam", "Oxcarbazepina", "Consulta con neurólogo para ajuste de tratamiento antiepiléptico"]
+  },
+  {
+    name: "Insulina",
+    category: FDACategory.A,
+    description: "Hormona utilizada para el tratamiento de la diabetes mellitus para controlar los niveles de glucosa en sangre.",
+    risks: "No atraviesa la placenta en cantidades significativas y no se han observado efectos teratogénicos. El control adecuado de la glucemia durante el embarazo es crucial para prevenir complicaciones maternas y fetales.",
+    recommendations: "Medicamento de elección para el tratamiento de la diabetes durante el embarazo. Las necesidades de insulina generalmente aumentan durante el embarazo y requieren ajustes frecuentes.",
+    alternatives: ["En algunos casos, metformina puede ser una opción para la diabetes gestacional", "Control estricto de la dieta y ejercicio como complemento al tratamiento"]
+  },
+  {
+    name: "Azitromicina",
+    category: FDACategory.B,
+    description: "Antibiótico macrólido de amplio espectro utilizado para tratar diversas infecciones bacterianas como infecciones respiratorias, de la piel y transmitidas sexualmente.",
+    risks: "Los estudios no han demostrado un aumento en el riesgo de malformaciones congénitas. Ha sido ampliamente utilizado durante el embarazo.",
+    recommendations: "Puede ser prescrito durante el embarazo cuando está indicado clínicamente. Es una alternativa para pacientes alérgicas a penicilinas para muchas infecciones.",
+    alternatives: ["Amoxicilina", "Cefalosporinas", "Consultar al médico para alternativas específicas según el tipo de infección"]
+  },
 ];
 
 // Función para buscar medicamentos por nombre (inclusivo)
