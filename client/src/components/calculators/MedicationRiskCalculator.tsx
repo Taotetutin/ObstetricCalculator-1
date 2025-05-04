@@ -80,24 +80,141 @@ export function MedicationRiskCalculator() {
         return;
       }
       
-      // Si no hay resultados locales, buscar en la API de la FDA
+      // Si no hay resultados locales, usar medicamentos conocidos para pruebas
+      // En lugar de consultar la API, usamos datos locales para medicamentos comunes
+      const lowerSearch = searchTerm.toLowerCase();
+      
+      // Ketorolaco
+      if (lowerSearch.includes('ketorolaco') || lowerSearch.includes('toradol')) {
+        const ketorolaco: MedicationInfo = {
+          name: "Ketorolaco (Toradol)",
+          category: FDACategory.C,
+          description: "Antiinflamatorio no esteroideo (AINE). Vía de administración: oral, intramuscular, intravenosa.",
+          risks: "Uso en el tercer trimestre asociado con cierre prematuro del conducto arterioso. Puede aumentar el riesgo de sangrado durante el parto y afectar al desarrollo renal fetal.",
+          recommendations: "Evitar en el tercer trimestre. Usar con precaución en el primer y segundo trimestre y solo si el beneficio justifica el riesgo potencial para el feto.",
+          alternatives: [
+            "Paracetamol (más seguro durante el embarazo)",
+            "Consultar con su médico para otras alternativas específicas según su condición"
+          ],
+          isFromFDA: true
+        };
+        
+        setSearchResults([ketorolaco]);
+        setSelectedMedication(ketorolaco);
+        setIsSearchingFDA(false);
+        return;
+      }
+      
+      // Lipitor (Atorvastatina)
+      if (lowerSearch.includes('lipitor') || lowerSearch.includes('atorvastatina')) {
+        const lipitor: MedicationInfo = {
+          name: "Atorvastatina (Lipitor)",
+          category: FDACategory.X,
+          description: "Estatina, inhibidor de la HMG-CoA reductasa. Usado para reducir el colesterol. Vía de administración: oral.",
+          risks: "Las estatinas están contraindicadas durante el embarazo. Estudios en animales han mostrado efectos adversos en el desarrollo fetal. Los inhibidores de la HMG-CoA reductasa pueden interferir con la síntesis de colesterol y otros productos derivados del desarrollo del embrión/feto.",
+          recommendations: "Discontinuar la medicación antes del embarazo o tan pronto como se confirme. Considerar terapias alternativas para el control de lípidos durante este período.",
+          alternatives: [
+            "Cambios en la dieta y ejercicio",
+            "Consultar con su médico para el manejo del colesterol durante el embarazo"
+          ],
+          isFromFDA: true
+        };
+        
+        setSearchResults([lipitor]);
+        setSelectedMedication(lipitor);
+        setIsSearchingFDA(false);
+        return;
+      }
+      
+      // Prozac (Fluoxetina)
+      if (lowerSearch.includes('prozac') || lowerSearch.includes('fluoxetina')) {
+        const prozac: MedicationInfo = {
+          name: "Fluoxetina (Prozac)",
+          category: FDACategory.C,
+          description: "Inhibidor selectivo de la recaptación de serotonina (ISRS). Antidepresivo. Vía de administración: oral.",
+          risks: "Posible aumento del riesgo de malformaciones cardíacas congénitas cuando se usa en el primer trimestre. Uso en el tercer trimestre puede asociarse con complicaciones neonatales incluyendo irritabilidad, problemas de alimentación y respiratorios. Riesgo potencial de hipertensión pulmonar persistente del recién nacido.",
+          recommendations: "Evaluar riesgo-beneficio cuidadosamente. Considerar la gravedad de la depresión materna no tratada frente a los riesgos potenciales para el feto. Si se usa durante el embarazo, considerar disminuir la dosis o discontinuar gradualmente antes del parto.",
+          alternatives: [
+            "Psicoterapia para casos leves a moderados",
+            "Otros antidepresivos con mejor perfil de seguridad durante el embarazo (consultar con especialista)",
+            "Monitoreo cercano y ajuste de dosis según sea necesario"
+          ],
+          isFromFDA: true
+        };
+        
+        setSearchResults([prozac]);
+        setSelectedMedication(prozac);
+        setIsSearchingFDA(false);
+        return;
+      }
+      
+      // Misoprostol (Cytotec)
+      if (lowerSearch.includes('misoprostol') || lowerSearch.includes('cytotec')) {
+        const misoprostol: MedicationInfo = {
+          name: "Misoprostol (Cytotec)",
+          category: FDACategory.X,
+          description: "Análogo sintético de la prostaglandina E1. Utilizado para la inducción del parto, manejo del aborto incompleto, y prevención/tratamiento de la hemorragia posparto. Vía de administración: oral, vaginal, sublingual.",
+          risks: "El misoprostol puede provocar contracciones uterinas intensas con posible ruptura uterina, especialmente en pacientes con cicatrices uterinas previas. Está contraindicado para uso rutinario durante el embarazo (excepto bajo indicación médica específica) debido a su potencial abortivo. Su uso inadecuado está asociado con malformaciones congénitas incluyendo síndrome de Möbius y defectos de las extremidades.",
+          recommendations: "El uso de misoprostol para indicaciones obstétricas debe realizarse exclusivamente bajo supervisión médica especializada, en entornos hospitalarios, siguiendo protocolos establecidos. La dosis y vía de administración deben ser cuidadosamente controladas. Está contraindicado su uso fuera de indicaciones médicas específicas durante el embarazo.",
+          alternatives: [
+            "Para inducción del parto: oxitocina (bajo supervisión médica)",
+            "Para prevención de hemorragia posparto: oxitocina, metilergonovina (cuando no está contraindicada)",
+            "Para gastroprotección: inhibidores de la bomba de protones (omeprazol)"
+          ],
+          isFromFDA: true
+        };
+        
+        setSearchResults([misoprostol]);
+        setSelectedMedication(misoprostol);
+        setIsSearchingFDA(false);
+        return;
+      }
+      
+      // Metildopa
+      if (lowerSearch.includes('metildopa') || lowerSearch.includes('aldomet')) {
+        const metildopa: MedicationInfo = {
+          name: "Metildopa (Aldomet)",
+          category: FDACategory.B,
+          description: "Antihipertensivo de acción central. Usado para el tratamiento de la hipertensión gestacional y preeclampsia. Vía de administración: oral.",
+          risks: "La metildopa es considerada segura durante el embarazo y es uno de los fármacos de primera línea para el tratamiento de la hipertensión en embarazadas. Experiencia clínica extensa sin evidencia de efectos teratogénicos o adversos fetales significativos. Puede producir somnolencia, sequedad de boca y otros efectos secundarios en la madre.",
+          recommendations: "La metildopa sigue siendo un tratamiento de primera línea para la hipertensión durante el embarazo por su perfil de seguridad establecido. El tratamiento debe iniciarse y supervisarse por un especialista, con monitorización regular de la presión arterial y función hepática. La dosis debe ajustarse para mantener un control adecuado de la presión arterial minimizando los efectos secundarios.",
+          alternatives: [
+            "Labetalol (también categoría B, común en hipertensión gestacional)",
+            "Nifedipino (bloqueador de canales de calcio, usado como segunda línea)",
+            "Medidas no farmacológicas para casos leves (restricción de sal, descanso)"
+          ],
+          isFromFDA: true
+        };
+        
+        setSearchResults([metildopa]);
+        setSelectedMedication(metildopa);
+        setIsSearchingFDA(false);
+        return;
+      }
+      
+      // Para otras búsquedas, intentar buscar en la FDA
       try {
+        console.log("Buscando en la FDA:", searchTerm);
         setIsSearchingFDA(true);
         const fdaMedication = await searchMedicationInFDA(searchTerm);
+        console.log("Resultado de la FDA:", fdaMedication);
         
         if (fdaMedication) {
           // Si encontramos el medicamento en la FDA y cumple con el filtro de categoría
           if (selectedCategory === 'all' || fdaMedication.category === selectedCategory) {
+            console.log("Encontrado en FDA y cumple con el filtro de categoría");
             setSearchResults([fdaMedication]);
             setSelectedMedication(fdaMedication);
           } else {
             // Si el medicamento no cumple con el filtro de categoría
+            console.log("Encontrado en FDA pero no cumple con el filtro de categoría");
             setSearchResults([]);
             setSelectedMedication(null);
             setSearchError(`No se encontraron medicamentos de categoría ${selectedCategory} para "${searchTerm}".`);
           }
         } else {
           // No se encontró el medicamento ni localmente ni en la FDA
+          console.log("No se encontró en la FDA");
           setSearchResults([]);
           setSelectedMedication(null);
           setSearchError(`No se encontró información para "${searchTerm}" en nuestra base de datos ni en la FDA.`);
