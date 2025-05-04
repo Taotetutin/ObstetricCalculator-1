@@ -176,7 +176,7 @@ Recomendaciones: [recomendaciones específicas]`,
         )}
       </div>
 
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -219,7 +219,7 @@ Recomendaciones: [recomendaciones específicas]`,
         .animate-pulse {
           animation: pulse 1.5s ease-in-out infinite;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }
