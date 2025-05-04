@@ -56,7 +56,8 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
-// Medicamentos calculators eliminados
+// Medicamentos calculators 
+import MedicationGeminiCalculator from "./MedicationGeminiCalculator";
 
 export const calculators = [
   {
@@ -213,5 +214,11 @@ export const calculators = [
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
   },
-  // Calculadora de medicamentos eliminada
+  {
+    id: "medicamentos-embarazo-ai",
+    name: "Medicamentos en Embarazo (IA)",
+    description: "Consulta la seguridad de medicamentos durante el embarazo mediante IA",
+    icon: Pill,
+    component: MedicationGeminiCalculator,
+  }
 ];
