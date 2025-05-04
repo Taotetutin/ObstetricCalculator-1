@@ -10,18 +10,30 @@ router.get('/api/medications/search', async (req, res) => {
   if (!term || typeof term !== 'string') {
     return res.status(400).json({ error: 'Se requiere un término de búsqueda válido' });
   }
+
+  // Los headers que emulan un navegador normal
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+    'Accept': 'application/json',
+    'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+    'Referer': 'https://open.fda.gov/',
+    'Origin': 'https://open.fda.gov'
+  };
   
   try {
-    // Buscar en la API de la FDA (OpenFDA) - usando términos más flexibles
-    const response = await axios.get(`https://api.fda.gov/drug/label.json`, {
-      params: {
-        search: `openfda.brand_name:"${term}" OR openfda.generic_name:"${term}" OR openfda.substance_name:"${term}"`,
-        limit: 5
-      }
+    // Usar una búsqueda más flexible y con un límite mayor
+    const searchQuery = encodeURIComponent(`openfda.brand_name:"${term}" OR openfda.generic_name:"${term}" OR openfda.substance_name:"${term}" OR openfda.brand_name:${term} OR openfda.generic_name:${term} OR openfda.substance_name:${term}`);
+    
+    // Buscar en la API de la FDA (OpenFDA) emulando un navegador web
+    console.log(`Buscando: ${searchQuery}`);
+    const response = await axios.get(`https://api.fda.gov/drug/label.json?search=${searchQuery}&limit=10`, { 
+      headers,
+      timeout: 10000, // 10 segundos de timeout
     });
     
     // Procesar resultados
     const results = response.data.results || [];
+    console.log(`Resultados encontrados: ${results.length}`);
     
     // Extraer información relevante de cada resultado
     const medications = results.map((result: any) => {
@@ -46,11 +58,15 @@ router.get('/api/medications/search', async (req, res) => {
       // Extraer información de embarazo y advertencias
       const pregnancyInfo = result.pregnancy && result.pregnancy.length > 0 
         ? result.pregnancy[0] 
-        : 'No hay información específica sobre el embarazo disponible.';
+        : (result.pregnancy_or_breast_feeding && result.pregnancy_or_breast_feeding.length > 0 
+            ? result.pregnancy_or_breast_feeding[0] 
+            : 'No hay información específica sobre el embarazo disponible.');
         
       const warnings = result.warnings && result.warnings.length > 0 
         ? result.warnings[0] 
-        : '';
+        : (result.warnings_and_precautions && result.warnings_and_precautions.length > 0
+            ? result.warnings_and_precautions[0]
+            : '');
         
       return {
         name: medicationName,
@@ -65,7 +81,61 @@ router.get('/api/medications/search', async (req, res) => {
   } catch (error: any) {
     console.error('Error buscando medicamentos en la FDA API:', error.message);
     
-    // Database de respaldo con medicamentos comunes para cuando la API falla
+    // Si hay un error de timeout o de conexión, intentar con una URL alternativa
+    try {
+      console.log("Intentando URL alternativa...");
+      
+      // URL alternativa a la API oficial
+      const alternativeResponse = await axios.get(`https://api.fda.gov/drug/label.json?api_key=DEMO_KEY&search=openfda.brand_name:"${term}" OR openfda.generic_name:"${term}"&limit=5`);
+      
+      const results = alternativeResponse.data.results || [];
+      
+      const medications = results.map((result: any) => {
+        const openfda = result.openfda || {};
+        
+        // Extraer categoría de embarazo
+        let pregnancyCategory = 'No disponible';
+        if (openfda.pregnancy_category && openfda.pregnancy_category.length > 0) {
+          pregnancyCategory = openfda.pregnancy_category[0];
+        }
+        
+        // Extraer nombre del medicamento
+        let medicationName = 'Medicamento desconocido';
+        if (openfda.brand_name && openfda.brand_name.length > 0) {
+          medicationName = openfda.brand_name[0];
+        } else if (openfda.generic_name && openfda.generic_name.length > 0) {
+          medicationName = openfda.generic_name[0];
+        } else if (openfda.substance_name && openfda.substance_name.length > 0) {
+          medicationName = openfda.substance_name[0];
+        }
+        
+        // Extraer información de embarazo y advertencias
+        const pregnancyInfo = result.pregnancy && result.pregnancy.length > 0 
+          ? result.pregnancy[0] 
+          : 'No hay información específica sobre el embarazo disponible.';
+          
+        const warnings = result.warnings && result.warnings.length > 0 
+          ? result.warnings[0] 
+          : '';
+          
+        return {
+          name: medicationName,
+          category: pregnancyCategory,
+          information: pregnancyInfo,
+          warnings: warnings,
+          route: openfda.route && openfda.route.length > 0 ? openfda.route[0] : 'No especificada',
+          isAlternative: true
+        };
+      });
+      
+      if (medications.length > 0) {
+        return res.json({ medications });
+      }
+    } catch (alternativeError: any) {
+      console.error('Error en la URL alternativa:', alternativeError.message);
+    }
+    
+    // Base de datos de respaldo con medicamentos comunes para cuando ambas APIs fallan
     const backupMedications = {
       "paracetamol": {
         name: "Paracetamol (Acetaminofén)",
