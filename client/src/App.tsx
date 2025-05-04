@@ -9,7 +9,6 @@ import Calculator from "@/pages/Calculator";
 import AuthPage from "@/pages/AuthPage";
 import CulturalWisdomPage from "@/pages/CulturalWisdomPage";
 import NewsPage from "@/pages/NewsPage";
-import MedicationRiskPage from "@/pages/MedicationRiskPage";
 import PregnancyTrackerPage from "@/pages/PregnancyTrackerPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -43,7 +42,7 @@ function Router() {
               <ProtectedRoute path="/calculadora/:id" component={Calculator} />
               <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
               <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
-              <ProtectedRoute path="/riesgo-medicamentos" component={MedicationRiskPage} />
+
               <ProtectedRoute path="/seguimiento-embarazo" component={PregnancyTrackerPage} />
               <Route component={NotFound} />
             </Switch>
