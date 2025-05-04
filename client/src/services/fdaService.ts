@@ -33,7 +33,9 @@ export async function searchMedicationInFDA(medicationName: string): Promise<Med
   try {
     // Construimos la URL para la API de la FDA
     const searchTerm = encodeURIComponent(medicationName);
-    const url = `https://api.fda.gov/drug/label.json?search=(openfda.brand_name:"${searchTerm}"+openfda.generic_name:"${searchTerm}")+AND+_exists_:openfda.pregnancy_category&limit=1`;
+    // Usamos una consulta más flexible para encontrar coincidencias parciales y evitar errores 404
+    // Ya no requerimos que exista pregnancy_category para permitir más resultados
+    const url = `https://api.fda.gov/drug/label.json?search=(openfda.brand_name:${searchTerm}~+openfda.generic_name:${searchTerm}~+openfda.substance_name:${searchTerm}~)&limit=3`;
     
     // Realizamos la petición
     const response = await axios.get<FDAApiResponse>(url);
@@ -91,10 +93,22 @@ export async function searchMedicationInFDA(medicationName: string): Promise<Med
       risks = result.precautions.join(" ");
     }
     
+    // Limitamos la longitud del texto para evitar textos demasiado extensos
+    if (risks && risks.length > 800) {
+      risks = risks.substring(0, 800) + "... (texto truncado)";
+    }
+    
     // Extraemos recomendaciones
     let recommendations = "";
     if (result.precautions && result.precautions.length > 0) {
       recommendations = result.precautions.join(" ");
+    } else if (result.indications_and_usage && result.indications_and_usage.length > 0) {
+      recommendations = "Indicaciones de uso: " + result.indications_and_usage.join(" ");
+    }
+    
+    // Limitamos la longitud del texto para evitar textos demasiado extensos
+    if (recommendations && recommendations.length > 800) {
+      recommendations = recommendations.substring(0, 800) + "... (texto truncado)";
     }
     
     // Alternativas (no disponibles en la API directamente)
@@ -174,10 +188,22 @@ export async function searchMedicationsByCategoryInFDA(category: FDACategory, li
         risks = result.precautions.join(" ");
       }
       
+      // Limitamos la longitud del texto para evitar textos demasiado extensos
+      if (risks && risks.length > 800) {
+        risks = risks.substring(0, 800) + "... (texto truncado)";
+      }
+      
       // Extraemos recomendaciones
       let recommendations = "";
       if (result.precautions && result.precautions.length > 0) {
         recommendations = result.precautions.join(" ");
+      } else if (result.indications_and_usage && result.indications_and_usage.length > 0) {
+        recommendations = "Indicaciones de uso: " + result.indications_and_usage.join(" ");
+      }
+      
+      // Limitamos la longitud del texto para evitar textos demasiado extensos
+      if (recommendations && recommendations.length > 800) {
+        recommendations = recommendations.substring(0, 800) + "... (texto truncado)";
       }
       
       // Alternativas (no disponibles en la API directamente)
