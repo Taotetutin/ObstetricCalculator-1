@@ -440,30 +440,17 @@ export function MedicationRiskCalculator() {
                     <div className="bg-blue-100 p-3 rounded-full mb-4">
                       <Pill className="h-10 w-10 text-blue-600" />
                     </div>
-                    <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                      Evaluador de Riesgos de Medicamentos durante el Embarazo
-                    </h3>
-                    <p className="text-gray-600 max-w-md mb-6">
-                      Busca un medicamento para ver su clasificación de la FDA, análisis de riesgos, 
-                      recomendaciones clínicas y posibles alternativas más seguras.
-                    </p>
                     <div className="flex flex-col gap-4 items-center">
                       <div className="grid grid-cols-2 gap-2">
                         <div className="flex flex-col items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
                           <ShieldCheck className="h-6 w-6 text-green-500 mb-1" />
-                          <span className="text-xs font-medium text-green-700">Categoría A</span>
-                          <span className="text-xs text-gray-500">Seguro</span>
+                          <span className="text-xs font-medium text-green-700">Seguro</span>
                         </div>
                         <div className="flex flex-col items-center bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
                           <FileX className="h-6 w-6 text-red-500 mb-1" />
-                          <span className="text-xs font-medium text-red-700">Categoría X</span>
-                          <span className="text-xs text-gray-500">Contraindicado</span>
+                          <span className="text-xs font-medium text-red-700">Contraindicado</span>
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500 italic max-w-sm">
-                        Esta herramienta proporciona información educativa basada en la clasificación de la FDA. 
-                        No sustituye el consejo médico profesional.
-                      </p>
                     </div>
                   </div>
                 </Card>
