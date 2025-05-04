@@ -215,9 +215,9 @@ export const calculators = [
     component: PulmonaryPredictorCalculator,
   },
   {
-    id: "medicamentos-embarazo-ai",
-    name: "Medicamentos en Embarazo (IA)",
-    description: "Consulta la seguridad de medicamentos durante el embarazo mediante IA",
+    id: "medicamentos-embarazo",
+    name: "Medicamentos en Embarazo",
+    description: "Consulta la seguridad de medicamentos durante el embarazo",
     icon: Pill,
     component: MedicationGeminiCalculator,
   }
