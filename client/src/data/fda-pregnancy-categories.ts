@@ -269,6 +269,98 @@ export const commonMedications: MedicationInfo[] = [
     recommendations: "Puede ser prescrito durante el embarazo cuando está indicado clínicamente. Es una alternativa para pacientes alérgicas a penicilinas para muchas infecciones.",
     alternatives: ["Amoxicilina", "Cefalosporinas", "Consultar al médico para alternativas específicas según el tipo de infección"]
   },
+  // Más antiinflamatorios
+  {
+    name: "Naproxeno",
+    category: FDACategory.C,
+    description: "Antiinflamatorio no esteroideo (AINE) utilizado para reducir el dolor, la inflamación y la fiebre.",
+    risks: "Similar a otros AINE, su uso durante el tercer trimestre se asocia con cierre prematuro del conducto arterioso fetal, oligohidramnios y complicaciones en el parto. Puede aumentar el riesgo de sangrado.",
+    recommendations: "Evitar durante el tercer trimestre. En el primer y segundo trimestre, usar solo si es claramente necesario, a la dosis más baja efectiva y por el menor tiempo posible.",
+    alternatives: ["Paracetamol", "Tratamientos no farmacológicos para el dolor", "Consultar con el médico para alternativas más seguras"]
+  },
+  {
+    name: "Diclofenaco",
+    category: FDACategory.C,
+    description: "Antiinflamatorio no esteroideo (AINE) potente utilizado para tratar el dolor articular, muscular y la inflamación.",
+    risks: "Uso en el tercer trimestre puede causar cierre prematuro del conducto arterioso fetal y disfunción renal fetal. Puede prolongar el trabajo de parto y aumentar el sangrado durante el parto.",
+    recommendations: "Contraindicado durante el tercer trimestre. Usar con precaución durante el primer y segundo trimestre solo si es claramente necesario y por períodos breves.",
+    alternatives: ["Paracetamol", "Terapia física", "Compresas de calor/frío", "Modificaciones en la actividad"]
+  },
+  {
+    name: "Celecoxib",
+    category: FDACategory.C,
+    description: "Inhibidor selectivo de la COX-2 utilizado para el dolor e inflamación en artritis y otras condiciones inflamatorias crónicas.",
+    risks: "Como otros AINE, puede causar cierre prematuro del conducto arterioso fetal cuando se usa en el tercer trimestre. Menos datos disponibles que con AINE tradicionales, pero se presumen riesgos similares.",
+    recommendations: "Evitar durante el tercer trimestre. Durante el primer y segundo trimestre, considerar solo cuando los beneficios superan los riesgos y no hay alternativas más seguras disponibles.",
+    alternatives: ["Paracetamol", "AINE de menor riesgo como ibuprofeno en dosis bajas (antes del tercer trimestre)", "Terapias no farmacológicas"]
+  },
+  // Más antibióticos
+  {
+    name: "Eritromicina",
+    category: FDACategory.B,
+    description: "Antibiótico macrólido utilizado para tratar diversas infecciones bacterianas, especialmente infecciones respiratorias y de la piel.",
+    risks: "No se ha demostrado un aumento en el riesgo de malformaciones congénitas, aunque algunos estudios han sugerido un pequeño aumento en el riesgo de estenosis pilórica infantil con el uso durante el embarazo temprano.",
+    recommendations: "Puede ser prescrito durante el embarazo cuando está indicado clínicamente. Es una alternativa para pacientes alérgicas a penicilinas.",
+    alternatives: ["Amoxicilina", "Cefalosporinas", "Azitromicina", "Clindamicina (para algunas indicaciones)"]
+  },
+  {
+    name: "Ceftriaxona",
+    category: FDACategory.B,
+    description: "Antibiótico cefalosporina de tercera generación de amplio espectro utilizado para infecciones graves como neumonía, meningitis e infecciones del tracto urinario complicadas.",
+    risks: "Los estudios no han demostrado un aumento en el riesgo de malformaciones congénitas. Las cefalosporinas son generalmente consideradas seguras durante el embarazo.",
+    recommendations: "Puede ser utilizada durante el embarazo cuando está médicamente indicada, especialmente para infecciones graves que requieren tratamiento parenteral.",
+    alternatives: ["Otras cefalosporinas", "Ampicilina (para algunas indicaciones)", "Consultar al médico para alternativas específicas según el tipo de infección"]
+  },
+  {
+    name: "Clindamicina",
+    category: FDACategory.B,
+    description: "Antibiótico utilizado para tratar infecciones causadas por bacterias anaerobias y algunas bacterias Gram-positivas, incluyendo infecciones de la piel, tejidos blandos y vaginosis bacteriana.",
+    risks: "No se ha demostrado un aumento en el riesgo de malformaciones congénitas con su uso durante el embarazo.",
+    recommendations: "Puede ser prescrita durante el embarazo cuando está indicada clínicamente. Es una opción para el tratamiento de la vaginosis bacteriana durante el embarazo.",
+    alternatives: ["Metronidazol", "Cefalosporinas", "Eritromicina", "Consultar al médico para alternativas según el tipo de infección"]
+  },
+  // Antivirales
+  {
+    name: "Aciclovir",
+    category: FDACategory.B,
+    description: "Antiviral utilizado para tratar infecciones por virus del herpes simple, herpes zóster y varicela zóster.",
+    risks: "Ampliamente utilizado durante el embarazo sin evidencia de aumento en malformaciones congénitas. El registro de embarazos con aciclovir no ha mostrado un aumento en los defectos congénitos.",
+    recommendations: "Puede ser utilizado durante el embarazo cuando está clínicamente indicado, especialmente para el tratamiento del herpes genital primario o recurrente severo.",
+    alternatives: ["Valaciclovir", "Tratamiento tópico para lesiones externas leves", "Manejo expectante para casos leves"]
+  },
+  {
+    name: "Oseltamivir",
+    category: FDACategory.C,
+    description: "Antiviral utilizado para el tratamiento y la prevención de la influenza A y B.",
+    risks: "Datos limitados en embarazadas, pero los estudios observacionales no han demostrado un aumento en el riesgo de malformaciones congénitas. La gripe durante el embarazo puede causar complicaciones graves para la madre y el feto.",
+    recommendations: "Puede usarse durante el embarazo cuando está clínicamente indicado, especialmente para el tratamiento de la influenza confirmada o sospechada, ya que los beneficios suelen superar los riesgos potenciales.",
+    alternatives: ["Zanamivir (inhalado)", "Vacunación contra la influenza como prevención", "Medidas de soporte"]
+  },
+  {
+    name: "Valaciclovir",
+    category: FDACategory.B,
+    description: "Profármaco del aciclovir, utilizado para el tratamiento de infecciones por herpes simple, herpes zóster y prevención del herpes genital recurrente.",
+    risks: "Similar al aciclovir, no se ha demostrado un aumento en el riesgo de malformaciones congénitas. Se convierte en aciclovir en el cuerpo, que tiene un largo historial de uso seguro durante el embarazo.",
+    recommendations: "Puede ser utilizado durante el embarazo cuando está indicado clínicamente. Mejor biodisponibilidad que el aciclovir, lo que permite una dosificación menos frecuente.",
+    alternatives: ["Aciclovir", "Tratamiento tópico para lesiones externas leves", "Manejo expectante para casos leves"]
+  },
+  // Antiinflamatorios esteroideos (corticosteroides)
+  {
+    name: "Dexametasona",
+    category: FDACategory.C,
+    description: "Corticosteroide potente utilizado para reducir la inflamación y suprimir el sistema inmunitario. En obstetricia, se usa para acelerar la maduración pulmonar fetal en casos de parto prematuro inminente.",
+    risks: "Uso prolongado o a dosis altas puede asociarse con bajo peso al nacer, insuficiencia suprarrenal neonatal y posiblemente un pequeño aumento en el riesgo de paladar hendido cuando se usa en el primer trimestre.",
+    recommendations: "Los beneficios de su uso para maduración pulmonar fetal entre las semanas 24-34 superan ampliamente los riesgos. Para otras indicaciones, usar solo cuando sea claramente necesario.",
+    alternatives: ["Betametasona (para maduración pulmonar fetal)", "Otros corticosteroides menos potentes", "Tratamientos no esteroideos según la condición"]
+  },
+  {
+    name: "Betametasona",
+    category: FDACategory.C,
+    description: "Corticosteroide potente utilizado principalmente en obstetricia para acelerar la maduración pulmonar fetal en casos de riesgo de parto prematuro.",
+    risks: "Similar a otros corticosteroides, pero los beneficios para la maduración pulmonar fetal superan ampliamente los riesgos. El uso prolongado puede asociarse con restricción del crecimiento intrauterino.",
+    recommendations: "Recomendada para maduración pulmonar fetal entre las semanas 24-34 de gestación cuando hay riesgo de parto prematuro. El régimen estándar consiste en dos dosis con 24 horas de diferencia.",
+    alternatives: ["Dexametasona", "Para otras indicaciones no obstétricas, considerar corticosteroides menos potentes o tratamientos no esteroideos"]
+  },
 ];
 
 // Función para buscar medicamentos por nombre (inclusivo)
