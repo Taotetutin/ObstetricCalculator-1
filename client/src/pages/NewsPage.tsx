@@ -82,7 +82,7 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <div className="container mx-auto py-8 px-3 sm:px-4 max-w-full overflow-hidden">
+    <div className="py-8 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
       <Helmet>
         <title>ObsteriX al Día | Noticias de Obstetricia y Ginecología</title>
       </Helmet>

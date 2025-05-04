@@ -78,7 +78,7 @@ export function CulturalWisdomCarousel({
   };
 
   return (
-    <div className="space-y-3 sm:space-y-4 overflow-hidden max-w-full">
+    <div className="space-y-3 sm:space-y-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
         <h2 className="text-lg sm:text-xl font-bold text-blue-800">{title}</h2>
         {showFilters && (
