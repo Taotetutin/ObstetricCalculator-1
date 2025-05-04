@@ -33,7 +33,7 @@ import {
 } from '@/data/fda-pregnancy-categories';
 import { searchMedicationInFDA } from '@/services/fdaService';
 
-function MedicationRiskCalculator() {
+export function MedicationRiskCalculator() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<FDACategory | 'all' | ''>('all');
   const [searchResults, setSearchResults] = useState<MedicationInfo[]>([]);
@@ -768,5 +768,3 @@ function MedicationRiskCalculator() {
     </div>
   );
 }
-
-export default MedicationRiskCalculator;

@@ -56,7 +56,7 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
-import MedicationRiskCalculator from "./MedicationRiskCalculator";
+import { MedicationRiskCalculator } from "./MedicationRiskCalculator";
 
 export const calculators = [
   {

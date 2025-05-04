@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FDACategory, MedicationInfo } from '@/data/fda-pregnancy-categories';
+import { FDACategory, MedicationInfo } from '../data/fda-pregnancy-categories';
 
 // Definimos la interfaz para la respuesta de la API de la FDA
 interface FDAApiResponse {
