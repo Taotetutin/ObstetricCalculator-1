@@ -59,13 +59,6 @@ import { MedicationRiskCalculator } from "./MedicationRiskCalculator";
 
 export const calculators = [
   {
-    id: "riesgo-medicamentos",
-    name: "Riesgos de Medicamentos",
-    description: "Evaluación de riesgos de medicamentos durante el embarazo según clasificación FDA",
-    icon: Tablets,
-    component: MedicationRiskCalculator,
-  },
-  {
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
     description: "Calculadora completa de edad gestacional con fechas importantes y registro de pacientes",
@@ -218,5 +211,12 @@ export const calculators = [
     description: "Evaluación integral de patologías pulmonares fetales",
     icon: Stethoscope,
     component: PulmonaryPredictorCalculator,
+  },
+  {
+    id: "riesgo-medicamentos",
+    name: "Riesgos de Medicamentos",
+    description: "Evaluación de riesgos de medicamentos durante el embarazo según clasificación FDA",
+    icon: Tablets,
+    component: MedicationRiskCalculator,
   }
 ];
