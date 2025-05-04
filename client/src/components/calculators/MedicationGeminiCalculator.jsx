@@ -182,12 +182,12 @@ function MedicationGeminiCalculator() {
         </p>
       </div>
       
-      <div className="p-5">
-        {/* Selector de métodos de búsqueda */}
-        <div className="flex mb-4 border-b">
+      <div className="p-4 sm:p-5">
+        {/* Selector de métodos de búsqueda - mejor espaciado en móvil */}
+        <div className="flex justify-center sm:justify-start mb-4 border-b">
           <button
             onClick={() => setActiveTab("gemini")}
-            className={`px-4 py-2 font-medium text-sm ${
+            className={`px-3 sm:px-4 py-2 font-medium text-sm ${
               activeTab === "gemini"
                 ? "text-blue-600 border-b-2 border-blue-600"
                 : "text-gray-500 hover:text-gray-700"
@@ -197,7 +197,7 @@ function MedicationGeminiCalculator() {
           </button>
           <button
             onClick={() => setActiveTab("fda")}
-            className={`px-4 py-2 font-medium text-sm ${
+            className={`px-3 sm:px-4 py-2 font-medium text-sm ${
               activeTab === "fda"
                 ? "text-blue-600 border-b-2 border-blue-600"
                 : "text-gray-500 hover:text-gray-700"
@@ -207,19 +207,19 @@ function MedicationGeminiCalculator() {
           </button>
         </div>
         
-        <div className="mb-4">
-          <div className="flex flex-col md:flex-row gap-2">
+        <div className="mb-5">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-grow">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Buscar medicamento (ej: paracetamol, ibuprofeno)"
-                className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Buscar medicamento (ej: paracetamol)"
+                className="w-full p-3 pl-9 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
               />
               <svg 
-                className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" 
+                className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" 
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 20 20" 
                 fill="currentColor"
@@ -234,14 +234,14 @@ function MedicationGeminiCalculator() {
             <button
               onClick={handleSearch}
               disabled={!searchTerm.trim() || loading}
-              className={`px-5 py-2.5 rounded-lg text-white font-medium ${
+              className={`px-4 sm:px-5 py-3 rounded-lg text-white font-medium text-sm sm:text-base ${
                 !searchTerm.trim() || loading
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 transition"
               }`}
             >
               {loading ? (
-                <span className="flex items-center">
+                <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -295,48 +295,48 @@ function MedicationGeminiCalculator() {
               </p>
             </div>
             
-            <div className="p-5">
+            <div className="p-4 sm:p-5">
               {geminiResult.categoria && (
-                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                <div className="bg-blue-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <div className="flex items-center mb-2">
                     <span className="text-blue-600 mr-2">🏷️</span>
-                    <h3 className="text-blue-800 font-semibold">Categoría FDA</h3>
+                    <h3 className="text-blue-800 font-semibold text-sm sm:text-base">Categoría FDA</h3>
                   </div>
-                  <p className="text-blue-700 ml-6">{geminiResult.categoria}</p>
+                  <p className="text-blue-700 ml-6 text-sm sm:text-base">{geminiResult.categoria}</p>
                 </div>
               )}
               
               {geminiResult.descripcion && (
-                <div className="bg-green-50 rounded-lg p-4 mb-4">
+                <div className="bg-green-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <div className="flex items-center mb-2">
                     <span className="text-green-600 mr-2">📝</span>
-                    <h3 className="text-green-800 font-semibold">Descripción</h3>
+                    <h3 className="text-green-800 font-semibold text-sm sm:text-base">Descripción</h3>
                   </div>
-                  <p className="text-green-700 ml-6">{geminiResult.descripcion}</p>
+                  <p className="text-green-700 ml-6 text-sm sm:text-base">{geminiResult.descripcion}</p>
                 </div>
               )}
               
               {geminiResult.riesgos && (
-                <div className="bg-yellow-50 rounded-lg p-4 mb-4">
+                <div className="bg-yellow-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <div className="flex items-center mb-2">
                     <span className="text-yellow-600 mr-2">⚠️</span>
-                    <h3 className="text-yellow-800 font-semibold">Riesgos Potenciales</h3>
+                    <h3 className="text-yellow-800 font-semibold text-sm sm:text-base">Riesgos Potenciales</h3>
                   </div>
-                  <p className="text-yellow-700 ml-6">{geminiResult.riesgos}</p>
+                  <p className="text-yellow-700 ml-6 text-sm sm:text-base">{geminiResult.riesgos}</p>
                 </div>
               )}
               
               {geminiResult.recomendaciones && (
-                <div className="bg-purple-50 rounded-lg p-4 mb-4">
+                <div className="bg-purple-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <div className="flex items-center mb-2">
                     <span className="text-purple-600 mr-2">💡</span>
-                    <h3 className="text-purple-800 font-semibold">Recomendaciones</h3>
+                    <h3 className="text-purple-800 font-semibold text-sm sm:text-base">Recomendaciones</h3>
                   </div>
-                  <p className="text-purple-700 ml-6">{geminiResult.recomendaciones}</p>
+                  <p className="text-purple-700 ml-6 text-sm sm:text-base">{geminiResult.recomendaciones}</p>
                 </div>
               )}
               
-              <div className="mt-2 pt-4 border-t border-gray-200">
+              <div className="mt-3 pt-3 border-t border-gray-200">
                 <p className="text-xs text-gray-500 italic">
                   La información proporcionada es orientativa y ha sido generada por IA. No sustituye el consejo médico profesional.
                   Consulte siempre con su médico antes de tomar cualquier medicamento durante el embarazo.
@@ -448,31 +448,31 @@ function MedicationGeminiCalculator() {
           </div>
         )}
         
-        {!searchTerm && !selectedMedication && (
+        {!searchTerm && !selectedMedication && !geminiResult && (
           <div className="mt-2">
             <h3 className="text-lg font-medium text-gray-800 mb-3">Categorías FDA para Embarazo</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {Object.entries(fdaCategories).map(([category, description]) => (
                 <div key={category} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                   <div className="flex items-center mb-2">
-                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full mr-2 font-bold text-white bg-${getCategoryColorByLetter(category)}`}>
+                    <span className={`inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full mr-2 font-bold text-white text-sm sm:text-base bg-${getCategoryColorByLetter(category)}`}>
                       {category}
                     </span>
-                    <span className="font-medium text-gray-800">
+                    <span className="font-medium text-gray-800 text-sm sm:text-base">
                       {getRiskLevelByLetter(category)}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600">{description.substring(0, 100)}...</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{description.substring(0, 100)}...</p>
                 </div>
               ))}
             </div>
             
-            <div className="mt-6 bg-blue-50 rounded-lg p-4">
-              <h4 className="font-medium text-blue-800 mb-2">Base de datos de medicamentos</h4>
-              <p className="text-sm text-blue-700">
-                Esta herramienta contiene datos sobre más de 30 medicamentos comunes y su clasificación durante
-                el embarazo. Ingrese el nombre de un medicamento en el campo de búsqueda para consultar su 
-                categoría FDA y recomendaciones específicas.
+            <div className="mt-5 bg-blue-50 rounded-lg p-3 sm:p-4">
+              <h4 className="font-medium text-blue-800 mb-2 text-sm sm:text-base">Base de datos de medicamentos</h4>
+              <p className="text-xs sm:text-sm text-blue-700">
+                Esta herramienta contiene información detallada sobre medicamentos y su clasificación durante
+                el embarazo. Use la búsqueda inteligente para información completa o consulte la base de datos
+                FDA para datos específicos de categorías.
               </p>
             </div>
           </div>
