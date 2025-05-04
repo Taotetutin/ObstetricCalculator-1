@@ -3,6 +3,7 @@ import { getWisdomByTrimester, getWisdomByRegion, getRandomWisdom, getAllRegions
 import { CulturalWisdomCard } from './CulturalWisdomCard';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronLeft, ChevronRight, Filter, RefreshCcw } from 'lucide-react';
 
 interface CulturalWisdomCarouselProps {
