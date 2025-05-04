@@ -417,65 +417,101 @@ export default function MedicationRiskCalculator() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-              <div className="bg-green-50 border border-green-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-green-800">
-                  <ShieldCheck className="h-4 w-4" />
-                  <span>Categoría A</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-green-100 border-2 border-green-300 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.A); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-green-800">
+                  <ShieldCheck className="h-5 w-5" />
+                  <span className="text-base">Categoría A</span>
                 </div>
-                <p className="text-green-700 text-xs">
+                <p className="text-green-800 text-sm">
                   Estudios controlados no han demostrado riesgo para el feto en ningún trimestre.
                 </p>
-              </div>
+              </motion.div>
               
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-blue-800">
-                  <Pill className="h-4 w-4" />
-                  <span>Categoría B</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-blue-100 border-2 border-blue-300 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.B); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-blue-800">
+                  <Pill className="h-5 w-5" />
+                  <span className="text-base">Categoría B</span>
                 </div>
-                <p className="text-blue-700 text-xs">
+                <p className="text-blue-800 text-sm">
                   No hay evidencia de riesgo en humanos. Estudios en animales no han mostrado riesgo o los hallazgos no se han confirmado en humanos.
                 </p>
-              </div>
+              </motion.div>
               
-              <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-yellow-800">
-                  <AlertTriangle className="h-4 w-4" />
-                  <span>Categoría C</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-yellow-200 border-2 border-yellow-300 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.C); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-yellow-800">
+                  <AlertTriangle className="h-5 w-5" />
+                  <span className="text-base">Categoría C</span>
                 </div>
-                <p className="text-yellow-700 text-xs">
+                <p className="text-yellow-800 text-sm">
                   Riesgo no puede descartarse. El beneficio potencial puede justificar el riesgo.
                 </p>
-              </div>
+              </motion.div>
               
-              <div className="bg-orange-50 border border-orange-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-orange-800">
-                  <FileWarning className="h-4 w-4" />
-                  <span>Categoría D</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-orange-200 border-2 border-orange-300 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.D); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-orange-800">
+                  <FileWarning className="h-5 w-5" />
+                  <span className="text-base">Categoría D</span>
                 </div>
-                <p className="text-orange-700 text-xs">
+                <p className="text-orange-800 text-sm">
                   Evidencia positiva de riesgo fetal. Los beneficios potenciales pueden superar los riesgos en situaciones graves.
                 </p>
-              </div>
+              </motion.div>
               
-              <div className="bg-red-50 border border-red-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-red-800">
-                  <FileX className="h-4 w-4" />
-                  <span>Categoría X</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-red-200 border-2 border-red-400 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.X); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-red-800">
+                  <FileX className="h-5 w-5" />
+                  <span className="text-base">Categoría X</span>
                 </div>
-                <p className="text-red-700 text-xs">
+                <p className="text-red-800 text-sm">
                   Contraindicado en embarazo. Riesgos superan claramente cualquier beneficio potencial.
                 </p>
-              </div>
+              </motion.div>
               
-              <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1 font-semibold text-gray-800">
-                  <Info className="h-4 w-4" />
-                  <span>No asignada</span>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="bg-gray-200 border-2 border-gray-300 shadow-sm hover:shadow-md rounded-lg p-4 cursor-pointer"
+                onClick={() => {setSelectedCategory(FDACategory.NA); setTimeout(handleSearch, 100);}}
+              >
+                <div className="flex items-center gap-2 mb-2 font-semibold text-gray-800">
+                  <Info className="h-5 w-5" />
+                  <span className="text-base">No asignada</span>
                 </div>
-                <p className="text-gray-700 text-xs">
+                <p className="text-gray-700 text-sm">
                   La FDA no ha asignado una categoría específica a este medicamento.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </CardContent>
         </Card>
