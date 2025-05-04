@@ -767,4 +767,6 @@ function MedicationRiskCalculator() {
       </div>
     </div>
   );
-}export default MedicationRiskCalculator;
+}
+
+export default MedicationRiskCalculator;
