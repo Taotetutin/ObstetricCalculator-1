@@ -29,7 +29,8 @@ import {
   Dna,
   PersonStanding,
   Hourglass,
-  AlarmClock
+  AlarmClock,
+  Tablets
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -54,8 +55,16 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
+import { MedicationRiskCalculator } from "./MedicationRiskCalculator";
 
 export const calculators = [
+  {
+    id: "riesgo-medicamentos",
+    name: "Riesgos de Medicamentos",
+    description: "Evaluación de riesgos de medicamentos durante el embarazo según clasificación FDA",
+    icon: Tablets,
+    component: MedicationRiskCalculator,
+  },
   {
     id: "calculadora-gestacional-compleja",
     name: "Calculadora Gestacional",
