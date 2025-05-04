@@ -44,7 +44,7 @@ export function PregnancyMilestone({ week }: PregnancyMilestoneProps) {
       weekEnd: 22,
     },
     {
-      icon: Lungs,
+      icon: Wind,
       title: 'Desarrollo pulmonar',
       description: 'Los pulmones de tu bebé se están desarrollando y pronto comenzará a practicar la respiración.',
       weekStart: 24,

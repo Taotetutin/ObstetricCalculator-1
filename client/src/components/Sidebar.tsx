@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, Menu, Heart, Calculator, Newspaper } from "lucide-react";
+import { LogOut, Menu, Heart, Calculator, Newspaper, Baby } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
@@ -80,6 +80,22 @@ export default function Sidebar() {
               >
                 <Newspaper className="w-5 h-5 shrink-0 text-blue-600" />
                 <span>ObsteriX al día</span>
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/seguimiento-embarazo"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
+                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                  "transition-colors duration-200",
+                  location === "/seguimiento-embarazo" && 
+                  "bg-blue-100 text-blue-900 font-medium"
+                )}
+              >
+                <Baby className="w-5 h-5 shrink-0 text-pink-500" />
+                <span>Seguimiento de Embarazo</span>
               </Link>
             </li>
           </ul>
