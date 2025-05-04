@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, AlertCircle, Pill, ShieldCheck, AlertTriangle, FileWarning, FileX, Info, Database, Loader2 } from 'lucide-react';
+import { Search, AlertCircle, Pill, ShieldCheck, AlertTriangle, FileWarning, FileX, Info, Database, Loader2, ListFilter, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -276,6 +276,21 @@ export function MedicationRiskCalculator() {
   const handleClearSelection = () => {
     setSelectedMedication(null);
   };
+  
+  // Función para manejar la selección de categoría
+  const handleCategorySelection = (category: FDACategory | 'all') => {
+    setSelectedCategory(category);
+    
+    // Si hay una selección actual, la limpiamos
+    if (selectedMedication) {
+      setSelectedMedication(null);
+    }
+    
+    // Limpiamos el término de búsqueda si estamos seleccionando una categoría específica
+    if (category !== 'all' && searchTerm.trim()) {
+      setSearchTerm('');
+    }
+  };
 
   // Determinar la categoría del medicamento y sus correspondientes atributos visuales
   const getCategoryIcon = (category: FDACategory) => {
@@ -303,58 +318,207 @@ export function MedicationRiskCalculator() {
           <CardHeader className="pb-3">
             <CardTitle className="text-lg text-blue-800">Buscar Medicamento</CardTitle>
             <CardDescription>
-              Ingresa el nombre del medicamento para buscar
+              Ingresa el nombre del medicamento o selecciona una categoría
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Buscador por nombre */}
-            <div className="space-y-2">
-              <div className="relative w-full">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  type="text"
-                  placeholder="Nombre del medicamento..."
-                  className="pl-9 border-blue-200 w-full"
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    // Si se escribe en el buscador, reiniciamos la categoría
-                    if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
-                      setSelectedCategory('all');
-                    }
-                  }}
-                />
-              </div>
-              <Button 
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full" 
-                onClick={() => {
-                  if (searchTerm.length >= 3) {
-                    handleSearch();
-                  }
-                }}
-                disabled={isSearchingFDA}
-              >
-                {isSearchingFDA ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Buscando en FDA...
-                  </>
-                ) : (
-                  "OK"
-                )}
-              </Button>
-              
-              {searchError && (
-                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700 text-sm">
-                  <div className="flex items-start gap-2">
-                    <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-500 mt-0.5" />
-                    <p>{searchError}</p>
+            <Tabs defaultValue="search" className="w-full">
+              <TabsList className="w-full mb-4 bg-blue-100">
+                <TabsTrigger 
+                  value="search" 
+                  className="flex-1 data-[state=active]:bg-white"
+                >
+                  <Search className="h-4 w-4 mr-2" />
+                  Búsqueda
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="categories" 
+                  className="flex-1 data-[state=active]:bg-white"
+                >
+                  <ListFilter className="h-4 w-4 mr-2" />
+                  Categorías FDA
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="search">
+                {/* Buscador por nombre */}
+                <div className="space-y-2">
+                  <div className="relative w-full">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input
+                      type="text"
+                      placeholder="Nombre del medicamento..."
+                      className="pl-9 border-blue-200 w-full"
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        // Si se escribe en el buscador, reiniciamos la categoría
+                        if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
+                          setSelectedCategory('all');
+                        }
+                      }}
+                    />
                   </div>
+                  <Button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full" 
+                    onClick={() => {
+                      if (searchTerm.length >= 3) {
+                        handleSearch();
+                      }
+                    }}
+                    disabled={isSearchingFDA}
+                  >
+                    {isSearchingFDA ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Buscando en FDA...
+                      </>
+                    ) : (
+                      "Buscar"
+                    )}
+                  </Button>
+                  
+                  {searchError && (
+                    <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700 text-sm">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-500 mt-0.5" />
+                        <p>{searchError}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </TabsContent>
+
+              <TabsContent value="categories">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <Button 
+                      onClick={() => handleCategorySelection('all')}
+                      variant={selectedCategory === 'all' ? "default" : "outline"}
+                      className={selectedCategory === 'all' ? "bg-blue-600 hover:bg-blue-700" : "border-blue-200"}
+                    >
+                      Todos
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => handleCategorySelection(FDACategory.A)}
+                      variant={selectedCategory === FDACategory.A ? "default" : "outline"}
+                      className={`${selectedCategory === FDACategory.A ? "bg-green-600 hover:bg-green-700" : "border-green-200 text-green-800"}`}
+                    >
+                      <ShieldCheck className="h-4 w-4 mr-2" />
+                      Categoría A
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => handleCategorySelection(FDACategory.B)}
+                      variant={selectedCategory === FDACategory.B ? "default" : "outline"}
+                      className={`${selectedCategory === FDACategory.B ? "bg-blue-600 hover:bg-blue-700" : "border-blue-200 text-blue-800"}`}
+                    >
+                      <Pill className="h-4 w-4 mr-2" />
+                      Categoría B
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => handleCategorySelection(FDACategory.C)}
+                      variant={selectedCategory === FDACategory.C ? "default" : "outline"}
+                      className={`${selectedCategory === FDACategory.C ? "bg-yellow-600 hover:bg-yellow-700 text-white" : "border-yellow-200 text-yellow-800"}`}
+                    >
+                      <AlertTriangle className="h-4 w-4 mr-2" />
+                      Categoría C
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => handleCategorySelection(FDACategory.D)}
+                      variant={selectedCategory === FDACategory.D ? "default" : "outline"}
+                      className={`${selectedCategory === FDACategory.D ? "bg-orange-600 hover:bg-orange-700 text-white" : "border-orange-200 text-orange-800"}`}
+                    >
+                      <FileWarning className="h-4 w-4 mr-2" />
+                      Categoría D
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => handleCategorySelection(FDACategory.X)}
+                      variant={selectedCategory === FDACategory.X ? "default" : "outline"}
+                      className={`${selectedCategory === FDACategory.X ? "bg-red-600 hover:bg-red-700 text-white" : "border-red-200 text-red-800"}`}
+                    >
+                      <FileX className="h-4 w-4 mr-2" />
+                      Categoría X
+                    </Button>
+                  </div>
+                  
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md text-blue-800 text-sm">
+                    <div className="flex items-start gap-2">
+                      <Info className="h-5 w-5 flex-shrink-0 text-blue-500 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Información de categorías:</p>
+                        <p className="mt-1">{fdaCategoryDescriptions[selectedCategory as FDACategory] || "Selecciona una categoría para ver su descripción."}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                    onClick={handleSearch}
+                  >
+                    Ver medicamentos de categoría {selectedCategory}
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
+
+        {/* Lista de resultados de búsqueda por categoría */}
+        {!selectedMedication && searchResults.length > 0 && (
+          <motion.div
+            key="search-results"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="border-blue-100 shadow w-full">
+              <CardHeader className="bg-blue-50/50 border-b border-blue-100 pb-4">
+                <CardTitle className="text-lg text-blue-800 flex items-center">
+                  <List className="h-5 w-5 mr-2" />
+                  Medicamentos {selectedCategory !== 'all' ? `categoría ${selectedCategory}` : 'encontrados'}
+                  <Badge className="ml-2 bg-blue-100 text-blue-800">{searchResults.length}</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Seleccione un medicamento para ver información detallada
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className={searchResults.length > 8 ? "h-96" : ""}>
+                  <div className="grid grid-cols-1 divide-y divide-blue-100">
+                    {searchResults.map((medication, index) => (
+                      <div 
+                        key={index}
+                        className="p-3 sm:p-4 hover:bg-blue-50 cursor-pointer transition-colors"
+                        onClick={() => handleSelectMedication(medication)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-full flex-shrink-0 ${getCategoryColor(medication.category)}`}>
+                            {getCategoryIcon(medication.category)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-blue-900 truncate">{medication.name}</h3>
+                            <p className="text-sm text-gray-600 line-clamp-1">{medication.description}</p>
+                          </div>
+                          <Badge 
+                            className={`${getCategoryColor(medication.category)} ml-2`}
+                          >
+                            FDA {medication.category}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Resultados detallados del medicamento - Aparecen inmediatamente después de la búsqueda */}
         <AnimatePresence mode="wait">
