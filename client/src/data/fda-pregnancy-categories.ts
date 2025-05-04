@@ -374,12 +374,73 @@ export const commonMedications: MedicationInfo[] = [
       "Consultar al médico para alternativas específicas según la condición"
     ]
   },
+  {
+    name: "Ketoconazol",
+    category: FDACategory.C,
+    description: "Antifúngico de amplio espectro. Utilizado para infecciones fúngicas sistémicas y tópicas. Disponible en formas orales, tópicas y champú.",
+    risks: "Estudios en animales han mostrado efectos teratogénicos a dosis altas. Potencial para toxicidad hepática materna. Cuando se usa por vía oral puede afectar la síntesis de hormonas esteroideas.",
+    recommendations: "Evitar la administración oral durante el embarazo si es posible. Las preparaciones tópicas pueden considerarse cuando sea necesario, con aplicación limitada en área y duración. Considerar alternativas más seguras para infecciones sistémicas.",
+    alternatives: [
+      "Clotrimazol tópico (categoría B, más seguro para uso local)",
+      "Nistatina (para infecciones por Candida)",
+      "Terbinafina (para algunas infecciones fúngicas)"
+    ]
+  },
+  {
+    name: "Enalapril",
+    category: FDACategory.D,
+    description: "Inhibidor de la enzima convertidora de angiotensina (IECA) utilizado para tratar la hipertensión y la insuficiencia cardíaca.",
+    risks: "El uso durante el segundo y tercer trimestre puede causar oligohidramnios, hipoplasia pulmonar, deformidades en las extremidades, hipoplasia craneal y muerte fetal/neonatal. El uso en el primer trimestre puede aumentar el riesgo de malformaciones congénitas.",
+    recommendations: "Debe discontinuarse tan pronto como se confirme el embarazo. Se debe cambiar a un antihipertensivo alternativo que sea seguro durante el embarazo.",
+    alternatives: [
+      "Labetalol", 
+      "Metildopa", 
+      "Nifedipino", 
+      "Hidralazina"
+    ]
+  },
+  {
+    name: "Ciprofloxacino",
+    category: FDACategory.C,
+    description: "Antibiótico de la familia de las fluoroquinolonas utilizado para tratar infecciones bacterianas, especialmente del tracto urinario y gastrointestinal.",
+    risks: "Estudios en animales han mostrado efectos sobre el cartílago articular en desarrollo. Riesgo teórico de daño al cartílago fetal, aunque no se ha confirmado en humanos.",
+    recommendations: "Utilizar sólo cuando los beneficios superen claramente los riesgos y no haya alternativas más seguras disponibles. Evitar durante el primer trimestre si es posible.",
+    alternatives: [
+      "Amoxicilina (para infecciones sensibles)",
+      "Cefalosporinas (para infecciones del tracto urinario)",
+      "Nitrofurantoína (excepto en el tercer trimestre)"
+    ]
+  },
+  {
+    name: "Sildenafil",
+    category: FDACategory.B,
+    description: "Inhibidor de la fosfodiesterasa tipo 5. Utilizado para tratar la disfunción eréctil y, en algunos casos, la hipertensión pulmonar.",
+    risks: "No se han documentado efectos teratogénicos significativos en estudios con animales. Experiencia limitada en humanos pero no sugiere aumento del riesgo.",
+    recommendations: "No está indicado para uso rutinario durante el embarazo excepto en casos específicos como hipertensión pulmonar bajo supervisión especializada.",
+    alternatives: [
+      "Abordajes no farmacológicos para disfunción eréctil",
+      "Para hipertensión pulmonar: consultar con especialista para alternativas específicas"
+    ]
+  },
+  {
+    name: "Loratadina",
+    category: FDACategory.B,
+    description: "Antihistamínico de segunda generación utilizado para tratar alergias como rinitis alérgica y urticaria.",
+    risks: "Estudios en animales no han mostrado efectos teratogénicos. La experiencia en humanos no sugiere un aumento en el riesgo de malformaciones.",
+    recommendations: "Considerado relativamente seguro durante el embarazo cuando existe una indicación clara. Preferible sobre antihistamínicos de primera generación debido a menor sedación y efectos anticolinérgicos.",
+    alternatives: [
+      "Cetirizina (también categoría B)",
+      "Medidas no farmacológicas para aliviar síntomas alérgicos",
+      "Evitar alérgenos conocidos"
+    ]
+  }
 ];
 
 // Función para buscar medicamentos por nombre (inclusivo)
 // Mapa de sinónimos para facilitar búsquedas comunes
 const medicationSynonyms: Record<string, string[]> = {
   "ketoprofeno": ["keto", "ketonal", "profenid"],
+  "ketoconazol": ["nizoral", "fungarest", "ketoisdin", "ketozol", "antifúngico", "antimicótico"],
   "paracetamol": ["acetaminofen", "tylenol", "acetaminofeno", "tempra", "panadol"],
   "ibuprofeno": ["ibu", "advil", "motrin", "nurofen", "buprex"],
   "amoxicilina": ["amox", "amoxil", "amoxidal"],
@@ -392,7 +453,11 @@ const medicationSynonyms: Record<string, string[]> = {
   "fluoxetina": ["prozac"],
   "atorvastatina": ["lipitor"],
   "misoprostol": ["cytotec"],
-  "metildopa": ["aldomet"]
+  "metildopa": ["aldomet"],
+  "enalapril": ["renitec", "vasotec", "ieca", "inhibidor eca"],
+  "ciprofloxacino": ["cipro", "ciproxina", "ciprobay", "fluoroquinolona"],
+  "sildenafil": ["viagra", "revatio", "pde5"],
+  "loratadina": ["clarityne", "claritin", "antihistamínico"]
 };
 
 // Función auxiliar para buscar medicamentos por nombre, incluyendo sinónimos
