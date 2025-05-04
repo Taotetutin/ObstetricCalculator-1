@@ -1,7 +1,34 @@
 "use client";
 import React, { useState } from "react";
 
-import { useHandleStreamResponse } from "../../utilities/runtime-helpers";
+// Import el useHandleStreamResponse desde un archivo de utilidades
+// Como no tenemos exactamente la misma función, crearemos una similar
+function useHandleStreamResponse({ onChunk, onFinish }) {
+  return async (response) => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let result = "";
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value, { stream: true });
+        result += text;
+        onChunk(result);
+      }
+      onFinish(result);
+    } catch (error) {
+      console.error("Error reading stream:", error);
+      throw error;
+    }
+  };
+}
 
 function MedicationGeminiCalculator() {
   const [busqueda, setBusqueda] = useState("");
@@ -176,7 +203,7 @@ Recomendaciones: [recomendaciones específicas]`,
         )}
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style jsx global>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -219,7 +246,7 @@ Recomendaciones: [recomendaciones específicas]`,
         .animate-pulse {
           animation: pulse 1.5s ease-in-out infinite;
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }
