@@ -283,17 +283,114 @@ function MedicationGeminiCalculator() {
           </div>
         )}
 
-        {results.length === 0 && loading === false && searchTerm !== "" && (
+        {/* Resultados de búsqueda con Gemini */}
+        {activeTab === "gemini" && geminiResult && !loading && (
+          <div className="mt-6 border rounded-lg overflow-hidden shadow-md animate-fadeIn">
+            <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+              <h3 className="text-lg font-semibold text-gray-800">
+                {geminiResult.name || searchTerm}
+              </h3>
+              <p className="text-xs text-gray-500 mt-1">
+                Información generada por IA avanzada
+              </p>
+            </div>
+            
+            <div className="p-5">
+              {geminiResult.categoria && (
+                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center mb-2">
+                    <span className="text-blue-600 mr-2">🏷️</span>
+                    <h3 className="text-blue-800 font-semibold">Categoría FDA</h3>
+                  </div>
+                  <p className="text-blue-700 ml-6">{geminiResult.categoria}</p>
+                </div>
+              )}
+              
+              {geminiResult.descripcion && (
+                <div className="bg-green-50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center mb-2">
+                    <span className="text-green-600 mr-2">📝</span>
+                    <h3 className="text-green-800 font-semibold">Descripción</h3>
+                  </div>
+                  <p className="text-green-700 ml-6">{geminiResult.descripcion}</p>
+                </div>
+              )}
+              
+              {geminiResult.riesgos && (
+                <div className="bg-yellow-50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center mb-2">
+                    <span className="text-yellow-600 mr-2">⚠️</span>
+                    <h3 className="text-yellow-800 font-semibold">Riesgos Potenciales</h3>
+                  </div>
+                  <p className="text-yellow-700 ml-6">{geminiResult.riesgos}</p>
+                </div>
+              )}
+              
+              {geminiResult.recomendaciones && (
+                <div className="bg-purple-50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center mb-2">
+                    <span className="text-purple-600 mr-2">💡</span>
+                    <h3 className="text-purple-800 font-semibold">Recomendaciones</h3>
+                  </div>
+                  <p className="text-purple-700 ml-6">{geminiResult.recomendaciones}</p>
+                </div>
+              )}
+              
+              <div className="mt-2 pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 italic">
+                  La información proporcionada es orientativa y ha sido generada por IA. No sustituye el consejo médico profesional.
+                  Consulte siempre con su médico antes de tomar cualquier medicamento durante el embarazo.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Mensajes de no resultados - Gemini */}
+        {activeTab === "gemini" && !geminiResult && !loading && searchTerm !== "" && (
+          <div className="text-center py-8 bg-gray-50 rounded-lg mb-6">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">No se encontró información</h3>
+            <p className="mt-1 text-sm text-gray-500">Intente con otro término de búsqueda o utilice la pestaña "Base de datos FDA".</p>
+          </div>
+        )}
+        
+        {/* Resultados de búsqueda con FDA API */}
+        {activeTab === "fda" && results.length === 0 && !loading && searchTerm !== "" && (
           <div className="text-center py-8 bg-gray-50 rounded-lg mb-6">
             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No se encontraron resultados</h3>
-            <p className="mt-1 text-sm text-gray-500">Intente con otro término de búsqueda.</p>
+            <p className="mt-1 text-sm text-gray-500">Intente con otro término de búsqueda o pruebe la búsqueda inteligente.</p>
           </div>
         )}
 
-        {selectedMedication && (
+        {activeTab === "fda" && results.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-gray-800 mb-2">Resultados ({results.length})</h3>
+            <div className="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto">
+              <ul className="divide-y divide-gray-200">
+                {results.map((med, index) => (
+                  <li 
+                    key={index}
+                    className="py-2 cursor-pointer hover:bg-blue-50 transition px-3 rounded flex justify-between items-center"
+                    onClick={() => handleSelectMedication(med)}
+                  >
+                    <span>{med.name}</span>
+                    <span className={`text-xs px-2 py-1 rounded-full bg-${getCategoryColor(med.category)}/20 text-${getCategoryColor(med.category)}`}>
+                      {med.category}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "fda" && selectedMedication && (
           <div className="mt-6 border rounded-lg overflow-hidden shadow-md animate-fadeIn">
             <div className="p-4 bg-blue-50 border-b">
               <h3 className="text-lg font-semibold text-gray-800">{selectedMedication.name}</h3>
