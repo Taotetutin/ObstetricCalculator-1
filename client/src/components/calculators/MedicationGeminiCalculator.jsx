@@ -175,9 +175,9 @@ function MedicationGeminiCalculator() {
 
   return (
     <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="p-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <h2 className="text-xl font-bold mb-1">Clasificación FDA de Medicamentos en el Embarazo</h2>
-        <p className="text-sm text-blue-100">
+      <div className="py-4 px-4 sm:p-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+        <h2 className="text-lg sm:text-xl font-bold mb-1">Clasificación FDA de Medicamentos en el Embarazo</h2>
+        <p className="text-xs sm:text-sm text-blue-100">
           Base de datos completa sobre la seguridad de medicamentos durante el embarazo
         </p>
       </div>
@@ -286,8 +286,8 @@ function MedicationGeminiCalculator() {
         {/* Resultados de búsqueda con Gemini */}
         {activeTab === "gemini" && geminiResult && !loading && (
           <div className="mt-6 border rounded-lg overflow-hidden shadow-md animate-fadeIn">
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-              <h3 className="text-lg font-semibold text-gray-800">
+            <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                 {geminiResult.name || searchTerm}
               </h3>
               <p className="text-xs text-gray-500 mt-1">
@@ -392,49 +392,49 @@ function MedicationGeminiCalculator() {
 
         {activeTab === "fda" && selectedMedication && (
           <div className="mt-6 border rounded-lg overflow-hidden shadow-md animate-fadeIn">
-            <div className="p-4 bg-blue-50 border-b">
-              <h3 className="text-lg font-semibold text-gray-800">{selectedMedication.name}</h3>
+            <div className="p-3 sm:p-4 bg-blue-50 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">{selectedMedication.name}</h3>
               {selectedMedication.description && (
-                <p className="text-sm text-gray-600">{selectedMedication.description}</p>
+                <p className="text-xs sm:text-sm text-gray-600">{selectedMedication.description}</p>
               )}
             </div>
             
-            <div className="p-5">
-              <div className="flex items-center mb-5">
-                <div className={`h-12 w-12 rounded-full bg-${getCategoryColor(selectedMedication.category)} flex items-center justify-center text-white font-bold`}>
+            <div className="p-3 sm:p-5">
+              <div className="flex items-center mb-4 sm:mb-5">
+                <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-${getCategoryColor(selectedMedication.category)} flex items-center justify-center text-white font-bold text-sm sm:text-base`}>
                   {selectedMedication.category}
                 </div>
-                <div className="ml-4">
-                  <h4 className="text-sm text-gray-500 uppercase">Categoría FDA para embarazo</h4>
-                  <p className="text-lg font-semibold">{getRiskLevel(selectedMedication.category)}</p>
+                <div className="ml-3 sm:ml-4">
+                  <h4 className="text-xs sm:text-sm text-gray-500 uppercase">Categoría FDA para embarazo</h4>
+                  <p className="text-base sm:text-lg font-semibold">{getRiskLevel(selectedMedication.category)}</p>
                 </div>
               </div>
               
               {selectedMedication.category && fdaCategories[selectedMedication.category.split('/')[0]] && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-700 mb-2">Descripción de la categoría</h4>
-                  <p className="text-gray-600">{fdaCategories[selectedMedication.category.split('/')[0]]}</p>
+                <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-700 mb-1 sm:mb-2 text-sm sm:text-base">Descripción de la categoría</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">{fdaCategories[selectedMedication.category.split('/')[0]]}</p>
                 </div>
               )}
               
               {selectedMedication.information && (
-                <div className="mt-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Información sobre el embarazo</h4>
-                  <p className="text-gray-600">{selectedMedication.information}</p>
+                <div className="mt-3 sm:mt-4">
+                  <h4 className="font-medium text-gray-700 mb-1 sm:mb-2 text-sm sm:text-base">Información sobre el embarazo</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">{selectedMedication.information}</p>
                 </div>
               )}
               
               {selectedMedication.warnings && (
-                <div className="mt-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Advertencias</h4>
-                  <p className="text-gray-600">{selectedMedication.warnings}</p>
+                <div className="mt-3 sm:mt-4">
+                  <h4 className="font-medium text-gray-700 mb-1 sm:mb-2 text-sm sm:text-base">Advertencias</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">{selectedMedication.warnings}</p>
                 </div>
               )}
               
               {selectedMedication.recommendation && (
-                <div className="mt-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Recomendaciones</h4>
-                  <p className="text-gray-600">{selectedMedication.recommendation}</p>
+                <div className="mt-3 sm:mt-4">
+                  <h4 className="font-medium text-gray-700 mb-1 sm:mb-2 text-sm sm:text-base">Recomendaciones</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">{selectedMedication.recommendation}</p>
                 </div>
               )}
               

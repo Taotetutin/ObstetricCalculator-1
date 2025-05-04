@@ -31,15 +31,15 @@ export default function Calculator() {
   const CalculatorComponent = calculator.component;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4">
       <Card className="shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10">
+        <CardHeader className="bg-gradient-to-r from-blue-500/10 to-sky-500/10 pb-4 pt-4 px-4 sm:px-6 sm:pt-5 sm:pb-5">
           <CardTitle className="flex items-center gap-2 text-blue-700 text-lg md:text-xl">
             {calculator.icon && <calculator.icon className="w-5 h-5 md:w-6 md:h-6" />}
             {calculator.name}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-3 sm:p-6">
           <CalculatorComponent />
         </CardContent>
       </Card>
