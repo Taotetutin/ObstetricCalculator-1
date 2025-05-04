@@ -240,30 +240,6 @@ export default function MedicationRiskCalculator() {
                 </div>
               </div>
               
-              <div className="w-full md:w-48">
-                <label className="text-sm font-medium mb-1 block text-blue-700">
-                  Categoría FDA
-                </label>
-                <Select 
-                  value={selectedCategory} 
-                  onValueChange={(value) => {
-                    setSelectedCategory(value as FDACategory | 'all');
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value={FDACategory.A}>Categoría A</SelectItem>
-                    <SelectItem value={FDACategory.B}>Categoría B</SelectItem>
-                    <SelectItem value={FDACategory.C}>Categoría C</SelectItem>
-                    <SelectItem value={FDACategory.D}>Categoría D</SelectItem>
-                    <SelectItem value={FDACategory.X}>Categoría X</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
               <div className="w-full md:w-auto self-end">
                 <Button 
                   className="w-full bg-blue-600 hover:bg-blue-700"
