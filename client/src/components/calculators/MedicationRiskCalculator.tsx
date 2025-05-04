@@ -298,6 +298,11 @@ export function MedicationRiskCalculator() {
     if (category !== 'all' && searchTerm.trim()) {
       setSearchTerm('');
     }
+    
+    // Ejecutar la búsqueda inmediatamente al seleccionar una categoría
+    setTimeout(() => {
+      handleSearch();
+    }, 100);
   };
 
   // Determinar la categoría del medicamento y sus correspondientes atributos visuales
@@ -464,12 +469,10 @@ export function MedicationRiskCalculator() {
                     </div>
                   </div>
                   
-                  <Button 
-                    className="bg-blue-600 hover:bg-blue-700 text-white w-full"
-                    onClick={handleSearch}
-                  >
-                    Ver medicamentos de categoría {selectedCategory}
-                  </Button>
+                  {/* Mensaje informativo */}
+                  <div className="text-center text-sm text-blue-600">
+                    Selecciona una categoría para ver los medicamentos correspondientes
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
