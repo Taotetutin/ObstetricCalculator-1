@@ -29,7 +29,7 @@ export default function CulturalWisdomPage() {
   const regionWisdom = selectedRegion ? getWisdomByRegion(selectedRegion) : [];
 
   return (
-    <div className="py-6 sm:py-8 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+    <div className="py-6 sm:py-8 px-3 sm:px-4 md:px-6 max-w-full mx-auto overflow-hidden">
       <Helmet>
         <title>Sabiduría Cultural del Embarazo | ObsteriX Legend</title>
       </Helmet>

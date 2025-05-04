@@ -85,23 +85,19 @@
 }
 
 /* Asegurar que el contenido se mantenga dentro de los límites de la ventana */
-.mobile-constrained {
-  max-width: 100%;
-  width: 100%;
-  padding: 0 1rem;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-@media (min-width: 640px) {
-  .mobile-constrained {
-    padding: 0 1.5rem;
+@media (max-width: 640px) {
+  .overflow-hidden {
+    overflow-x: hidden !important;
   }
-}
-
-@media (min-width: 768px) {
-  .mobile-constrained {
-    padding: 0 2rem;
+  
+  .container, 
+  div[class*="grid"],
+  div[class*="flex"],
+  .max-w-full,
+  .mx-auto {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
 }
 
