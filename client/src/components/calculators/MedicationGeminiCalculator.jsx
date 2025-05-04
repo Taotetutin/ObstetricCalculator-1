@@ -203,7 +203,7 @@ Recomendaciones: [recomendaciones específicas]`,
         )}
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
