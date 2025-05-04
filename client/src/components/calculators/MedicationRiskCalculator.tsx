@@ -54,32 +54,31 @@ export function MedicationRiskCalculator() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Realizar búsqueda cuando cambia el término de búsqueda
+  // Realizar búsqueda combinada cuando cambia el término o la categoría
   useEffect(() => {
+    // Si hay un término de búsqueda válido, priorizar búsqueda por nombre
     if (searchTerm.trim().length > 2) {
       const results = searchMedicationsByName(searchTerm);
-      setSearchResults(results);
-    } else {
-      setSearchResults([]);
-    }
-  }, [searchTerm]);
-
-  // Realizar búsqueda cuando cambia la categoría seleccionada
-  useEffect(() => {
-    if (selectedCategory && selectedCategory !== 'all') {
+      
+      // Si además hay categoría seleccionada, filtrar resultados por categoría
+      if (selectedCategory && selectedCategory !== 'all') {
+        setSearchResults(results.filter(med => med.category === selectedCategory));
+      } else {
+        setSearchResults(results);
+      }
+    } 
+    // Si no hay término de búsqueda pero hay categoría seleccionada
+    else if (selectedCategory && selectedCategory !== 'all') {
       const results = getMedicationsByCategory(selectedCategory as FDACategory);
       setSearchResults(results);
-    } else if (selectedCategory === 'all') {
+    } 
+    // Si no hay término ni categoría específica
+    else {
       setSearchResults([]);
     }
-  }, [selectedCategory]);
+  }, [searchTerm, selectedCategory]);
 
-  // Reiniciar búsqueda por categoría cuando se escribe en el campo de búsqueda
-  useEffect(() => {
-    if (searchTerm.trim().length > 0) {
-      setSelectedCategory('all');
-    }
-  }, [searchTerm]);
+
 
   // Función para seleccionar un medicamento y mostrar detalles
   const handleSelectMedication = (medication: MedicationInfo) => {
@@ -144,7 +143,13 @@ export function MedicationRiskCalculator() {
                   placeholder="Nombre del medicamento..."
                   className="pl-9 border-blue-200"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    // Si se escribe en el buscador, reiniciamos la categoría
+                    if (e.target.value.trim().length > 0 && selectedCategory !== 'all') {
+                      setSelectedCategory('all');
+                    }
+                  }}
                 />
               </div>
 
