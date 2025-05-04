@@ -33,7 +33,7 @@ import {
 
 export function MedicationRiskCalculator() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<FDACategory | ''>('');
+  const [selectedCategory, setSelectedCategory] = useState<FDACategory | 'all' | ''>('all');
   const [searchResults, setSearchResults] = useState<MedicationInfo[]>([]);
   const [selectedMedication, setSelectedMedication] = useState<MedicationInfo | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -66,16 +66,18 @@ export function MedicationRiskCalculator() {
 
   // Realizar búsqueda cuando cambia la categoría seleccionada
   useEffect(() => {
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== 'all') {
       const results = getMedicationsByCategory(selectedCategory as FDACategory);
       setSearchResults(results);
+    } else if (selectedCategory === 'all') {
+      setSearchResults([]);
     }
   }, [selectedCategory]);
 
   // Reiniciar búsqueda por categoría cuando se escribe en el campo de búsqueda
   useEffect(() => {
     if (searchTerm.trim().length > 0) {
-      setSelectedCategory('');
+      setSelectedCategory('all');
     }
   }, [searchTerm]);
 
@@ -151,8 +153,8 @@ export function MedicationRiskCalculator() {
                 <Select 
                   value={selectedCategory} 
                   onValueChange={(value) => {
-                    if (value === '') {
-                      setSelectedCategory('');
+                    if (value === 'all' || value === '') {
+                      setSelectedCategory(value);
                     } else {
                       setSelectedCategory(value as FDACategory);
                     }
@@ -162,7 +164,7 @@ export function MedicationRiskCalculator() {
                     <SelectValue placeholder="Filtrar por categoría FDA" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas las categorías</SelectItem>
+                    <SelectItem value="all">Todas las categorías</SelectItem>
                     <SelectItem value={FDACategory.A}>Categoría A</SelectItem>
                     <SelectItem value={FDACategory.B}>Categoría B</SelectItem>
                     <SelectItem value={FDACategory.C}>Categoría C</SelectItem>
@@ -208,7 +210,7 @@ export function MedicationRiskCalculator() {
                       size="sm" 
                       onClick={() => {
                         setSearchTerm('');
-                        setSelectedCategory('');
+                        setSelectedCategory('all');
                         setSearchResults([]);
                       }}
                       className="text-xs h-7 px-2 text-gray-500"
