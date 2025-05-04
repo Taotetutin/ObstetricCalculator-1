@@ -33,9 +33,9 @@ export async function searchMedicationInFDA(medicationName: string): Promise<Med
   try {
     // Construimos la URL para la API de la FDA
     const searchTerm = encodeURIComponent(medicationName);
-    // Usamos una consulta más flexible para encontrar coincidencias parciales y evitar errores 404
-    // Ya no requerimos que exista pregnancy_category para permitir más resultados
-    const url = `https://api.fda.gov/drug/label.json?search=(openfda.brand_name:${searchTerm}~+openfda.generic_name:${searchTerm}~+openfda.substance_name:${searchTerm}~)&limit=3`;
+    // Simplificamos la consulta para obtener mejores resultados
+    // Usamos una consulta simple con el operador de aproximación (~)
+    const url = `https://api.fda.gov/drug/label.json?search=${searchTerm}~&limit=5`;
     
     // Realizamos la petición
     const response = await axios.get<FDAApiResponse>(url);

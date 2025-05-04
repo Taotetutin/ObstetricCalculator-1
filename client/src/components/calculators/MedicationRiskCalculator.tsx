@@ -259,7 +259,15 @@ export function MedicationRiskCalculator() {
                         {getCategoryIcon(selectedMedication.category)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg sm:text-xl text-blue-900 break-words font-bold leading-tight">{selectedMedication.name}</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl text-blue-900 break-words font-bold leading-tight">
+                          {selectedMedication.name}
+                          {selectedMedication.isFromFDA && (
+                            <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full inline-flex items-center">
+                              <Database className="h-3 w-3 mr-1" />
+                              Datos FDA
+                            </span>
+                          )}
+                        </CardTitle>
                         <CardDescription className="text-xs sm:text-sm text-blue-800 mt-1 font-medium line-clamp-2 sm:line-clamp-none">
                           {selectedMedication.description}
                         </CardDescription>
@@ -271,13 +279,6 @@ export function MedicationRiskCalculator() {
                       >
                         FDA {selectedMedication.category}
                       </Badge>
-                      
-                      {selectedMedication.isFromFDA && (
-                        <Badge variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700 flex items-center gap-1 px-2 py-0.5">
-                          <Database className="h-3 w-3" />
-                          Datos FDA
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 </CardHeader>
