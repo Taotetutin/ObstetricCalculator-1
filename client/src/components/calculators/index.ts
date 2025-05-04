@@ -30,7 +30,8 @@ import {
   PersonStanding,
   Hourglass,
   AlarmClock,
-  Tablets
+  Tablets,
+  Clipboard
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
