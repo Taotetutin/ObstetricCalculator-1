@@ -31,8 +31,7 @@ import {
   Hourglass,
   AlarmClock,
   Tablets,
-  Clipboard,
-  Play
+  Clipboard
 } from "lucide-react";
 
 import GestationalAgeCalculator from "./GestationalAgeCalculator";
@@ -57,7 +56,6 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
-
 // Medicamentos calculators 
 import MedicationGeminiCalculator from "./MedicationGeminiCalculator";
 
@@ -222,5 +220,5 @@ export const calculators = [
     description: "Consulta la seguridad de medicamentos durante el embarazo",
     icon: Pill,
     component: MedicationGeminiCalculator,
-  },
+  }
 ];

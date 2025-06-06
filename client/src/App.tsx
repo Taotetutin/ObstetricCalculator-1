@@ -41,6 +41,8 @@ function Router() {
               <ProtectedRoute path="/calculadora/:id" component={Calculator} />
               <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
               <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
+
+
               <Route component={NotFound} />
             </Switch>
           </main>
