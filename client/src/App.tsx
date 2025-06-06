@@ -37,10 +37,10 @@ function Router() {
             )}
             <Switch>
               <Route path="/auth" component={AuthPage} />
-              <Route path="/" component={Home} />
-              <Route path="/calculadora/:id" component={Calculator} />
-              <Route path="/sabiduria-cultural" component={CulturalWisdomPage} />
-              <Route path="/obsterix-al-dia" component={NewsPage} />
+              <ProtectedRoute path="/" component={Home} />
+              <ProtectedRoute path="/calculadora/:id" component={Calculator} />
+              <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
+              <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
               <Route component={NotFound} />
             </Switch>
           </main>
