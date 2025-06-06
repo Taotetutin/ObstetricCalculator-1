@@ -6,10 +6,8 @@ import { NewsOfTheDay } from "@/components/ui/LatestNews";
 import { Link } from "wouter";
 
 export default function Home() {
-  const { user } = useAuth();
-
-  // Get first name from the full name
-  const firstName = user?.name?.split(' ')[0] || '';
+  // Using demo user for now since auth is bypassed
+  const firstName = 'Doctor';
 
   return (
     <div className="flex flex-col h-full gap-6 sm:gap-8 max-w-4xl mx-auto px-0 sm:px-4">
