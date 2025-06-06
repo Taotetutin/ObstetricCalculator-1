@@ -57,8 +57,7 @@ import RiesgoNeonatalCalculator from "./RiesgoNeonatalCalculator";
 import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
-import BirthVisualizationCalculator from "./BirthVisualizationCalculator";
-import TestCalculator from "./TestCalculator";
+
 // Medicamentos calculators 
 import MedicationGeminiCalculator from "./MedicationGeminiCalculator";
 
@@ -224,18 +223,4 @@ export const calculators = [
     icon: Pill,
     component: MedicationGeminiCalculator,
   },
-  {
-    id: "visualizacion-parto",
-    name: "Visualización del Parto",
-    description: "Experiencia inmersiva con audio y narración del proceso natural del nacimiento",
-    icon: Play,
-    component: BirthVisualizationCalculator,
-  },
-  {
-    id: "test-calculator",
-    name: "Test Calculator",
-    description: "Calculadora de prueba",
-    icon: Calculator,
-    component: TestCalculator,
-  }
 ];

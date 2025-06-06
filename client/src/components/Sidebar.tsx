@@ -9,13 +9,13 @@ import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
   "Calculadoras Esenciales": calculators.filter(c => 
-    ["calculadora-gestacional-compleja", "mefi", "doppler", "visualizacion-parto"].includes(c.id)
+    ["calculadora-gestacional-compleja", "mefi", "doppler"].includes(c.id)
   ),
   "Evaluación y Riesgos": calculators.filter(c => 
-    ["t21", "preeclampsia", "parto-prematuro", "colestasis", "prematurez", "thrombosis"].includes(c.id)
+    ["t21", "preeclampsia", "parto-prematuro", "colestasis", "thrombosis"].includes(c.id)
   ),
   "Herramientas Especializadas": calculators.filter(c => 
-    !["calculadora-gestacional-compleja", "mefi", "doppler", "visualizacion-parto", "t21", "preeclampsia", "parto-prematuro", "colestasis", "prematurez", "thrombosis"].includes(c.id)
+    !["calculadora-gestacional-compleja", "mefi", "doppler", "t21", "preeclampsia", "parto-prematuro", "colestasis", "thrombosis"].includes(c.id)
   )
 };
 
