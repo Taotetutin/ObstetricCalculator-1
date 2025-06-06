@@ -99,6 +99,24 @@
     max-width: 100vw !important;
     overflow-x: hidden !important;
   }
+  
+  /* Mantener botones de autenticación fijos en horizontal */
+  [role="tablist"] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+    height: 44px !important;
+  }
+  
+  [role="tab"] {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+    font-size: 0.875rem !important;
+    padding: 0 8px !important;
+  }
 }
 
 body {

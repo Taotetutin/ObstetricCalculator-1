@@ -69,9 +69,9 @@ export default function AuthPage() {
         <Card className="shadow-lg">
           <CardContent className="pt-6">
             <Tabs defaultValue="login" className="space-y-6">
-              <TabsList className="grid grid-cols-2 w-full">
-                <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
-                <TabsTrigger value="register">Registrarse</TabsTrigger>
+              <TabsList className="grid grid-cols-2 w-full h-11">
+                <TabsTrigger value="login" className="text-sm px-2">Iniciar Sesión</TabsTrigger>
+                <TabsTrigger value="register" className="text-sm px-2">Registrarse</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
