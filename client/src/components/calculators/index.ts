@@ -58,6 +58,7 @@ import ColestasisCalculator from "./colestasis-app/ColestasisCalculator";
 import PulmonaryPredictorCalculator from "./PulmonaryPredictorCalculator";
 import ThrombosisCalculator from "./ThrombosisCalculator";
 import BirthVisualizationCalculator from "./BirthVisualizationCalculator";
+import TestCalculator from "./TestCalculator";
 // Medicamentos calculators 
 import MedicationGeminiCalculator from "./MedicationGeminiCalculator";
 
