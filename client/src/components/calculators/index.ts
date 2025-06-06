@@ -230,5 +230,12 @@ export const calculators = [
     description: "Experiencia inmersiva con audio y narración del proceso natural del nacimiento",
     icon: Play,
     component: BirthVisualizationCalculator,
+  },
+  {
+    id: "test-calculator",
+    name: "Test Calculator",
+    description: "Calculadora de prueba",
+    icon: Calculator,
+    component: TestCalculator,
   }
 ];
