@@ -67,13 +67,24 @@ export default function AuthPage() {
         </div>
 
         <Card className="shadow-lg">
-          <CardContent className="pt-6">
-            <Tabs defaultValue="login" className="space-y-6">
-              <TabsList className="grid grid-cols-2 w-full h-11">
-                <TabsTrigger value="login" className="text-sm px-2">Iniciar Sesión</TabsTrigger>
-                <TabsTrigger value="register" className="text-sm px-2">Registrarse</TabsTrigger>
+          <CardContent className="p-0">
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="w-full h-14 rounded-none rounded-t-lg grid grid-cols-2 bg-gray-50 border-b">
+                <TabsTrigger 
+                  value="login" 
+                  className="h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
+                >
+                  Iniciar Sesión
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="register" 
+                  className="h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
+                >
+                  Registrarse
+                </TabsTrigger>
               </TabsList>
-
+              
+              <div className="p-6">
               <TabsContent value="login">
                 <Form {...loginForm}>
                   <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
@@ -176,6 +187,7 @@ export default function AuthPage() {
                   </form>
                 </Form>
               </TabsContent>
+              </div>
             </Tabs>
           </CardContent>
         </Card>
