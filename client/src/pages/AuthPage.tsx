@@ -69,20 +69,40 @@ export default function AuthPage() {
         <Card className="shadow-lg">
           <CardContent className="p-0">
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="w-full h-14 rounded-none rounded-t-lg grid grid-cols-2 bg-gray-50 border-b">
-                <TabsTrigger 
-                  value="login" 
-                  className="h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
-                >
-                  Iniciar Sesión
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="register" 
-                  className="h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
-                >
-                  Registrarse
-                </TabsTrigger>
-              </TabsList>
+              <div className="auth-tabs-container w-full h-14 bg-gray-50 border-b rounded-t-lg flex">
+                <TabsList className="w-full h-full flex bg-transparent p-0 rounded-none" style={{ display: 'flex', flexDirection: 'row' }}>
+                  <TabsTrigger 
+                    value="login" 
+                    className="auth-tab-button flex-1 h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium border-r border-gray-200"
+                    style={{ 
+                      flex: '1 1 50%', 
+                      minWidth: '50%', 
+                      maxWidth: '50%', 
+                      width: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    Iniciar Sesión
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="register" 
+                    className="auth-tab-button flex-1 h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
+                    style={{ 
+                      flex: '1 1 50%', 
+                      minWidth: '50%', 
+                      maxWidth: '50%', 
+                      width: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    Registrarse
+                  </TabsTrigger>
+                </TabsList>
+              </div>
               
               <div className="p-6">
               <TabsContent value="login">
