@@ -66,8 +66,8 @@ export default function AuthPage() {
           </div>
         </div>
 
-        <Card className="shadow-lg">
-          <CardContent className="p-0">
+        <Card className="shadow-2xl border-0 overflow-hidden">
+          <CardContent className="p-0 m-0">
             <div className="auth-button-container">
               <button 
                 className={`auth-tab-btn ${activeTab === "login" ? "auth-tab-active" : ""}`}
