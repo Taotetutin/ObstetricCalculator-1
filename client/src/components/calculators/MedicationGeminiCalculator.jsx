@@ -38,10 +38,15 @@ function MedicationGeminiCalculator() {
       console.log("Respuesta recibida de Gemini:", response.data);
       
       if (response.data.sections) {
-        setGeminiResult({
+        const result = {
           name: response.data.medicationName,
-          ...response.data.sections
-        });
+          categoria: response.data.sections.categoria,
+          descripcion: response.data.sections.descripcion,
+          riesgos: response.data.sections.riesgos,
+          recomendaciones: response.data.sections.recomendaciones
+        };
+        console.log("Estableciendo geminiResult:", result);
+        setGeminiResult(result);
       } else {
         setError("No se pudo procesar la información recibida.");
       }
@@ -187,7 +192,11 @@ function MedicationGeminiCalculator() {
         <div className="mb-6">
           <div className="flex bg-gray-100 rounded-xl p-1 gap-1">
             <button
-              onClick={() => setActiveTab("gemini")}
+              onClick={() => {
+                setActiveTab("gemini");
+                setResults([]);
+                setSelectedMedication(null);
+              }}
               className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300 ${
                 activeTab === "gemini"
                   ? "bg-blue-600 text-white shadow-lg transform scale-105"
@@ -201,7 +210,10 @@ function MedicationGeminiCalculator() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab("fda")}
+              onClick={() => {
+                setActiveTab("fda");
+                setGeminiResult(null);
+              }}
               className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300 ${
                 activeTab === "fda"
                   ? "bg-blue-600 text-white shadow-lg transform scale-105"
@@ -340,7 +352,7 @@ function MedicationGeminiCalculator() {
         )}
 
         {/* Resultados de búsqueda con Gemini - Interfaz mejorada */}
-        {activeTab === "gemini" && geminiResult && !loading && (
+        {geminiResult && !loading && (
           <div className="mt-6 bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
             {/* Header con información del medicamento */}
             <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white p-6">
