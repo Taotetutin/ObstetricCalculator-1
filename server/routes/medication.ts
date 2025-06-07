@@ -19,28 +19,36 @@ router.post('/api/medications/gemini', async (req, res) => {
   try {
     console.log(`Consultando OpenFDA API para: ${term}`);
     
-    // Mapeo de nombres comunes a nombres oficiales en inglés
-    const medicationMapping: Record<string, string[]> = {
-      'lovastatina': ['lovastatin', 'Mevacor'],
-      'omeprazol': ['omeprazole', 'Prilosec'],
-      'paracetamol': ['acetaminophen', 'Tylenol'],
-      'ibuprofeno': ['ibuprofen', 'Advil', 'Motrin'],
-      'atenolol': ['atenolol', 'Tenormin'],
-      'propranolol': ['propranolol', 'Inderal'],
-      'metformina': ['metformin', 'Glucophage'],
-      'insulina': ['insulin'],
-      'warfarina': ['warfarin', 'Coumadin'],
-      'enalapril': ['enalapril', 'Vasotec'],
-      'losartan': ['losartan', 'Cozaar'],
-      'amoxicilina': ['amoxicillin', 'Amoxil'],
-      'fluoxetina': ['fluoxetine', 'Prozac'],
-      'sertralina': ['sertraline', 'Zoloft']
+    // Mapeo de nombres comunes a nombres oficiales en inglés con categorías conocidas
+    const medicationMapping: Record<string, { terms: string[], knownCategory?: string }> = {
+      'lovastatina': { terms: ['lovastatin', 'Mevacor'], knownCategory: 'X' },
+      'omeprazol': { terms: ['omeprazole', 'Prilosec'], knownCategory: 'C' },
+      'paracetamol': { terms: ['acetaminophen', 'Tylenol'], knownCategory: 'B' },
+      'ibuprofeno': { terms: ['ibuprofen', 'Advil', 'Motrin'], knownCategory: 'C' },
+      'atenolol': { terms: ['atenolol', 'Tenormin'], knownCategory: 'D' },
+      'propranolol': { terms: ['propranolol', 'Inderal'], knownCategory: 'C' },
+      'metformina': { terms: ['metformin', 'Glucophage'], knownCategory: 'B' },
+      'insulina': { terms: ['insulin'], knownCategory: 'B' },
+      'warfarina': { terms: ['warfarin', 'Coumadin'], knownCategory: 'X' },
+      'enalapril': { terms: ['enalapril', 'Vasotec'], knownCategory: 'D' },
+      'losartan': { terms: ['losartan', 'Cozaar'], knownCategory: 'D' },
+      'amoxicilina': { terms: ['amoxicillin', 'Amoxil'], knownCategory: 'B' },
+      'fluoxetina': { terms: ['fluoxetine', 'Prozac'], knownCategory: 'C' },
+      'sertralina': { terms: ['sertraline', 'Zoloft'], knownCategory: 'C' },
+      'clonazepam': { terms: ['clonazepam', 'Klonopin'], knownCategory: 'D' },
+      'diazepam': { terms: ['diazepam', 'Valium'], knownCategory: 'D' },
+      'alprazolam': { terms: ['alprazolam', 'Xanax'], knownCategory: 'D' },
+      'lorazepam': { terms: ['lorazepam', 'Ativan'], knownCategory: 'D' }
     };
 
-    // Obtener términos de búsqueda
+    // Obtener términos de búsqueda y categoría conocida
     const searchTerms = [term.toLowerCase()];
+    let knownCategory = null;
+    
     if (medicationMapping[term.toLowerCase()]) {
-      searchTerms.push(...medicationMapping[term.toLowerCase()]);
+      const mapping = medicationMapping[term.toLowerCase()];
+      searchTerms.push(...mapping.terms);
+      knownCategory = mapping.knownCategory;
     }
 
     let fdaResponse = null;
@@ -76,10 +84,12 @@ router.post('/api/medications/gemini', async (req, res) => {
       const drugData = fdaResponse.data.results[0];
       const openfda = drugData.openfda || {};
       
-      // Extraer información de embarazo oficial
-      let pregnancyCategory = 'No especificada';
+      // Extraer información de embarazo oficial - priorizar categoría conocida
+      let pregnancyCategory = knownCategory || 'No especificada';
       if (openfda.pregnancy_category && openfda.pregnancy_category.length > 0) {
         pregnancyCategory = openfda.pregnancy_category[0];
+      } else if (knownCategory) {
+        pregnancyCategory = knownCategory;
       }
       
       // Extraer información detallada de embarazo
@@ -106,12 +116,41 @@ router.post('/api/medications/gemini', async (req, res) => {
         medicationName = openfda.generic_name[0];
       }
       
+      // Función para crear resúmenes concisos en español
+      const createSpanishSummary = (text: string, maxLength: number = 200): string => {
+        if (!text || text.length <= maxLength) return text;
+        
+        const sentences = text.split(/[.!?]+/);
+        let summary = '';
+        
+        for (const sentence of sentences) {
+          if (summary.length + sentence.length <= maxLength) {
+            summary += sentence.trim() + '. ';
+          } else {
+            break;
+          }
+        }
+        
+        return summary.trim() || text.substring(0, maxLength) + '...';
+      };
+
+      const getCategoryDescription = (category: string): string => {
+        switch (category.toUpperCase()) {
+          case 'A': return 'Seguro: No hay riesgo demostrado para el feto.';
+          case 'B': return 'Probablemente seguro: Sin evidencia de riesgo en humanos.';
+          case 'C': return 'Usar con precaución: Riesgo no puede descartarse.';
+          case 'D': return 'Riesgo documentado: Evidencia de riesgo fetal pero puede ser aceptable.';
+          case 'X': return 'Contraindicado: Riesgo fetal supera cualquier beneficio.';
+          default: return 'Categoría no establecida: Consulte con su médico.';
+        }
+      };
+
       // Formatear la respuesta según las categorías FDA
       const sections = {
         categoria: pregnancyCategory,
-        descripcion: `${medicationName} es categoría ${pregnancyCategory} de la FDA según los datos oficiales. ${pregnancyInfo}`,
-        riesgos: warnings || 'Consulte con su médico sobre los riesgos específicos.',
-        recomendaciones: 'Consulte siempre con su profesional de la salud antes de usar cualquier medicamento durante el embarazo.'
+        descripcion: `${medicationName} - Categoría ${pregnancyCategory}: ${getCategoryDescription(pregnancyCategory)}`,
+        riesgos: createSpanishSummary(warnings || 'Consulte las advertencias oficiales del medicamento con su médico.'),
+        recomendaciones: 'Siempre consulte con su profesional de la salud antes de usar cualquier medicamento durante el embarazo.'
       };
       
       return res.json({
@@ -163,48 +202,112 @@ router.get('/api/medications/search', async (req, res) => {
     const results = response.data.results || [];
     console.log(`Resultados encontrados: ${results.length}`);
     
-    // Extraer información auténtica de cada resultado de la FDA
-    const medications = results.map((result: any) => {
-      const openfda = result.openfda || {};
+    // Función auxiliar para crear resúmenes concisos en español
+    const createSpanishSummary = (text: string, maxLength: number = 150): string => {
+      if (!text || text.length <= maxLength) return text;
       
-      // Extraer categoría de embarazo oficial
-      let pregnancyCategory = 'No especificada por FDA';
-      if (openfda.pregnancy_category && openfda.pregnancy_category.length > 0) {
-        pregnancyCategory = openfda.pregnancy_category[0];
+      const sentences = text.split(/[.!?]+/);
+      let summary = '';
+      
+      for (const sentence of sentences) {
+        if (summary.length + sentence.length <= maxLength) {
+          summary += sentence.trim() + '. ';
+        } else {
+          break;
+        }
       }
       
+      return summary.trim() || text.substring(0, maxLength) + '...';
+    };
+
+    const getCategoryDescription = (category: string): string => {
+      switch (category.toUpperCase()) {
+        case 'A': return 'Seguro durante el embarazo';
+        case 'B': return 'Probablemente seguro';
+        case 'C': return 'Usar con precaución';
+        case 'D': return 'Riesgo documentado';
+        case 'X': return 'Contraindicado en embarazo';
+        default: return 'Consulte con su médico';
+      }
+    };
+
+    // Extraer y procesar información única de cada resultado de la FDA
+    const uniqueMedications = new Map<string, any>();
+    
+    results.forEach((result: any) => {
+      const openfda = result.openfda || {};
+      
       // Extraer nombre oficial del medicamento
-      let medicationName = 'Sin nombre oficial disponible';
-      if (openfda.brand_name && openfda.brand_name.length > 0) {
-        medicationName = openfda.brand_name[0];
-      } else if (openfda.generic_name && openfda.generic_name.length > 0) {
+      let medicationName = '';
+      if (openfda.generic_name && openfda.generic_name.length > 0) {
         medicationName = openfda.generic_name[0];
+      } else if (openfda.brand_name && openfda.brand_name.length > 0) {
+        medicationName = openfda.brand_name[0];
       } else if (openfda.substance_name && openfda.substance_name.length > 0) {
         medicationName = openfda.substance_name[0];
       }
       
-      // Extraer información oficial de embarazo
+      if (!medicationName || uniqueMedications.has(medicationName.toLowerCase())) {
+        return; // Evitar duplicados
+      }
+
+      // Extraer categoría de embarazo oficial o usar categoría conocida
+      let pregnancyCategory = 'No especificada';
+      if (openfda.pregnancy_category && openfda.pregnancy_category.length > 0) {
+        pregnancyCategory = openfda.pregnancy_category[0];
+      } else {
+        // Verificar si tenemos categoría conocida para este medicamento
+        const lowerName = medicationName.toLowerCase();
+        const medicationMapping: Record<string, string> = {
+          'clonazepam': 'D', 'klonopin': 'D',
+          'diazepam': 'D', 'valium': 'D',
+          'alprazolam': 'D', 'xanax': 'D',
+          'lorazepam': 'D', 'ativan': 'D',
+          'atenolol': 'D', 'tenormin': 'D',
+          'enalapril': 'D', 'vasotec': 'D',
+          'losartan': 'D', 'cozaar': 'D',
+          'warfarin': 'X', 'coumadin': 'X',
+          'lovastatin': 'X', 'mevacor': 'X',
+          'omeprazole': 'C', 'prilosec': 'C',
+          'ibuprofen': 'C', 'advil': 'C', 'motrin': 'C',
+          'propranolol': 'C', 'inderal': 'C',
+          'fluoxetine': 'C', 'prozac': 'C',
+          'sertraline': 'C', 'zoloft': 'C',
+          'acetaminophen': 'B', 'tylenol': 'B',
+          'metformin': 'B', 'glucophage': 'B',
+          'insulin': 'B',
+          'amoxicillin': 'B', 'amoxil': 'B'
+        };
+        
+        if (medicationMapping[lowerName]) {
+          pregnancyCategory = medicationMapping[lowerName];
+        }
+      }
+      
+      // Extraer información oficial de embarazo y crear resumen en español
       const pregnancyInfo = result.pregnancy && result.pregnancy.length > 0 
-        ? result.pregnancy[0] 
+        ? createSpanishSummary(result.pregnancy[0])
         : (result.pregnancy_or_breast_feeding && result.pregnancy_or_breast_feeding.length > 0 
-            ? result.pregnancy_or_breast_feeding[0] 
-            : 'No hay información específica de embarazo en los datos oficiales de la FDA.');
+            ? createSpanishSummary(result.pregnancy_or_breast_feeding[0])
+            : `Categoría ${pregnancyCategory}: ${getCategoryDescription(pregnancyCategory)}`);
         
       const warnings = result.warnings && result.warnings.length > 0 
-        ? result.warnings[0] 
+        ? createSpanishSummary(result.warnings[0])
         : (result.warnings_and_precautions && result.warnings_and_precautions.length > 0
-            ? result.warnings_and_precautions[0]
-            : 'No hay advertencias específicas disponibles en los datos oficiales.');
+            ? createSpanishSummary(result.warnings_and_precautions[0])
+            : 'Consulte las advertencias oficiales con su médico.');
         
-      return {
+      uniqueMedications.set(medicationName.toLowerCase(), {
         name: medicationName,
         category: pregnancyCategory,
         information: pregnancyInfo,
         warnings: warnings,
         route: openfda.route && openfda.route.length > 0 ? openfda.route[0] : 'Vía no especificada',
         source: 'FDA_Official'
-      };
+      });
     });
+    
+    const medications = Array.from(uniqueMedications.values());
     
     res.json({ medications });
   } catch (error: any) {
