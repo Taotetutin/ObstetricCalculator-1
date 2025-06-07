@@ -1,9 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, FileText, Mail, Heart, Newspaper } from "lucide-react";
+import { Lock, FileText, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { WisdomOfTheDay } from "@/components/ui/WisdomOfTheDay";
-import { NewsOfTheDay } from "@/components/ui/LatestNews";
-import { Link } from "wouter";
 
 export default function Home() {
   const { user } = useAuth();
@@ -38,40 +35,6 @@ export default function Home() {
             </p>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Sabiduría Cultural del Día */}
-      <div className="mb-3 sm:mb-4">
-        <div className="flex justify-between items-center mb-2 sm:mb-3">
-          <h2 className="text-lg sm:text-xl font-semibold text-blue-800 flex items-center gap-1 sm:gap-2">
-            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-rose-500" />
-            <span className="text-base sm:text-xl">Explora Nuestra Sabiduría Cultural</span>
-          </h2>
-          <Link 
-            href="/sabiduria-cultural"
-            className="bg-blue-600 text-white hover:bg-blue-700 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded-md flex items-center gap-1 shadow-sm"
-          >
-            Ver más <span className="text-xs">→</span>
-          </Link>
-        </div>
-        <WisdomOfTheDay />
-      </div>
-
-      {/* Noticias al Día */}
-      <div className="mb-3 sm:mb-4">
-        <div className="flex justify-between items-center mb-2 sm:mb-3">
-          <h2 className="text-lg sm:text-xl font-semibold text-blue-800 flex items-center gap-1 sm:gap-2">
-            <Newspaper className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-            <span className="text-base sm:text-xl">Explora las Noticias de la Especialidad</span>
-          </h2>
-          <Link 
-            href="/obsterix-al-dia"
-            className="bg-blue-600 text-white hover:bg-blue-700 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded-md flex items-center gap-1 shadow-sm"
-          >
-            Ver más <span className="text-xs">→</span>
-          </Link>
-        </div>
-        <NewsOfTheDay />
       </div>
 
       {/* Imagen de la familia Obsterix */}
