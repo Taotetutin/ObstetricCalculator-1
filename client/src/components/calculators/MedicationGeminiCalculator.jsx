@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { MedicationSafetyVisualization } from './MedicationSafetyVisualization';
 
 function MedicationGeminiCalculator() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,6 +11,7 @@ function MedicationGeminiCalculator() {
   const [geminiResult, setGeminiResult] = useState(null);
   const [streamingResponse, setStreamingResponse] = useState("");
   const [activeTab, setActiveTab] = useState("gemini"); // "gemini" o "fda"
+  const [selectedTrimester, setSelectedTrimester] = useState(1); // Para la visualización de seguridad
 
   // Descripción de las categorías FDA
   const fdaCategories = {
@@ -240,6 +242,29 @@ function MedicationGeminiCalculator() {
               </p>
             )}
           </div>
+
+          {/* Trimester Selector */}
+          <div className="mt-4 p-4 bg-pink-50 rounded-lg border border-pink-200">
+            <h4 className="font-semibold text-pink-800 mb-3">Trimestre del Embarazo</h4>
+            <div className="flex space-x-2">
+              {[1, 2, 3].map((trimester) => (
+                <button
+                  key={trimester}
+                  onClick={() => setSelectedTrimester(trimester)}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedTrimester === trimester
+                      ? "bg-pink-500 text-white shadow-md"
+                      : "bg-white text-pink-600 border border-pink-300 hover:bg-pink-100"
+                  }`}
+                >
+                  {trimester}° Trimestre
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-pink-600 mt-2">
+              Algunos medicamentos tienen diferentes niveles de riesgo según el trimestre
+            </p>
+          </div>
         </div>
         
         <div className="mb-6">
@@ -351,8 +376,24 @@ function MedicationGeminiCalculator() {
           </div>
         )}
 
-        {/* Resultados de búsqueda con Gemini - Interfaz mejorada */}
+        {/* Interactive Safety Visualization */}
         {geminiResult && !loading && (
+          <div className="mt-6">
+            <MedicationSafetyVisualization 
+              medication={{
+                name: geminiResult.name,
+                category: geminiResult.categoria,
+                description: geminiResult.descripcion,
+                risks: geminiResult.riesgos,
+                recommendations: geminiResult.recomendaciones
+              }}
+              trimester={selectedTrimester}
+            />
+          </div>
+        )}
+
+        {/* Resultados de búsqueda con Gemini - Interfaz complementaria */}
+        {geminiResult && !loading && false && (
           <div className="mt-6 bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
             {/* Header con información del medicamento */}
             <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white p-6">
@@ -560,6 +601,21 @@ function MedicationGeminiCalculator() {
         )}
 
         {activeTab === "fda" && selectedMedication && (
+          <div className="mt-6">
+            <MedicationSafetyVisualization 
+              medication={{
+                name: selectedMedication.name,
+                category: selectedMedication.category,
+                description: selectedMedication.information || selectedMedication.description,
+                risks: selectedMedication.warnings || 'Consulte las advertencias oficiales de la FDA',
+                recommendations: 'Consulte siempre con su profesional de la salud antes de usar durante el embarazo'
+              }}
+              trimester={selectedTrimester}
+            />
+          </div>
+        )}
+
+        {activeTab === "fda" && selectedMedication && false && (
           <div className="mt-6 border rounded-lg overflow-hidden shadow-md animate-fadeIn">
             <div className="p-3 sm:p-4 bg-blue-50 border-b">
               <h3 className="text-base sm:text-lg font-semibold text-gray-800">{selectedMedication.name}</h3>
