@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MedicationSafetyVisualization } from './MedicationSafetyVisualization';
+import { DosageRiskCalculator } from './DosageRiskCalculator';
+import { MedicationComparison } from './MedicationComparison';
 
 function MedicationGeminiCalculator() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +14,8 @@ function MedicationGeminiCalculator() {
   const [streamingResponse, setStreamingResponse] = useState("");
   const [activeTab, setActiveTab] = useState("gemini"); // "gemini" o "fda"
   const [selectedTrimester, setSelectedTrimester] = useState(1); // Para la visualización de seguridad
+  const [visualizationMode, setVisualizationMode] = useState("safety"); // "safety", "dosage", "comparison"
+  const [comparisonMedications, setComparisonMedications] = useState([]);
 
   // Descripción de las categorías FDA
   const fdaCategories = {
@@ -376,19 +380,138 @@ function MedicationGeminiCalculator() {
           </div>
         )}
 
-        {/* Interactive Safety Visualization */}
-        {geminiResult && !loading && (
+        {/* Visualization Mode Selector */}
+        {(geminiResult || selectedMedication) && !loading && (
           <div className="mt-6">
-            <MedicationSafetyVisualization 
-              medication={{
-                name: geminiResult.name,
-                category: geminiResult.categoria,
-                description: geminiResult.descripcion,
-                risks: geminiResult.riesgos,
-                recommendations: geminiResult.recomendaciones
-              }}
-              trimester={selectedTrimester}
-            />
+            <div className="bg-white rounded-xl p-4 border border-gray-200 mb-6">
+              <h3 className="font-semibold text-gray-800 mb-4">Herramientas de Análisis Interactivo</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setVisualizationMode("safety")}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                    visualizationMode === "safety"
+                      ? "bg-blue-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  🛡️ Perfil de Seguridad
+                </button>
+                <button
+                  onClick={() => setVisualizationMode("dosage")}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                    visualizationMode === "dosage"
+                      ? "bg-purple-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  💊 Calculadora de Dosis
+                </button>
+                <button
+                  onClick={() => setVisualizationMode("comparison")}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                    visualizationMode === "comparison"
+                      ? "bg-green-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  ⚖️ Comparar Medicamentos
+                </button>
+              </div>
+            </div>
+
+            {/* Safety Visualization */}
+            {visualizationMode === "safety" && geminiResult && (
+              <MedicationSafetyVisualization 
+                medication={{
+                  name: geminiResult.name,
+                  category: geminiResult.categoria,
+                  description: geminiResult.descripcion,
+                  risks: geminiResult.riesgos,
+                  recommendations: geminiResult.recomendaciones
+                }}
+                trimester={selectedTrimester}
+              />
+            )}
+
+            {/* Safety Visualization for FDA results */}
+            {visualizationMode === "safety" && selectedMedication && !geminiResult && (
+              <MedicationSafetyVisualization 
+                medication={{
+                  name: selectedMedication.name,
+                  category: selectedMedication.category,
+                  description: selectedMedication.information || selectedMedication.description,
+                  risks: selectedMedication.warnings || 'Consulte las advertencias oficiales de la FDA',
+                  recommendations: 'Consulte siempre con su profesional de la salud antes de usar durante el embarazo'
+                }}
+                trimester={selectedTrimester}
+              />
+            )}
+
+            {/* Dosage Risk Calculator */}
+            {visualizationMode === "dosage" && geminiResult && (
+              <DosageRiskCalculator
+                medication={{
+                  name: geminiResult.name,
+                  category: geminiResult.categoria,
+                  description: geminiResult.descripcion,
+                  risks: geminiResult.riesgos,
+                  recommendations: geminiResult.recomendaciones
+                }}
+                trimester={selectedTrimester}
+              />
+            )}
+
+            {/* Dosage Risk Calculator for FDA results */}
+            {visualizationMode === "dosage" && selectedMedication && !geminiResult && (
+              <DosageRiskCalculator
+                medication={{
+                  name: selectedMedication.name,
+                  category: selectedMedication.category,
+                  description: selectedMedication.information || selectedMedication.description,
+                  risks: selectedMedication.warnings || 'Consulte las advertencias oficiales de la FDA',
+                  recommendations: 'Consulte siempre con su profesional de la salud antes de usar durante el embarazo'
+                }}
+                trimester={selectedTrimester}
+              />
+            )}
+
+            {/* Medication Comparison */}
+            {visualizationMode === "comparison" && (
+              <MedicationComparison
+                medications={comparisonMedications}
+                onRemoveMedication={(index) => {
+                  const updated = comparisonMedications.filter((_, i) => i !== index);
+                  setComparisonMedications(updated);
+                }}
+                onAddMedication={() => {
+                  const currentMedication = geminiResult || selectedMedication;
+                  if (currentMedication) {
+                    const medicationToAdd = geminiResult ? {
+                      name: geminiResult.name,
+                      category: geminiResult.categoria,
+                      description: geminiResult.descripcion,
+                      risks: geminiResult.riesgos,
+                      recommendations: geminiResult.recomendaciones
+                    } : {
+                      name: selectedMedication.name,
+                      category: selectedMedication.category,
+                      description: selectedMedication.information || selectedMedication.description,
+                      risks: selectedMedication.warnings || 'Consulte las advertencias oficiales de la FDA',
+                      recommendations: 'Consulte siempre con su profesional de la salud antes de usar durante el embarazo'
+                    };
+
+                    // Check if medication is already in comparison
+                    const exists = comparisonMedications.some(med => 
+                      med.name.toLowerCase() === medicationToAdd.name.toLowerCase()
+                    );
+
+                    if (!exists) {
+                      setComparisonMedications([...comparisonMedications, medicationToAdd]);
+                    }
+                  }
+                }}
+              />
+            )}
           </div>
         )}
 
