@@ -17,12 +17,75 @@ router.post('/api/medications/gemini', async (req, res) => {
   }
   
   try {
-    const prompt = `Actúa como un experto farmacéutico y proporciona información sobre la clasificación FDA del medicamento "${term}" durante el embarazo. Responde en español, con el siguiente formato exacto:
+    // Base de datos local con clasificaciones FDA correctas
+    const medicationDatabase = {
+      "propranolol": {
+        categoria: "C",
+        descripcion: "El propranolol es categoría C de la FDA. Los estudios en animales han mostrado efectos adversos en el feto, pero no hay estudios adecuados y bien controlados en mujeres embarazadas. Debe usarse solo si el beneficio potencial justifica el riesgo potencial para el feto.",
+        riesgos: "Puede causar bradicardia fetal, hipoglucemia neonatal, y retraso del crecimiento intrauterino. En altas dosis puede asociarse con bajo peso al nacer.",
+        recomendaciones: "Usar solo cuando sea absolutamente necesario y bajo estricta supervisión médica. Monitorear frecuencia cardíaca fetal y crecimiento. Considerar alternativas más seguras cuando sea posible."
+      },
+      "atenolol": {
+        categoria: "D",
+        descripcion: "El atenolol es categoría D de la FDA. Hay evidencia positiva de riesgo fetal humano, pero los beneficios pueden superar los riesgos en situaciones que pongan en peligro la vida.",
+        riesgos: "Asociado con retraso del crecimiento intrauterino, bajo peso al nacer, y bradicardia neonatal. Mayor riesgo de complicaciones perinatales.",
+        recomendaciones: "Evitar en el embarazo cuando sea posible. Si es esencial, usar la dosis mínima efectiva y monitorear estrechamente el bienestar fetal."
+      },
+      "metoprolol": {
+        categoria: "C",
+        descripcion: "El metoprolol es categoría C de la FDA. Los estudios en animales no han demostrado efectos teratogénicos, pero no hay estudios controlados en mujeres embarazadas.",
+        riesgos: "Posible bradicardia fetal, hipoglucemia neonatal. Generalmente considerado más seguro que otros betabloqueadores.",
+        recomendaciones: "Puede usarse cuando los beneficios superen los riesgos. Preferido sobre atenolol. Monitorear función cardiovascular fetal."
+      },
+      "labetalol": {
+        categoria: "C",
+        descripcion: "El labetalol es categoría C de la FDA y es uno de los betabloqueadores preferidos durante el embarazo para el tratamiento de la hipertensión.",
+        riesgos: "Riesgo mínimo comparado con otros betabloqueadores. Posible hipoglucemia neonatal leve.",
+        recomendaciones: "Considerado de primera línea para hipertensión en el embarazo. Seguro y efectivo bajo supervisión médica adecuada."
+      },
+      "paracetamol": {
+        categoria: "B",
+        descripcion: "El paracetamol es categoría B de la FDA. Los estudios en animales no han demostrado riesgo fetal y no hay estudios controlados en mujeres embarazadas que demuestren riesgo.",
+        riesgos: "Generalmente considerado seguro. Uso prolongado en altas dosis puede asociarse con problemas del desarrollo neurológico.",
+        recomendaciones: "Analgésico de primera elección durante el embarazo. Usar la dosis mínima efectiva por el menor tiempo posible."
+      },
+      "ibuprofeno": {
+        categoria: "C/D",
+        descripcion: "El ibuprofeno es categoría C en el primer y segundo trimestre, y categoría D en el tercer trimestre debido al riesgo de cierre prematuro del conducto arterioso.",
+        riesgos: "En el tercer trimestre: cierre prematuro del conducto arterioso, oligohidramnios, hipertensión pulmonar persistente del recién nacido.",
+        recomendaciones: "Evitar en el tercer trimestre. En primer y segundo trimestre usar solo si es absolutamente necesario y por corto tiempo."
+      }
+    };
+
+    // Buscar en la base de datos local primero
+    const termLower = term.toLowerCase();
+    const localData = Object.prototype.hasOwnProperty.call(medicationDatabase, termLower) 
+      ? medicationDatabase[termLower as keyof typeof medicationDatabase] 
+      : null;
+    
+    if (localData) {
+      return res.json({
+        sections: localData,
+        medicationName: term,
+        source: "local_database"
+      });
+    }
+
+    const prompt = `Actúa como un experto farmacéutico especializado en farmacología perinatal. Proporciona información PRECISA sobre la clasificación FDA del medicamento "${term}" durante el embarazo. 
+
+IMPORTANTE: Verifica que la categoría FDA sea correcta. Las categorías son:
+- A: Seguro (estudios controlados sin riesgo)
+- B: Probablemente seguro (sin evidencia de riesgo en humanos)  
+- C: Precaución (riesgo no puede descartarse)
+- D: Evidencia de riesgo (pero beneficio puede superar riesgo)
+- X: Contraindicado (riesgo supera cualquier beneficio)
+
+Responde en español, con el siguiente formato exacto:
 
 Categoría FDA: [categoría]
-Descripción: [descripción detallada de la categoría]
-Riesgos: [lista de riesgos potenciales]
-Recomendaciones: [recomendaciones específicas]`;
+Descripción: [descripción detallada de la categoría y el medicamento]
+Riesgos: [lista de riesgos potenciales específicos]
+Recomendaciones: [recomendaciones específicas para el uso en embarazo]`;
 
     console.log(`Consultando a Gemini sobre: ${term}`);
     

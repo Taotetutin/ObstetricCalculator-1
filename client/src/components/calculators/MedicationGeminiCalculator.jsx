@@ -339,80 +339,134 @@ function MedicationGeminiCalculator() {
           </div>
         )}
 
-        {/* Resultados de búsqueda con Gemini */}
+        {/* Resultados de búsqueda con Gemini - Interfaz mejorada */}
         {activeTab === "gemini" && geminiResult && !loading && (
-          <div className="mt-6 bg-white rounded-2xl overflow-hidden shadow-xl border-2 border-blue-100">
-            <div className="p-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-              <div className="flex items-center mb-2">
-                <span className="text-2xl mr-3">💊</span>
-                <div>
-                  <h3 className="text-xl font-bold">
-                    {geminiResult.name || searchTerm}
-                  </h3>
-                  <p className="text-blue-100 text-sm">
-                    Análisis completo con inteligencia artificial
-                  </p>
+          <div className="mt-6 bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
+            {/* Header con información del medicamento */}
+            <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center mb-3">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-2xl">💊</span>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold capitalize">
+                        {geminiResult.name || searchTerm}
+                      </h3>
+                      <p className="text-blue-100 text-sm font-medium">
+                        Información farmacológica verificada
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Categoría FDA prominente */}
+                  {geminiResult.categoria && (
+                    <div className="inline-flex items-center bg-white/15 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/20">
+                      <span className="text-lg mr-2">🏷️</span>
+                      <div>
+                        <span className="text-xs font-medium text-blue-100">Categoría FDA</span>
+                        <div className="text-2xl font-bold">{geminiResult.categoria}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Indicador de riesgo visual */}
+                <div className="flex-shrink-0 ml-4">
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold border-4 ${
+                    geminiResult.categoria === 'A' ? 'bg-green-500 border-green-300 text-white' :
+                    geminiResult.categoria === 'B' ? 'bg-blue-500 border-blue-300 text-white' :
+                    geminiResult.categoria === 'C' ? 'bg-yellow-500 border-yellow-300 text-white' :
+                    geminiResult.categoria === 'D' ? 'bg-orange-500 border-orange-300 text-white' :
+                    geminiResult.categoria === 'X' ? 'bg-red-600 border-red-400 text-white' :
+                    'bg-gray-500 border-gray-300 text-white'
+                  }`}>
+                    {geminiResult.categoria || '?'}
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="p-5 space-y-4">
-              {geminiResult.categoria && (
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border-l-4 border-blue-500">
-                  <div className="flex items-start">
-                    <span className="text-2xl mr-3 mt-1">🏷️</span>
-                    <div className="flex-1">
-                      <h4 className="text-blue-900 font-bold text-lg mb-2">Categoría FDA</h4>
-                      <p className="text-blue-800 text-base leading-relaxed">{geminiResult.categoria}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
+            {/* Contenido principal */}
+            <div className="p-6 space-y-6">
+              {/* Descripción */}
               {geminiResult.descripcion && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl p-4 border-l-4 border-green-500">
-                  <div className="flex items-start">
-                    <span className="text-2xl mr-3 mt-1">📝</span>
+                <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-5 border border-slate-200">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">📋</span>
+                    </div>
                     <div className="flex-1">
-                      <h4 className="text-green-900 font-bold text-lg mb-2">Descripción del Medicamento</h4>
-                      <p className="text-green-800 text-base leading-relaxed">{geminiResult.descripcion}</p>
+                      <h4 className="text-lg font-bold text-slate-800 mb-3">Información General</h4>
+                      <p className="text-slate-700 text-base leading-relaxed">{geminiResult.descripcion}</p>
                     </div>
                   </div>
                 </div>
               )}
               
+              {/* Riesgos */}
               {geminiResult.riesgos && (
-                <div className="bg-gradient-to-r from-amber-50 to-yellow-100 rounded-xl p-4 border-l-4 border-amber-500">
-                  <div className="flex items-start">
-                    <span className="text-2xl mr-3 mt-1">⚠️</span>
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-5 border border-amber-200">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">⚠️</span>
+                    </div>
                     <div className="flex-1">
-                      <h4 className="text-amber-900 font-bold text-lg mb-2">Riesgos Potenciales</h4>
+                      <h4 className="text-lg font-bold text-amber-900 mb-3">Riesgos y Precauciones</h4>
                       <p className="text-amber-800 text-base leading-relaxed">{geminiResult.riesgos}</p>
                     </div>
                   </div>
                 </div>
               )}
               
+              {/* Recomendaciones */}
               {geminiResult.recomendaciones && (
-                <div className="bg-gradient-to-r from-purple-50 to-violet-100 rounded-xl p-4 border-l-4 border-purple-500">
-                  <div className="flex items-start">
-                    <span className="text-2xl mr-3 mt-1">💡</span>
+                <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-5 border border-emerald-200">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">💡</span>
+                    </div>
                     <div className="flex-1">
-                      <h4 className="text-purple-900 font-bold text-lg mb-2">Recomendaciones Médicas</h4>
-                      <p className="text-purple-800 text-base leading-relaxed">{geminiResult.recomendaciones}</p>
+                      <h4 className="text-lg font-bold text-emerald-900 mb-3">Recomendaciones Clínicas</h4>
+                      <p className="text-emerald-800 text-base leading-relaxed">{geminiResult.recomendaciones}</p>
                     </div>
                   </div>
                 </div>
               )}
               
-              <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                <div className="flex items-start">
-                  <span className="text-xl mr-3 mt-1">⚕️</span>
-                  <div>
-                    <h5 className="font-bold text-gray-800 mb-2">Aviso Médico Importante</h5>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      Esta información es únicamente orientativa y no sustituye el consejo médico profesional.
-                      Siempre consulte con su médico antes de tomar cualquier medicamento durante el embarazo.
+              {/* Botones de acción */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                <button 
+                  onClick={() => {
+                    setSearchTerm("");
+                    setGeminiResult(null);
+                  }}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <span>🔍</span>
+                  Nueva búsqueda
+                </button>
+                <button 
+                  onClick={() => setActiveTab("fda")}
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <span>🏥</span>
+                  Verificar en FDA
+                </button>
+              </div>
+              
+              {/* Aviso médico */}
+              <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-xl p-5 border border-red-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">⚕️</span>
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="font-bold text-red-900 mb-2">Aviso Médico Importante</h5>
+                    <p className="text-red-800 text-sm leading-relaxed">
+                      Esta información es únicamente orientativa y educativa. No sustituye el consejo médico profesional.
+                      Siempre consulte con su médico u obstetra antes de tomar cualquier medicamento durante el embarazo.
                     </p>
                   </div>
                 </div>
