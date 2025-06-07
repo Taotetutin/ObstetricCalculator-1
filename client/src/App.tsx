@@ -13,19 +13,24 @@ import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
 import { Home as HomeIcon } from "lucide-react";
-import { AuthProvider } from "@/hooks/use-auth";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 function Router() {
   const [location, setLocation] = useLocation();
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen">
       <div className="flex min-h-screen">
-        <Sidebar />
+        {user && <Sidebar />}
         <div className="flex-1 flex flex-col">
           <main className="flex-1 bg-gradient-to-br from-blue-50 to-white p-3 sm:p-4 md:p-6 overflow-auto">
-            {location !== "/" && location !== "/auth" && (
+            {user && location !== "/" && location !== "/auth" && (
               <Button
                 variant="ghost"
                 className="mb-3 sm:mb-4"
@@ -41,7 +46,6 @@ function Router() {
               <ProtectedRoute path="/calculadora/:id" component={Calculator} />
               <ProtectedRoute path="/sabiduria-cultural" component={CulturalWisdomPage} />
               <ProtectedRoute path="/obsterix-al-dia" component={NewsPage} />
-
 
               <Route component={NotFound} />
             </Switch>
