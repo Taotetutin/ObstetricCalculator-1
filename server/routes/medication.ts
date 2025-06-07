@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import axios from 'axios';
 import { searchMedication, getAllMedications, getMedicationsByCategory } from '../data/medications-database';
+import { findDrug, getAllDrugs, getDrugsByCategory } from '../data/comprehensive-drug-database';
 
 const router = Router();
 
@@ -171,7 +172,26 @@ router.post('/api/medications/gemini', async (req, res) => {
       });
     }
 
-    // Si no se encuentra en OpenFDA, buscar en base de datos médica completa
+    // Buscar en sistema farmacológico completo
+    const drugData = findDrug(term);
+    if (drugData) {
+      const sections = {
+        categoria: drugData.category,
+        descripcion: `${drugData.name} - ${drugData.class}: ${drugData.mechanism}`,
+        riesgos: drugData.pregnancy_risks,
+        recomendaciones: drugData.recommendations
+      };
+      
+      return res.json({
+        sections,
+        medicationName: drugData.name,
+        source: "comprehensive_pharmaceutical_database",
+        monitoring: drugData.monitoring,
+        alternatives: drugData.alternatives
+      });
+    }
+
+    // Fallback a base de datos médica específica
     const medicationData = searchMedication(term);
     if (medicationData) {
       const sections = {
@@ -184,7 +204,7 @@ router.post('/api/medications/gemini', async (req, res) => {
       return res.json({
         sections,
         medicationName: medicationData.name,
-        source: "comprehensive_medical_database",
+        source: "medical_database",
         trimesterInfo: medicationData.trimesterSpecific
       });
     }
@@ -392,10 +412,27 @@ router.get('/api/medications/search', async (req, res) => {
   } catch (error: any) {
     console.error('Error consultando OpenFDA API:', error.message);
     
-    // Buscar en base de datos médica como respaldo
+    // Buscar en sistema farmacológico completo como respaldo
     const searchTerm = typeof term === 'string' ? term.toLowerCase() : '';
-    const foundMedication = searchMedication(searchTerm);
+    const foundDrug = findDrug(searchTerm);
     
+    if (foundDrug) {
+      const medication = {
+        name: foundDrug.name,
+        category: foundDrug.category,
+        information: `${foundDrug.class}: ${foundDrug.mechanism}`,
+        warnings: foundDrug.pregnancy_risks,
+        route: 'Según prescripción médica',
+        source: 'Pharmaceutical_Database',
+        monitoring: foundDrug.monitoring,
+        alternatives: foundDrug.alternatives
+      };
+      
+      return res.json({ medications: [medication] });
+    }
+
+    // Fallback a base de datos médica específica
+    const foundMedication = searchMedication(searchTerm);
     if (foundMedication) {
       const medication = {
         name: foundMedication.name,
@@ -412,6 +449,85 @@ router.get('/api/medications/search', async (req, res) => {
     res.status(500).json({ 
       error: 'Error accediendo a la base de datos de medicamentos',
       message: 'No se pudo encontrar información para este medicamento.',
+      details: error.message
+    });
+  }
+});
+
+// Endpoint para acceso universal a medicamentos
+router.get('/api/medications/universal-search', async (req, res) => {
+  try {
+    const { term, category } = req.query;
+    
+    if (term && typeof term === 'string') {
+      // Búsqueda específica
+      const searchTerm = term.toLowerCase();
+      
+      // Prioridad 1: Sistema farmacológico completo
+      const drugData = findDrug(searchTerm);
+      if (drugData) {
+        const medication = {
+          name: drugData.name,
+          category: drugData.category,
+          information: `${drugData.class}: ${drugData.mechanism}`,
+          warnings: drugData.pregnancy_risks,
+          recommendations: drugData.recommendations,
+          monitoring: drugData.monitoring,
+          alternatives: drugData.alternatives,
+          source: 'Pharmaceutical_Database'
+        };
+        return res.json({ medications: [medication] });
+      }
+      
+      // Prioridad 2: Base de datos médica específica
+      const medicationData = searchMedication(searchTerm);
+      if (medicationData) {
+        const medication = {
+          name: medicationData.name,
+          category: medicationData.category,
+          information: medicationData.description,
+          warnings: medicationData.risks,
+          recommendations: medicationData.recommendations,
+          source: 'Medical_Database'
+        };
+        return res.json({ medications: [medication] });
+      }
+      
+      return res.status(404).json({ 
+        error: 'Medicamento no encontrado',
+        message: 'Este medicamento no está en nuestra base de datos.'
+      });
+    }
+    
+    // Listar por categoría o todos
+    let allMedications = [];
+    
+    if (category && typeof category === 'string') {
+      const categoryUpper = category.toUpperCase();
+      allMedications = [
+        ...getDrugsByCategory(categoryUpper),
+        ...getMedicationsByCategory(categoryUpper)
+      ];
+    } else {
+      allMedications = [
+        ...getAllDrugs(),
+        ...getAllMedications()
+      ];
+    }
+    
+    const formattedMedications = allMedications.map(med => ({
+      name: med.name,
+      category: med.category,
+      information: 'description' in med ? med.description : `${med.class}: ${med.mechanism}`,
+      warnings: 'risks' in med ? med.risks : med.pregnancy_risks,
+      source: 'pregnancy_risks' in med ? 'Pharmaceutical_Database' : 'Medical_Database'
+    }));
+    
+    res.json({ medications: formattedMedications, total: formattedMedications.length });
+  } catch (error: any) {
+    console.error('Error en búsqueda universal:', error.message);
+    res.status(500).json({ 
+      error: 'Error en búsqueda universal de medicamentos',
       details: error.message
     });
   }

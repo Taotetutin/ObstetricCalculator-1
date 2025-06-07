@@ -256,6 +256,120 @@ export const medicationsDatabase: Record<string, MedicationData> = {
     risks: 'Sin riesgos fetales. No cruza la placenta.',
     recommendations: 'Tratamiento preferido para diabetes gestacional.',
     commonUses: ['Diabetes tipo 1', 'Diabetes gestacional']
+  },
+
+  // Inhibidores de bomba de protones
+  'esomeprazol': {
+    name: 'Esomeprazol',
+    englishNames: ['esomeprazole', 'Nexium'],
+    category: 'B',
+    description: 'Inhibidor de bomba de protones seguro durante el embarazo',
+    risks: 'Riesgo bajo. Puede causar dolor de cabeza o náuseas.',
+    recommendations: 'Seguro para uso durante el embarazo bajo supervisión médica.',
+    commonUses: ['Reflujo gastroesofágico', 'Úlceras pépticas', 'Síndrome de Zollinger-Ellison']
+  },
+  'lansoprazol': {
+    name: 'Lansoprazol',
+    englishNames: ['lansoprazole', 'Prevacid'],
+    category: 'B',
+    description: 'Inhibidor de bomba de protones con perfil de seguridad favorable',
+    risks: 'Riesgo bajo durante el embarazo.',
+    recommendations: 'Alternativa segura para el tratamiento de acidez.',
+    commonUses: ['Reflujo gastroesofágico', 'Úlceras duodenales']
+  },
+  'pantoprazol': {
+    name: 'Pantoprazol',
+    englishNames: ['pantoprazole', 'Protonix'],
+    category: 'B',
+    description: 'Inhibidor de bomba de protones con uso seguro en embarazo',
+    risks: 'Perfil de seguridad favorable durante el embarazo.',
+    recommendations: 'Puede usarse cuando sea necesario.',
+    commonUses: ['Esofagitis erosiva', 'Úlceras gástricas']
+  },
+
+  // Antihistamínicos
+  'loratadina': {
+    name: 'Loratadina',
+    englishNames: ['loratadine', 'Claritin'],
+    category: 'B',
+    description: 'Antihistamínico no sedante seguro durante el embarazo',
+    risks: 'Riesgo bajo. Antihistamínico preferido.',
+    recommendations: 'Antihistamínico de primera elección durante el embarazo.',
+    commonUses: ['Alergias', 'Rinitis alérgica', 'Urticaria']
+  },
+  'cetirizina': {
+    name: 'Cetirizina',
+    englishNames: ['cetirizine', 'Zyrtec'],
+    category: 'B',
+    description: 'Antihistamínico con perfil de seguridad establecido',
+    risks: 'Riesgo bajo durante el embarazo.',
+    recommendations: 'Seguro para uso en embarazo.',
+    commonUses: ['Alergias estacionales', 'Dermatitis atópica']
+  },
+  'difenhidramina': {
+    name: 'Difenhidramina',
+    englishNames: ['diphenhydramine', 'Benadryl'],
+    category: 'B',
+    description: 'Antihistamínico clásico con uso seguro en embarazo',
+    risks: 'Puede causar somnolencia. Seguro en dosis apropiadas.',
+    recommendations: 'Seguro para uso ocasional.',
+    commonUses: ['Alergias', 'Insomnio ocasional', 'Náuseas']
+  },
+
+  // Antieméticos
+  'ondansetron': {
+    name: 'Ondansetrón',
+    englishNames: ['ondansetron', 'Zofran'],
+    category: 'B',
+    description: 'Antiemético usado para náuseas severas del embarazo',
+    risks: 'Riesgo bajo. Posible pequeño aumento de riesgo de fisura palatina.',
+    recommendations: 'Usar para náuseas severas cuando otros tratamientos fallan.',
+    commonUses: ['Náuseas del embarazo', 'Vómitos por quimioterapia']
+  },
+  'metoclopramida': {
+    name: 'Metoclopramida',
+    englishNames: ['metoclopramide', 'Reglan'],
+    category: 'B',
+    description: 'Antiemético y procinético seguro en embarazo',
+    risks: 'Riesgo bajo. Evitar uso prolongado.',
+    recommendations: 'Seguro para uso a corto plazo.',
+    commonUses: ['Náuseas', 'Gastroparesia', 'Reflujo']
+  },
+
+  // Broncodilatadores
+  'salbutamol': {
+    name: 'Salbutamol',
+    englishNames: ['salbutamol', 'albuterol', 'Ventolin'],
+    category: 'C',
+    description: 'Broncodilatador de acción rápida para asma',
+    risks: 'Riesgo bajo cuando se usa según indicaciones.',
+    recommendations: 'Continuar uso para control del asma durante el embarazo.',
+    commonUses: ['Asma', 'Broncoespasmo', 'EPOC'],
+    trimesterSpecific: {
+      first: 'Continuar si es necesario para control del asma',
+      second: 'Uso seguro para exacerbaciones',
+      third: 'Seguro, monitorear frecuencia cardíaca fetal'
+    }
+  },
+
+  // Antifúngicos
+  'fluconazol': {
+    name: 'Fluconazol',
+    englishNames: ['fluconazole', 'Diflucan'],
+    category: 'C',
+    description: 'Antifúngico con uso cauteloso en embarazo',
+    risks: 'Riesgo de malformaciones con dosis altas o uso prolongado.',
+    recommendations: 'Evitar en primer trimestre. Usar solo si es esencial.',
+    commonUses: ['Candidiasis vaginal', 'Infecciones fúngicas sistémicas']
+  },
+  'nistatina': {
+    name: 'Nistatina',
+    englishNames: ['nystatin', 'Mycostatin'],
+    category: 'B',
+    description: 'Antifúngico tópico seguro durante el embarazo',
+    risks: 'Riesgo muy bajo. Absorción sistémica mínima.',
+    recommendations: 'Antifúngico de primera elección para candidiasis.',
+    commonUses: ['Candidiasis oral', 'Candidiasis vaginal']
   }
 };
 
