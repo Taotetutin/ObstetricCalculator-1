@@ -19,13 +19,60 @@ router.post('/api/medications/gemini', async (req, res) => {
   try {
     console.log(`Consultando OpenFDA API para: ${term}`);
     
-    // Buscar en la API oficial de OpenFDA
-    const searchQuery = encodeURIComponent(`openfda.brand_name:"${term}" OR openfda.generic_name:"${term}" OR openfda.substance_name:"${term}"`);
-    const fdaResponse = await axios.get(
-      `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=1`
-    );
+    // Mapeo de nombres comunes a nombres oficiales en inglés
+    const medicationMapping: Record<string, string[]> = {
+      'lovastatina': ['lovastatin', 'Mevacor'],
+      'omeprazol': ['omeprazole', 'Prilosec'],
+      'paracetamol': ['acetaminophen', 'Tylenol'],
+      'ibuprofeno': ['ibuprofen', 'Advil', 'Motrin'],
+      'atenolol': ['atenolol', 'Tenormin'],
+      'propranolol': ['propranolol', 'Inderal'],
+      'metformina': ['metformin', 'Glucophage'],
+      'insulina': ['insulin'],
+      'warfarina': ['warfarin', 'Coumadin'],
+      'enalapril': ['enalapril', 'Vasotec'],
+      'losartan': ['losartan', 'Cozaar'],
+      'amoxicilina': ['amoxicillin', 'Amoxil'],
+      'fluoxetina': ['fluoxetine', 'Prozac'],
+      'sertralina': ['sertraline', 'Zoloft']
+    };
 
-    if (fdaResponse.data.results && fdaResponse.data.results.length > 0) {
+    // Obtener términos de búsqueda
+    const searchTerms = [term.toLowerCase()];
+    if (medicationMapping[term.toLowerCase()]) {
+      searchTerms.push(...medicationMapping[term.toLowerCase()]);
+    }
+
+    let fdaResponse = null;
+    let searchQuery;
+    
+    // Intentar con cada término hasta encontrar resultados
+    console.log(`Términos de búsqueda a probar: ${searchTerms.join(', ')}`);
+    
+    for (const searchTerm of searchTerms) {
+      try {
+        searchQuery = encodeURIComponent(`openfda.generic_name:${searchTerm}`);
+        console.log(`Intentando búsqueda con: ${searchTerm} -> ${searchQuery}`);
+        const response = await axios.get(
+          `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=1`
+        );
+        
+        console.log(`Respuesta para ${searchTerm}: ${response.data.results?.length || 0} resultados`);
+        
+        if (response.data.results && response.data.results.length > 0) {
+          console.log(`✓ Encontrado con término: ${searchTerm}`);
+          fdaResponse = response;
+          break;
+        }
+      } catch (searchError: any) {
+        console.log(`✗ Error buscando ${searchTerm}: ${searchError.response?.status || 'Sin código de estado'}`);
+        if (searchError.response?.status !== 404) {
+          throw searchError;
+        }
+      }
+    }
+
+    if (fdaResponse?.data?.results && fdaResponse.data.results.length > 0) {
       const drugData = fdaResponse.data.results[0];
       const openfda = drugData.openfda || {};
       
