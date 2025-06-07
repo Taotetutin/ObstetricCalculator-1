@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import axios from 'axios';
+import { searchMedication, getAllMedications, getMedicationsByCategory } from '../data/medications-database';
 
 const router = Router();
 
@@ -38,7 +39,17 @@ router.post('/api/medications/gemini', async (req, res) => {
       'clonazepam': { terms: ['clonazepam', 'Klonopin'], knownCategory: 'D' },
       'diazepam': { terms: ['diazepam', 'Valium'], knownCategory: 'D' },
       'alprazolam': { terms: ['alprazolam', 'Xanax'], knownCategory: 'D' },
-      'lorazepam': { terms: ['lorazepam', 'Ativan'], knownCategory: 'D' }
+      'lorazepam': { terms: ['lorazepam', 'Ativan'], knownCategory: 'D' },
+      'azitromicina': { terms: ['azithromycin', 'Zithromax'], knownCategory: 'B' },
+      'ciprofloxacina': { terms: ['ciprofloxacin', 'Cipro'], knownCategory: 'C' },
+      'cefalexina': { terms: ['cephalexin', 'Keflex'], knownCategory: 'B' },
+      'prednisona': { terms: ['prednisone'], knownCategory: 'C' },
+      'dexametasona': { terms: ['dexamethasone'], knownCategory: 'C' },
+      'levotiroxina': { terms: ['levothyroxine', 'Synthroid'], knownCategory: 'A' },
+      'lisinopril': { terms: ['lisinopril', 'Prinivil'], knownCategory: 'D' },
+      'amlodipino': { terms: ['amlodipine', 'Norvasc'], knownCategory: 'C' },
+      'simvastatina': { terms: ['simvastatin', 'Zocor'], knownCategory: 'X' },
+      'atorvastatina': { terms: ['atorvastatin', 'Lipitor'], knownCategory: 'X' }
     };
 
     // Obtener términos de búsqueda y categoría conocida
@@ -160,10 +171,78 @@ router.post('/api/medications/gemini', async (req, res) => {
       });
     }
 
-    // Si no se encuentra en OpenFDA, informar que no hay datos disponibles
+    // Si no se encuentra en OpenFDA, buscar en base de datos médica completa
+    const medicationData = searchMedication(term);
+    if (medicationData) {
+      const sections = {
+        categoria: medicationData.category,
+        descripcion: medicationData.description,
+        riesgos: medicationData.risks,
+        recomendaciones: medicationData.recommendations
+      };
+      
+      return res.json({
+        sections,
+        medicationName: medicationData.name,
+        source: "comprehensive_medical_database",
+        trimesterInfo: medicationData.trimesterSpecific
+      });
+    }
+
+    // Fallback para medicamentos con categoría conocida pero sin datos completos
+    if (knownCategory) {
+      const medicationName = term.charAt(0).toUpperCase() + term.slice(1);
+      
+      const getMedicationInfo = (category: string, name: string) => {
+        const infoMap: Record<string, { description: string, risks: string }> = {
+          'A': {
+            description: `${name} - Categoría A: Seguro durante el embarazo. Estudios controlados no han demostrado riesgo para el feto.`,
+            risks: 'No se han identificado riesgos significativos durante el embarazo según estudios controlados.'
+          },
+          'B': {
+            description: `${name} - Categoría B: Probablemente seguro. No hay evidencia de riesgo en humanos, aunque los estudios en animales pueden mostrar algún riesgo.`,
+            risks: 'Riesgo bajo durante el embarazo. Uso generalmente considerado seguro bajo supervisión médica.'
+          },
+          'C': {
+            description: `${name} - Categoría C: Usar con precaución. Los beneficios pueden justificar el riesgo potencial para el feto.`,
+            risks: 'Riesgo moderado. Usar solo si los beneficios potenciales justifican el riesgo para el feto.'
+          },
+          'D': {
+            description: `${name} - Categoría D: Riesgo documentado. Existe evidencia de riesgo fetal pero puede ser aceptable en situaciones críticas.`,
+            risks: 'Riesgo significativo documentado para el feto. Considerar alternativas más seguras cuando sea posible.'
+          },
+          'X': {
+            description: `${name} - Categoría X: Contraindicado en embarazo. Los riesgos superan claramente cualquier beneficio posible.`,
+            risks: 'Contraindicado durante el embarazo. Alto riesgo de daño fetal documentado.'
+          }
+        };
+        
+        return infoMap[category] || {
+          description: `${name} - Consulte con su médico sobre el uso durante el embarazo.`,
+          risks: 'Consulte las advertencias oficiales con su profesional de la salud.'
+        };
+      };
+
+      const info = getMedicationInfo(knownCategory, medicationName);
+      
+      const sections = {
+        categoria: knownCategory,
+        descripcion: info.description,
+        riesgos: info.risks,
+        recomendaciones: 'Siempre consulte con su profesional de la salud antes de usar cualquier medicamento durante el embarazo.'
+      };
+      
+      return res.json({
+        sections,
+        medicationName,
+        source: "known_medication_database"
+      });
+    }
+
+    // Si no está en el mapeo conocido, informar que no hay datos disponibles
     return res.status(404).json({
-      error: 'Medicamento no encontrado en la base de datos oficial de la FDA',
-      message: 'No se encontró información oficial para este medicamento. Consulte con su profesional de la salud.',
+      error: 'Medicamento no encontrado en la base de datos',
+      message: 'No se encontró información para este medicamento. Consulte con su profesional de la salud.',
       searchedTerm: term
     });
     
@@ -313,10 +392,58 @@ router.get('/api/medications/search', async (req, res) => {
   } catch (error: any) {
     console.error('Error consultando OpenFDA API:', error.message);
     
-    // No usar datos de respaldo sintéticos - solo devolver error para mantener integridad de datos
+    // Buscar en base de datos médica como respaldo
+    const searchTerm = typeof term === 'string' ? term.toLowerCase() : '';
+    const foundMedication = searchMedication(searchTerm);
+    
+    if (foundMedication) {
+      const medication = {
+        name: foundMedication.name,
+        category: foundMedication.category,
+        information: foundMedication.description,
+        warnings: foundMedication.risks,
+        route: 'Según prescripción médica',
+        source: 'Medical_Database'
+      };
+      
+      return res.json({ medications: [medication] });
+    }
+    
     res.status(500).json({ 
-      error: 'Error accediendo a la base de datos oficial de la FDA',
-      message: 'No se pudo consultar la información oficial. Verifique su conexión o intente más tarde.',
+      error: 'Error accediendo a la base de datos de medicamentos',
+      message: 'No se pudo encontrar información para este medicamento.',
+      details: error.message
+    });
+  }
+});
+
+// Endpoint para listar todos los medicamentos disponibles
+router.get('/api/medications/list', async (req, res) => {
+  try {
+    const { category } = req.query;
+    
+    let medications;
+    if (category && typeof category === 'string') {
+      medications = getMedicationsByCategory(category.toUpperCase());
+    } else {
+      medications = getAllMedications();
+    }
+    
+    const formattedMedications = medications.map(med => ({
+      name: med.name,
+      category: med.category,
+      information: med.description,
+      warnings: med.risks,
+      route: 'Según prescripción médica',
+      source: 'Medical_Database',
+      commonUses: med.commonUses
+    }));
+    
+    res.json({ medications: formattedMedications });
+  } catch (error: any) {
+    console.error('Error obteniendo lista de medicamentos:', error.message);
+    res.status(500).json({ 
+      error: 'Error obteniendo lista de medicamentos',
       details: error.message
     });
   }
