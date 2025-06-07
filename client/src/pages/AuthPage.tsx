@@ -69,35 +69,67 @@ export default function AuthPage() {
         <Card className="shadow-lg">
           <CardContent className="p-0">
             <Tabs defaultValue="login" className="w-full">
-              <div className="auth-tabs-container w-full h-14 bg-gray-50 border-b rounded-t-lg flex">
-                <TabsList className="w-full h-full flex bg-transparent p-0 rounded-none" style={{ display: 'flex', flexDirection: 'row' }}>
+              <div 
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  height: '56px',
+                  backgroundColor: '#f9fafb',
+                  borderBottom: '1px solid #e5e7eb',
+                  borderRadius: '0.5rem 0.5rem 0 0'
+                }}
+              >
+                <TabsList 
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'transparent',
+                    padding: '0',
+                    margin: '0',
+                    borderRadius: '0'
+                  }}
+                >
                   <TabsTrigger 
-                    value="login" 
-                    className="auth-tab-button flex-1 h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium border-r border-gray-200"
-                    style={{ 
-                      flex: '1 1 50%', 
-                      minWidth: '50%', 
-                      maxWidth: '50%', 
+                    value="login"
+                    style={{
+                      flex: '1',
                       width: '50%',
+                      height: '100%',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      backgroundColor: '#f9fafb',
+                      border: 'none',
+                      borderRadius: '0',
+                      borderRight: '1px solid #e5e7eb',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#374151',
+                      cursor: 'pointer'
                     }}
+                    className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-700"
                   >
                     Iniciar Sesión
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="register" 
-                    className="auth-tab-button flex-1 h-full rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 font-medium"
-                    style={{ 
-                      flex: '1 1 50%', 
-                      minWidth: '50%', 
-                      maxWidth: '50%', 
+                    value="register"
+                    style={{
+                      flex: '1',
                       width: '50%',
+                      height: '100%',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      backgroundColor: '#f9fafb',
+                      border: 'none',
+                      borderRadius: '0',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#374151',
+                      cursor: 'pointer'
                     }}
+                    className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-700"
                   >
                     Registrarse
                   </TabsTrigger>

@@ -100,40 +100,19 @@
     overflow-x: hidden !important;
   }
   
-  /* Forzar botones de autenticación fijos en horizontal */
-  .auth-tabs-container,
-  .auth-tabs-container [role="tablist"],
-  .auth-tabs-container > * {
+  /* Asegurar que los botones de tabs se mantengan en horizontal */
+  [role="tablist"] {
     display: flex !important;
     flex-direction: row !important;
     width: 100% !important;
   }
   
-  .auth-tab-button {
-    flex: 1 1 50% !important;
-    min-width: 50% !important;
-    max-width: 50% !important;
+  [role="tab"] {
+    flex: 1 !important;
     width: 50% !important;
-    height: 56px !important;
-    border-radius: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    white-space: nowrap !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    background-color: #f9fafb !important;
-    cursor: pointer !important;
-  }
-  
-  .auth-tab-button[data-state="active"] {
-    background-color: white !important;
-    border-bottom: 2px solid #2563eb !important;
-    font-weight: 600 !important;
-    color: #1d4ed8 !important;
   }
 }
 
