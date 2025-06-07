@@ -3,6 +3,7 @@ import axios from "axios";
 import { MedicationSafetyVisualization } from './MedicationSafetyVisualization';
 import { DosageRiskCalculator } from './DosageRiskCalculator';
 import { MedicationComparison } from './MedicationComparison';
+import { MedicationInteractionVisualizer } from './MedicationInteractionVisualizer';
 
 function MedicationGeminiCalculator() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,8 +15,9 @@ function MedicationGeminiCalculator() {
   const [streamingResponse, setStreamingResponse] = useState("");
   const [activeTab, setActiveTab] = useState("gemini"); // "gemini" o "fda"
   const [selectedTrimester, setSelectedTrimester] = useState(1); // Para la visualización de seguridad
-  const [visualizationMode, setVisualizationMode] = useState("safety"); // "safety", "dosage", "comparison"
+  const [visualizationMode, setVisualizationMode] = useState("safety"); // "safety", "dosage", "comparison", "interactions"
   const [comparisonMedications, setComparisonMedications] = useState([]);
+  const [interactionMedications, setInteractionMedications] = useState([]);
 
   // Descripción de las categorías FDA
   const fdaCategories = {
@@ -416,6 +418,16 @@ function MedicationGeminiCalculator() {
                 >
                   ⚖️ Comparar Medicamentos
                 </button>
+                <button
+                  onClick={() => setVisualizationMode("interactions")}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                    visualizationMode === "interactions"
+                      ? "bg-red-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  🔗 Interacciones
+                </button>
               </div>
             </div>
 
@@ -510,6 +522,18 @@ function MedicationGeminiCalculator() {
                     }
                   }
                 }}
+              />
+            )}
+
+            {/* Medication Interaction Visualizer */}
+            {visualizationMode === "interactions" && (
+              <MedicationInteractionVisualizer
+                initialMedications={(() => {
+                  const medications = [];
+                  if (geminiResult) medications.push(geminiResult.name);
+                  if (selectedMedication && !geminiResult) medications.push(selectedMedication.name);
+                  return [...medications, ...interactionMedications];
+                })()}
               />
             )}
           </div>

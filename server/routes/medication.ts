@@ -2,6 +2,7 @@ import { Router } from 'express';
 import axios from 'axios';
 import { searchMedication, getAllMedications, getMedicationsByCategory } from '../data/medications-database';
 import { findDrug, getAllDrugs, getDrugsByCategory } from '../data/comprehensive-drug-database';
+import { analyzeInteractions, getMedicationInteractions } from '../data/drug-interactions';
 
 const router = Router();
 
@@ -606,6 +607,50 @@ router.get('/api/medications/list', async (req, res) => {
     console.error('Error obteniendo lista de medicamentos:', error.message);
     res.status(500).json({ 
       error: 'Error obteniendo lista de medicamentos',
+      details: error.message
+    });
+  }
+});
+
+// Endpoint para analizar interacciones medicamentosas
+router.post('/api/interactions/analyze', async (req, res) => {
+  try {
+    const { medications } = req.body;
+    
+    if (!Array.isArray(medications) || medications.length < 2) {
+      return res.status(400).json({ 
+        error: 'Se requieren al menos 2 medicamentos para analizar interacciones' 
+      });
+    }
+
+    const analysis = analyzeInteractions(medications);
+    res.json(analysis);
+    
+  } catch (error: any) {
+    console.error('Error analizando interacciones:', error.message);
+    res.status(500).json({ 
+      error: 'Error analizando interacciones medicamentosas',
+      details: error.message
+    });
+  }
+});
+
+// Endpoint para obtener interacciones de un medicamento específico
+router.get('/api/interactions/:medication', async (req, res) => {
+  try {
+    const { medication } = req.params;
+    const interactions = getMedicationInteractions(medication);
+    
+    res.json({ 
+      medication,
+      interactions,
+      total: interactions.length
+    });
+    
+  } catch (error: any) {
+    console.error('Error obteniendo interacciones:', error.message);
+    res.status(500).json({ 
+      error: 'Error obteniendo interacciones del medicamento',
       details: error.message
     });
   }
