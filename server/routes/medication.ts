@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const router = Router();
 
-// Endpoint para buscar medicamentos usando Gemini (Método que usa Create.xyz)
+// Endpoint para buscar medicamentos usando la API oficial de OpenFDA
 router.post('/api/medications/gemini', async (req, res) => {
   const { term } = req.body;
   
@@ -11,125 +11,74 @@ router.post('/api/medications/gemini', async (req, res) => {
     return res.status(400).json({ error: 'Se requiere un término de búsqueda válido' });
   }
   
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-  if (!GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'API key de Gemini no configurada' });
+  const OPENFDA_API_KEY = process.env.OPENFDA_API_KEY;
+  if (!OPENFDA_API_KEY) {
+    return res.status(500).json({ error: 'API key de OpenFDA no configurada' });
   }
   
   try {
-    // Base de datos local con clasificaciones FDA correctas
-    const medicationDatabase = {
-      "propranolol": {
-        categoria: "C",
-        descripcion: "El propranolol es categoría C de la FDA. Los estudios en animales han mostrado efectos adversos en el feto, pero no hay estudios adecuados y bien controlados en mujeres embarazadas. Debe usarse solo si el beneficio potencial justifica el riesgo potencial para el feto.",
-        riesgos: "Puede causar bradicardia fetal, hipoglucemia neonatal, y retraso del crecimiento intrauterino. En altas dosis puede asociarse con bajo peso al nacer.",
-        recomendaciones: "Usar solo cuando sea absolutamente necesario y bajo estricta supervisión médica. Monitorear frecuencia cardíaca fetal y crecimiento. Considerar alternativas más seguras cuando sea posible."
-      },
-      "atenolol": {
-        categoria: "D",
-        descripcion: "El atenolol es categoría D de la FDA. Hay evidencia positiva de riesgo fetal humano, pero los beneficios pueden superar los riesgos en situaciones que pongan en peligro la vida.",
-        riesgos: "Asociado con retraso del crecimiento intrauterino, bajo peso al nacer, y bradicardia neonatal. Mayor riesgo de complicaciones perinatales.",
-        recomendaciones: "Evitar en el embarazo cuando sea posible. Si es esencial, usar la dosis mínima efectiva y monitorear estrechamente el bienestar fetal."
-      },
-      "metoprolol": {
-        categoria: "C",
-        descripcion: "El metoprolol es categoría C de la FDA. Los estudios en animales no han demostrado efectos teratogénicos, pero no hay estudios controlados en mujeres embarazadas.",
-        riesgos: "Posible bradicardia fetal, hipoglucemia neonatal. Generalmente considerado más seguro que otros betabloqueadores.",
-        recomendaciones: "Puede usarse cuando los beneficios superen los riesgos. Preferido sobre atenolol. Monitorear función cardiovascular fetal."
-      },
-      "labetalol": {
-        categoria: "C",
-        descripcion: "El labetalol es categoría C de la FDA y es uno de los betabloqueadores preferidos durante el embarazo para el tratamiento de la hipertensión.",
-        riesgos: "Riesgo mínimo comparado con otros betabloqueadores. Posible hipoglucemia neonatal leve.",
-        recomendaciones: "Considerado de primera línea para hipertensión en el embarazo. Seguro y efectivo bajo supervisión médica adecuada."
-      },
-      "paracetamol": {
-        categoria: "B",
-        descripcion: "El paracetamol es categoría B de la FDA. Los estudios en animales no han demostrado riesgo fetal y no hay estudios controlados en mujeres embarazadas que demuestren riesgo.",
-        riesgos: "Generalmente considerado seguro. Uso prolongado en altas dosis puede asociarse con problemas del desarrollo neurológico.",
-        recomendaciones: "Analgésico de primera elección durante el embarazo. Usar la dosis mínima efectiva por el menor tiempo posible."
-      },
-      "ibuprofeno": {
-        categoria: "C/D",
-        descripcion: "El ibuprofeno es categoría C en el primer y segundo trimestre, y categoría D en el tercer trimestre debido al riesgo de cierre prematuro del conducto arterioso.",
-        riesgos: "En el tercer trimestre: cierre prematuro del conducto arterioso, oligohidramnios, hipertensión pulmonar persistente del recién nacido.",
-        recomendaciones: "Evitar en el tercer trimestre. En primer y segundo trimestre usar solo si es absolutamente necesario y por corto tiempo."
-      }
-    };
-
-    // Buscar en la base de datos local primero
-    const termLower = term.toLowerCase();
-    const localData = Object.prototype.hasOwnProperty.call(medicationDatabase, termLower) 
-      ? medicationDatabase[termLower as keyof typeof medicationDatabase] 
-      : null;
+    console.log(`Consultando OpenFDA API para: ${term}`);
     
-    if (localData) {
+    // Buscar en la API oficial de OpenFDA
+    const searchQuery = encodeURIComponent(`openfda.brand_name:"${term}" OR openfda.generic_name:"${term}" OR openfda.substance_name:"${term}"`);
+    const fdaResponse = await axios.get(
+      `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=1`
+    );
+
+    if (fdaResponse.data.results && fdaResponse.data.results.length > 0) {
+      const drugData = fdaResponse.data.results[0];
+      const openfda = drugData.openfda || {};
+      
+      // Extraer información de embarazo oficial
+      let pregnancyCategory = 'No especificada';
+      if (openfda.pregnancy_category && openfda.pregnancy_category.length > 0) {
+        pregnancyCategory = openfda.pregnancy_category[0];
+      }
+      
+      // Extraer información detallada de embarazo
+      let pregnancyInfo = 'No hay información específica disponible.';
+      if (drugData.pregnancy && drugData.pregnancy.length > 0) {
+        pregnancyInfo = drugData.pregnancy[0];
+      } else if (drugData.pregnancy_or_breast_feeding && drugData.pregnancy_or_breast_feeding.length > 0) {
+        pregnancyInfo = drugData.pregnancy_or_breast_feeding[0];
+      }
+      
+      // Extraer advertencias
+      let warnings = '';
+      if (drugData.warnings && drugData.warnings.length > 0) {
+        warnings = drugData.warnings[0];
+      } else if (drugData.warnings_and_precautions && drugData.warnings_and_precautions.length > 0) {
+        warnings = drugData.warnings_and_precautions[0];
+      }
+      
+      // Extraer nombre del medicamento
+      let medicationName = term;
+      if (openfda.brand_name && openfda.brand_name.length > 0) {
+        medicationName = openfda.brand_name[0];
+      } else if (openfda.generic_name && openfda.generic_name.length > 0) {
+        medicationName = openfda.generic_name[0];
+      }
+      
+      // Formatear la respuesta según las categorías FDA
+      const sections = {
+        categoria: pregnancyCategory,
+        descripcion: `${medicationName} es categoría ${pregnancyCategory} de la FDA según los datos oficiales. ${pregnancyInfo}`,
+        riesgos: warnings || 'Consulte con su médico sobre los riesgos específicos.',
+        recomendaciones: 'Consulte siempre con su profesional de la salud antes de usar cualquier medicamento durante el embarazo.'
+      };
+      
       return res.json({
-        sections: localData,
-        medicationName: term,
-        source: "local_database"
+        sections,
+        medicationName,
+        source: "official_fda_api"
       });
     }
 
-    const prompt = `Actúa como un experto farmacéutico especializado en farmacología perinatal. Proporciona información PRECISA sobre la clasificación FDA del medicamento "${term}" durante el embarazo. 
-
-IMPORTANTE: Verifica que la categoría FDA sea correcta. Las categorías son:
-- A: Seguro (estudios controlados sin riesgo)
-- B: Probablemente seguro (sin evidencia de riesgo en humanos)  
-- C: Precaución (riesgo no puede descartarse)
-- D: Evidencia de riesgo (pero beneficio puede superar riesgo)
-- X: Contraindicado (riesgo supera cualquier beneficio)
-
-Responde en español, con el siguiente formato exacto:
-
-Categoría FDA: [categoría]
-Descripción: [descripción detallada de la categoría y el medicamento]
-Riesgos: [lista de riesgos potenciales específicos]
-Recomendaciones: [recomendaciones específicas para el uso en embarazo]`;
-
-    console.log(`Consultando a Gemini sobre: ${term}`);
-    
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        contents: [
-          {
-            parts: [
-              { text: prompt }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 1024,
-        }
-      }
-    );
-    
-    // Extraer el texto de la respuesta
-    const responseText = response.data.candidates[0].content.parts[0].text;
-    console.log("Respuesta recibida de Gemini");
-    
-    // Procesar la respuesta para extraer las secciones
-    const sections = responseText.split("\n").reduce((acc: any, line: string) => {
-      if (line.toLowerCase().includes("categoría fda:")) {
-        acc.categoria = line.split(":")[1].trim();
-      } else if (line.toLowerCase().includes("descripción:")) {
-        acc.descripcion = line.split(":")[1].trim();
-      } else if (line.toLowerCase().includes("riesgos:")) {
-        acc.riesgos = line.split(":")[1].trim();
-      } else if (line.toLowerCase().includes("recomendaciones:")) {
-        acc.recomendaciones = line.split(":")[1].trim();
-      }
-      return acc;
-    }, {});
-    
-    res.json({ 
-      sections,
-      medicationName: term,
-      rawText: responseText
+    // Si no se encuentra en OpenFDA, informar que no hay datos disponibles
+    return res.status(404).json({
+      error: 'Medicamento no encontrado en la base de datos oficial de la FDA',
+      message: 'No se encontró información oficial para este medicamento. Consulte con su profesional de la salud.',
+      searchedTerm: term
     });
     
   } catch (error: any) {
