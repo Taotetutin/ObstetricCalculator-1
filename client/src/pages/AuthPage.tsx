@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
@@ -5,13 +6,12 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, Lock, User } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function AuthPage() {
   const { registerMutation, loginMutation, user } = useAuth();
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   const loginForm = useForm({
     resolver: zodResolver(insertUserSchema.pick({ email: true, password: true })),
@@ -68,76 +68,23 @@ export default function AuthPage() {
 
         <Card className="shadow-lg">
           <CardContent className="p-0">
-            <Tabs defaultValue="login" className="w-full">
-              <div 
-                style={{
-                  display: 'flex',
-                  width: '100%',
-                  height: '56px',
-                  backgroundColor: '#f9fafb',
-                  borderBottom: '1px solid #e5e7eb',
-                  borderRadius: '0.5rem 0.5rem 0 0'
-                }}
+            <div className="auth-button-container">
+              <button 
+                className={`auth-tab-btn ${activeTab === "login" ? "auth-tab-active" : ""}`}
+                onClick={() => setActiveTab("login")}
               >
-                <TabsList 
-                  style={{
-                    display: 'flex',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'transparent',
-                    padding: '0',
-                    margin: '0',
-                    borderRadius: '0'
-                  }}
-                >
-                  <TabsTrigger 
-                    value="login"
-                    style={{
-                      flex: '1',
-                      width: '50%',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#f9fafb',
-                      border: 'none',
-                      borderRadius: '0',
-                      borderRight: '1px solid #e5e7eb',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: '#374151',
-                      cursor: 'pointer'
-                    }}
-                    className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-700"
-                  >
-                    Iniciar Sesión
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="register"
-                    style={{
-                      flex: '1',
-                      width: '50%',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#f9fafb',
-                      border: 'none',
-                      borderRadius: '0',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: '#374151',
-                      cursor: 'pointer'
-                    }}
-                    className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-700"
-                  >
-                    Registrarse
-                  </TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <div className="p-6">
-              <TabsContent value="login">
+                Iniciar Sesión
+              </button>
+              <button 
+                className={`auth-tab-btn ${activeTab === "register" ? "auth-tab-active" : ""}`}
+                onClick={() => setActiveTab("register")}
+              >
+                Registrarse
+              </button>
+            </div>
+            
+            <div className="p-6">
+              {activeTab === "login" && (
                 <Form {...loginForm}>
                   <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
                     <FormField
@@ -179,9 +126,9 @@ export default function AuthPage() {
                     </Button>
                   </form>
                 </Form>
-              </TabsContent>
-
-              <TabsContent value="register">
+              )}
+              
+              {activeTab === "register" && (
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
                     <FormField
@@ -238,9 +185,8 @@ export default function AuthPage() {
                     </Button>
                   </form>
                 </Form>
-              </TabsContent>
-              </div>
-            </Tabs>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
