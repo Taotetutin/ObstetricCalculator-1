@@ -71,19 +71,37 @@ router.post('/api/medications/gemini', async (req, res) => {
     
     for (const searchTerm of searchTerms) {
       try {
-        searchQuery = encodeURIComponent(`openfda.generic_name:${searchTerm}`);
-        console.log(`Intentando búsqueda con: ${searchTerm} -> ${searchQuery}`);
-        const response = await axios.get(
-          `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=1`
-        );
-        
-        console.log(`Respuesta para ${searchTerm}: ${response.data.results?.length || 0} resultados`);
-        
-        if (response.data.results && response.data.results.length > 0) {
-          console.log(`✓ Encontrado con término: ${searchTerm}`);
-          fdaResponse = response;
-          break;
+        // Múltiples estrategias de búsqueda como en la aplicación que funciona
+        const searchStrategies = [
+          `openfda.generic_name:"${searchTerm}"`,
+          `openfda.brand_name:"${searchTerm}"`,
+          `openfda.substance_name:"${searchTerm}"`,
+          `openfda.generic_name:${searchTerm}`,
+          `openfda.brand_name:${searchTerm}`
+        ];
+
+        for (const strategy of searchStrategies) {
+          try {
+            searchQuery = encodeURIComponent(strategy);
+            console.log(`Intentando búsqueda con: ${searchTerm} -> ${strategy}`);
+            
+            const response = await axios.get(
+              `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=1`
+            );
+            
+            if (response.data.results && response.data.results.length > 0) {
+              console.log(`✓ Encontrado con término: ${searchTerm} usando estrategia: ${strategy}`);
+              fdaResponse = response;
+              break;
+            }
+          } catch (strategyError: any) {
+            console.log(`✗ Estrategia ${strategy} falló: ${strategyError.response?.status || 'Sin estado'}`);
+            continue;
+          }
         }
+
+        if (fdaResponse) break;
+        
       } catch (searchError: any) {
         console.log(`✗ Error buscando ${searchTerm}: ${searchError.response?.status || 'Sin código de estado'}`);
         if (searchError.response?.status !== 404) {
@@ -289,13 +307,41 @@ router.get('/api/medications/search', async (req, res) => {
   }
   
   try {
-    // Buscar en la API oficial de OpenFDA con autenticación
-    const searchQuery = encodeURIComponent(`openfda.brand_name:"${term}" OR openfda.generic_name:"${term}" OR openfda.substance_name:"${term}"`);
+    // Usar múltiples estrategias de búsqueda para mayor cobertura
+    const searchStrategies = [
+      `openfda.generic_name:"${term}"`,
+      `openfda.brand_name:"${term}"`,
+      `openfda.substance_name:"${term}"`,
+      `openfda.generic_name:${term}`,
+      `openfda.brand_name:${term}`,
+      `openfda.substance_name:${term}`
+    ];
+
+    let response = null;
     
-    console.log(`Buscando en OpenFDA: ${searchQuery}`);
-    const response = await axios.get(
-      `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=10`
-    );
+    for (const strategy of searchStrategies) {
+      try {
+        const searchQuery = encodeURIComponent(strategy);
+        console.log(`Probando estrategia FDA: ${strategy}`);
+        
+        const apiResponse = await axios.get(
+          `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=10`
+        );
+        
+        if (apiResponse.data.results && apiResponse.data.results.length > 0) {
+          console.log(`✓ Éxito con estrategia: ${strategy}`);
+          response = apiResponse;
+          break;
+        }
+      } catch (strategyError: any) {
+        console.log(`✗ Estrategia ${strategy} falló: ${strategyError.response?.status}`);
+        continue;
+      }
+    }
+
+    if (!response || !response.data.results) {
+      throw new Error('No se encontraron resultados en OpenFDA');
+    }
     
     // Procesar resultados de la API oficial
     const results = response.data.results || [];
