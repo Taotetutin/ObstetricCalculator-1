@@ -13,6 +13,18 @@ export interface DrugClassification {
 
 // Base de datos farmacológica exhaustiva por categorías terapéuticas
 export const comprehensiveDrugDatabase: Record<string, DrugClassification> = {
+  // Analgésicos y antiinflamatorios
+  "metamizol": {
+    name: "Metamizol (Dipirona)",
+    aliases: ["dipirona", "novalgina", "metamizole", "dipyrone"],
+    category: "Analgésico antipirético",
+    class: "Pirazolona",
+    mechanism: "Inhibición de la ciclooxigenasa y bloqueo de canales de sodio",
+    pregnancy_risks: "Categoría C - Evitar en tercer trimestre por riesgo de cierre prematuro del ductus arterioso",
+    recommendations: "Usar con precaución. Evitar en tercer trimestre. Considerar alternativas como paracetamol.",
+    monitoring: "Función renal, presión arterial, signos de sangrado",
+    alternatives: ["paracetamol", "acetaminofén"]
+  },
   // CATEGORÍA A - SEGUROS
   'levotiroxina': {
     name: 'Levotiroxina',

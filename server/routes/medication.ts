@@ -74,7 +74,7 @@ function generateMedicationVariations(term: string): string[] {
     }
   }
   
-  return [...new Set(variations)];
+  return Array.from(new Set(variations));
 }
 
 // Endpoint compatible con la implementación exitosa de "create"
@@ -247,8 +247,36 @@ router.post('/api/medications/gemini', async (req, res) => {
 
     console.log(`⚠️ Medicamento no encontrado en bases locales: ${term}`);
     
-    // Mapeo de nombres comunes a nombres oficiales en inglés con categorías conocidas
-    const medicationMapping: Record<string, { terms: string[], knownCategory?: string }> = {
+    // PASO 4: Proporcionar información genérica si no se encuentra
+    return res.json({
+      source: 'not_found',
+      name: term,
+      categoria: 'No disponible en base de datos',
+      descripcion: 'Este medicamento no se encuentra en nuestras bases de datos. Se recomienda consultar con un profesional de la salud para obtener información específica sobre el uso durante el embarazo.',
+      riesgos: 'Desconocidos - Se requiere evaluación médica',
+      recomendaciones: 'Consulte con su médico o farmacéutico antes de usar este medicamento durante el embarazo.',
+      sections: {
+        categoria: 'No disponible en base de datos',
+        descripcion: 'Este medicamento no se encuentra en nuestras bases de datos. Se recomienda consultar con un profesional de la salud para obtener información específica sobre el uso durante el embarazo.',
+        riesgos: 'Desconocidos - Se requiere evaluación médica',
+        recomendaciones: 'Consulte con su médico o farmacéutico antes de usar este medicamento durante el embarazo.'
+      },
+      medicationName: term
+    });
+    
+  } catch (error: any) {
+    console.error('Error en búsqueda de medicamentos:', error.message);
+    res.status(500).json({ 
+      error: 'Error interno del servidor',
+      details: error.message
+    });
+  }
+});
+
+/*
+// Código heredado completamente desactivado - no debe ejecutarse
+// Mapeo de nombres comunes a nombres oficiales en inglés con categorías conocidas
+const medicationMappingOld: Record<string, { terms: string[], knownCategory?: string }> = {
       'lovastatina': { terms: ['lovastatin', 'Mevacor'], knownCategory: 'X' },
       'omeprazol': { terms: ['omeprazole', 'Prilosec'], knownCategory: 'C' },
       'paracetamol': { terms: ['acetaminophen', 'Tylenol'], knownCategory: 'B' },
@@ -880,5 +908,7 @@ router.get('/api/interactions/:medication', async (req, res) => {
     });
   }
 });
+
+*/
 
 export default router;
