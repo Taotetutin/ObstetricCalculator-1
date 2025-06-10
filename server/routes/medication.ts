@@ -6,6 +6,77 @@ import { analyzeInteractions, getMedicationInteractions } from '../data/drug-int
 
 const router = Router();
 
+// Función auxiliar para extraer categoría FDA
+function extractFDACategory(category: string): string {
+  if (!category) return 'No especificada';
+  
+  const categoryMap: Record<string, string> = {
+    'A': 'Categoría A - Sin riesgo en estudios controlados',
+    'B': 'Categoría B - Sin evidencia de riesgo en humanos',
+    'C': 'Categoría C - Riesgo no puede descartarse',
+    'D': 'Categoría D - Evidencia de riesgo, pero beneficios pueden justificar uso',
+    'X': 'Categoría X - Contraindicado en embarazo'
+  };
+  
+  return categoryMap[category.toUpperCase()] || category;
+}
+
+// Función para generar variaciones de nombres de medicamentos
+function generateMedicationVariations(term: string): string[] {
+  const variations = [];
+  const lowerTerm = term.toLowerCase();
+  
+  // Variaciones comunes
+  variations.push(lowerTerm);
+  variations.push(term.charAt(0).toUpperCase() + term.slice(1).toLowerCase());
+  
+  // Mapeo de nombres españoles a nombres internacionales
+  const nameMapping: Record<string, string[]> = {
+    'metamizol': ['dipyrone', 'metamizole', 'novalgina'],
+    'paracetamol': ['acetaminophen', 'tylenol', 'panadol'],
+    'ibuprofeno': ['ibuprofen', 'advil', 'motrin'],
+    'diclofenaco': ['diclofenac', 'voltaren'],
+    'aspirina': ['aspirin', 'acetylsalicylic acid'],
+    'omeprazol': ['omeprazole', 'prilosec'],
+    'metformina': ['metformin', 'glucophage'],
+    'atenolol': ['atenolol', 'tenormin'],
+    'enalapril': ['enalapril', 'vasotec'],
+    'amoxicilina': ['amoxicillin', 'amoxil'],
+    'azitromicina': ['azithromycin', 'zithromax'],
+    'claritromicina': ['clarithromycin', 'biaxin'],
+    'ciprofloxacina': ['ciprofloxacin', 'cipro'],
+    'clonazepam': ['clonazepam', 'klonopin'],
+    'diazepam': ['diazepam', 'valium'],
+    'fluoxetina': ['fluoxetine', 'prozac'],
+    'sertralina': ['sertraline', 'zoloft'],
+    'lorazepam': ['lorazepam', 'ativan'],
+    'alprazolam': ['alprazolam', 'xanax'],
+    'warfarina': ['warfarin', 'coumadin'],
+    'heparina': ['heparin'],
+    'prednisona': ['prednisone'],
+    'levotiroxina': ['levothyroxine', 'synthroid'],
+    'insulina': ['insulin'],
+    'simvastatina': ['simvastatin', 'zocor'],
+    'atorvastatina': ['atorvastatin', 'lipitor'],
+    'losartan': ['losartan', 'cozaar'],
+    'amlodipino': ['amlodipine', 'norvasc']
+  };
+  
+  if (nameMapping[lowerTerm]) {
+    variations.push(...nameMapping[lowerTerm]);
+  }
+  
+  // Buscar en mappings inversos
+  for (const [spanish, international] of Object.entries(nameMapping)) {
+    if (international.includes(lowerTerm)) {
+      variations.push(spanish);
+      variations.push(...international);
+    }
+  }
+  
+  return [...new Set(variations)];
+}
+
 // Endpoint compatible con la implementación exitosa de "create"
 router.post('/integrations/google-gemini-1-5/', async (req, res) => {
   try {
@@ -25,7 +96,7 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     const userMessage = messages[messages.length - 1];
     const prompt = userMessage.content;
 
-    const response = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+    const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       contents: [{
         parts: [{
           text: prompt
@@ -34,9 +105,6 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     }, {
       headers: {
         'Content-Type': 'application/json',
-      },
-      params: {
-        key: process.env.GEMINI_API_KEY
       }
     });
 
@@ -79,7 +147,7 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
   }
 });
 
-// Endpoint para buscar medicamentos usando la API oficial de OpenFDA
+// Endpoint mejorado para búsqueda de medicamentos con base de datos integral
 router.post('/api/medications/gemini', async (req, res) => {
   const { term } = req.body;
   
@@ -87,13 +155,97 @@ router.post('/api/medications/gemini', async (req, res) => {
     return res.status(400).json({ error: 'Se requiere un término de búsqueda válido' });
   }
   
-  const OPENFDA_API_KEY = process.env.OPENFDA_API_KEY;
-  if (!OPENFDA_API_KEY) {
-    return res.status(500).json({ error: 'API key de OpenFDA no configurada' });
-  }
-  
   try {
-    console.log(`Consultando OpenFDA API para: ${term}`);
+    console.log(`Buscando medicamento: ${term}`);
+    
+    // PASO 1: Buscar en base de datos de medicamentos locales
+    const localResult = searchMedication(term);
+    if (localResult) {
+      console.log(`✓ Encontrado en base local: ${term}`);
+      return res.json({
+        source: 'local',
+        name: term,
+        categoria: extractFDACategory(localResult.category),
+        descripcion: localResult.description,
+        riesgos: localResult.risks,
+        recomendaciones: localResult.recommendations,
+        sections: {
+          categoria: extractFDACategory(localResult.category),
+          descripcion: localResult.description,
+          riesgos: localResult.risks,
+          recomendaciones: localResult.recommendations
+        },
+        medicationName: term
+      });
+    }
+
+    // PASO 2: Buscar en base de datos integral de drogas
+    const drugResult = findDrug(term);
+    if (drugResult) {
+      console.log(`✓ Encontrado en base integral: ${term}`);
+      return res.json({
+        source: 'comprehensive',
+        name: term,
+        categoria: drugResult.pregnancy_risks,
+        descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
+        riesgos: drugResult.pregnancy_risks,
+        recomendaciones: drugResult.recommendations,
+        sections: {
+          categoria: drugResult.pregnancy_risks,
+          descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
+          riesgos: drugResult.pregnancy_risks,
+          recomendaciones: drugResult.recommendations
+        },
+        medicationName: term
+      });
+    }
+
+    // PASO 3: Buscar variaciones del nombre
+    const variations = generateMedicationVariations(term);
+    for (const variation of variations) {
+      const drugResult = findDrug(variation);
+      const medResult = searchMedication(variation);
+      
+      if (drugResult) {
+        console.log(`✓ Encontrado variación ${variation} para: ${term}`);
+        return res.json({
+          source: 'comprehensive_variation',
+          name: term,
+          categoria: drugResult.pregnancy_risks,
+          descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
+          riesgos: drugResult.pregnancy_risks,
+          recomendaciones: drugResult.recommendations,
+          sections: {
+            categoria: drugResult.pregnancy_risks,
+            descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
+            riesgos: drugResult.pregnancy_risks,
+            recomendaciones: drugResult.recommendations
+          },
+          medicationName: term
+        });
+      }
+      
+      if (medResult) {
+        console.log(`✓ Encontrado variación ${variation} para: ${term}`);
+        return res.json({
+          source: 'local_variation',
+          name: term,
+          categoria: extractFDACategory(medResult.category),
+          descripcion: medResult.description,
+          riesgos: medResult.risks,
+          recomendaciones: medResult.recommendations,
+          sections: {
+            categoria: extractFDACategory(medResult.category),
+            descripcion: medResult.description,
+            riesgos: medResult.risks,
+            recomendaciones: medResult.recommendations
+          },
+          medicationName: term
+        });
+      }
+    }
+
+    console.log(`⚠️ Medicamento no encontrado en bases locales: ${term}`);
     
     // Mapeo de nombres comunes a nombres oficiales en inglés con categorías conocidas
     const medicationMapping: Record<string, { terms: string[], knownCategory?: string }> = {

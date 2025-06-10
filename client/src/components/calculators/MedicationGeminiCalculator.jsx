@@ -40,56 +40,36 @@ function MedicationGeminiCalculator() {
     try {
       console.log("Consultando información sobre:", searchTerm);
       
-      // Usar el endpoint que funciona, igual que en "create"
-      const response = await fetch("/integrations/google-gemini-1-5/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "user",
-              content: `Actúa como un experto farmacéutico y proporciona información sobre la clasificación FDA del medicamento "${searchTerm}" durante el embarazo. Responde en español, con el siguiente formato exacto:
-
-Categoría FDA: [categoría]
-Descripción: [descripción detallada de la categoría]
-Riesgos: [lista de riesgos potenciales]
-Recomendaciones: [recomendaciones específicas]`,
-            },
-          ],
-          stream: false,
-        }),
+      // Usar endpoint mejorado con base de datos integral
+      const response = await axios.post('/api/medications/gemini', {
+        term: searchTerm
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const result = data?.choices?.[0]?.message?.content;
-
-      if (result) {
-        // Procesar la respuesta para extraer información estructurada
-        const sections = result.split("\n").reduce((acc, line) => {
-          if (line.toLowerCase().includes("categoría fda:")) {
-            acc.categoria = line.split(":")[1]?.trim() || '';
-          } else if (line.toLowerCase().includes("descripción:")) {
-            acc.descripcion = line.split(":")[1]?.trim() || '';
-          } else if (line.toLowerCase().includes("riesgos:")) {
-            acc.riesgos = line.split(":")[1]?.trim() || '';
-          } else if (line.toLowerCase().includes("recomendaciones:")) {
-            acc.recomendaciones = line.split(":")[1]?.trim() || '';
-          }
-          return acc;
-        }, {});
-
-        console.log("Información procesada:", sections);
+      
+      console.log("Respuesta recibida:", response.data);
+      
+      if (response.data.sections) {
+        const result = {
+          name: response.data.medicationName || searchTerm,
+          categoria: response.data.sections.categoria,
+          descripcion: response.data.sections.descripcion,
+          riesgos: response.data.sections.riesgos,
+          recomendaciones: response.data.sections.recomendaciones,
+          source: response.data.source
+        };
+        console.log("Estableciendo geminiResult:", result);
+        setGeminiResult(result);
+      } else if (response.data.categoria) {
+        // Formato alternativo directo
         setGeminiResult({
           name: searchTerm,
-          source: 'gemini',
-          ...sections
+          categoria: response.data.categoria,
+          descripcion: response.data.descripcion,
+          riesgos: response.data.riesgos,
+          recomendaciones: response.data.recomendaciones,
+          source: response.data.source
         });
       } else {
-        throw new Error("No se recibió respuesta válida");
+        setError("No se pudo procesar la información recibida.");
       }
     } catch (error) {
       console.error("Error consultando a Gemini:", error);
