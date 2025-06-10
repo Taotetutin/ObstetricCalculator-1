@@ -6,6 +6,79 @@ import { analyzeInteractions, getMedicationInteractions } from '../data/drug-int
 
 const router = Router();
 
+// Endpoint compatible con la implementación exitosa de "create"
+router.post('/integrations/google-gemini-1-5/', async (req, res) => {
+  try {
+    const { messages, stream } = req.body;
+    
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'Mensajes requeridos' });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'Clave API de Gemini no configurada',
+        suggestion: 'El administrador debe configurar GEMINI_API_KEY'
+      });
+    }
+
+    const userMessage = messages[messages.length - 1];
+    const prompt = userMessage.content;
+
+    const response = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {
+        key: process.env.GEMINI_API_KEY
+      }
+    });
+
+    const result = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!result) {
+      return res.status(404).json({ 
+        error: 'No se pudo generar respuesta',
+      });
+    }
+
+    if (stream) {
+      // Para streaming, enviar la respuesta de forma similar al proyecto create
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Transfer-Encoding', 'chunked');
+      
+      // Simular streaming enviando la respuesta en chunks
+      const chunks = result.split(' ');
+      for (let i = 0; i < chunks.length; i++) {
+        res.write(chunks[i] + ' ');
+        await new Promise(resolve => setTimeout(resolve, 50)); // Pequeño delay para simular streaming
+      }
+      res.end();
+    } else {
+      res.json({ 
+        choices: [{
+          message: {
+            content: result
+          }
+        }]
+      });
+    }
+    
+  } catch (error: any) {
+    console.error('Error en Gemini API:', error.message);
+    res.status(500).json({ 
+      error: 'Error consultando Gemini API',
+      details: error.message
+    });
+  }
+});
+
 // Endpoint para buscar medicamentos usando la API oficial de OpenFDA
 router.post('/api/medications/gemini', async (req, res) => {
   const { term } = req.body;
