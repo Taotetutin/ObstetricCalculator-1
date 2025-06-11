@@ -199,6 +199,56 @@ export const essentialMedications = {
     descripcion: "Antihistamínico de primera generación",
     riesgos: "Sedación. Seguro en dosis ocasionales.",
     recomendaciones: "Útil para insomnio ocasional además de alergias."
+  },
+
+  // Relajantes musculares
+  "ciclobenzaprina": {
+    name: "Ciclobenzaprina",
+    categoria: "Categoría B",
+    descripcion: "Relajante muscular de acción central",
+    riesgos: "Datos limitados en embarazo. Sedación posible.",
+    recomendaciones: "Usar solo si es esencial. Preferir fisioterapia y medidas no farmacológicas."
+  },
+  "ciclobenzaprida": {
+    name: "Ciclobenzaprina",
+    categoria: "Categoría B", 
+    descripcion: "Relajante muscular de acción central (nombre alternativo)",
+    riesgos: "Datos limitados en embarazo. Sedación posible.",
+    recomendaciones: "Usar solo si es esencial. Preferir fisioterapia y medidas no farmacológicas."
+  },
+
+  // Medicamentos para gota
+  "alopurinol": {
+    name: "Alopurinol",
+    categoria: "Categoría C",
+    descripcion: "Inhibidor de xantina oxidasa para el tratamiento de la gota",
+    riesgos: "Datos limitados en embarazo. Posibles efectos teratogénicos.",
+    recomendaciones: "Evitar durante embarazo salvo casos graves. Considerar medidas dietéticas."
+  },
+
+  // Antivirales
+  "aciclovir": {
+    name: "Aciclovir",
+    categoria: "Categoría B",
+    descripcion: "Antiviral para herpes simple y varicela zoster",
+    riesgos: "Seguro durante embarazo. Datos extensos disponibles.",
+    recomendaciones: "Antiviral de elección para infecciones herpéticas durante embarazo."
+  },
+
+  // Antihipertensivos seguros
+  "metildopa": {
+    name: "Metildopa",
+    categoria: "Categoría B",
+    descripcion: "Antihipertensivo de primera línea en embarazo",
+    riesgos: "Muy seguros. Amplia experiencia en embarazo.",
+    recomendaciones: "Antihipertensivo preferido durante embarazo."
+  },
+  "nifedipino": {
+    name: "Nifedipino",
+    categoria: "Categoría C",
+    descripcion: "Bloqueador de canales de calcio para hipertensión",
+    riesgos: "Generalmente seguro. Monitoreo de presión arterial necesario.",
+    recomendaciones: "Alternativa a metildopa. Útil también para amenaza de parto prematuro."
   }
 };
 

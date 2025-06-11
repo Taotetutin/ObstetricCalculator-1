@@ -97,8 +97,8 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     const userMessage = messages[messages.length - 1];
     const prompt = userMessage.content;
 
-    // Usar la URL exacta de la API de Gemini
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    // Usar la URL exacta de la API de Gemini con el modelo correcto
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
     
     const response = await axios.post(apiUrl, {
       contents: [{
