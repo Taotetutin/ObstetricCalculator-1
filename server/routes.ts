@@ -207,7 +207,8 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
         'metformina': ['metformin', 'Glucophage'],
         'amoxicilina': ['amoxicillin', 'Amoxil'],
         'ciclobenzaprina': ['cyclobenzaprine', 'Flexeril'],
-        'alopurinol': ['allopurinol', 'Zyloprim']
+        'alopurinol': ['allopurinol', 'Zyloprim'],
+        'clorfenamina': ['chlorpheniramine', 'Chlor-Trimeton']
       };
       
       const searchTerms = [query.toLowerCase()];
