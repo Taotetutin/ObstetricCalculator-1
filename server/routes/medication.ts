@@ -182,70 +182,111 @@ router.post('/api/medications/gemini', async (req, res) => {
   try {
     console.log(`Buscando medicamento: ${term}`);
     
-    // PASO 1: Buscar en base de datos esencial (medicamentos básicos)
-    const essentialResult = searchEssentialMedication(term);
-    if (essentialResult) {
-      console.log(`✓ Encontrado en base esencial: ${term}`);
-      return res.json({
-        source: 'essential',
-        name: term,
-        categoria: essentialResult.categoria,
-        descripcion: essentialResult.descripcion,
-        riesgos: essentialResult.riesgos,
-        recomendaciones: essentialResult.recomendaciones,
-        sections: {
+    // PASO 1: Consultar directamente a Gemini API para acceso universal
+    console.log(`🔍 Consultando Gemini API para: ${term}`);
+    
+    if (!process.env.GEMINI_API_KEY) {
+      console.log('⚠️ Clave API de Gemini no configurada, usando bases locales');
+      // Fallback a bases locales solo si no hay API key
+      const essentialResult = searchEssentialMedication(term);
+      if (essentialResult) {
+        console.log(`✓ Encontrado en base esencial: ${term}`);
+        return res.json({
+          source: 'essential',
+          name: term,
           categoria: essentialResult.categoria,
           descripcion: essentialResult.descripcion,
           riesgos: essentialResult.riesgos,
-          recomendaciones: essentialResult.recomendaciones
-        },
-        medicationName: term
-      });
+          recomendaciones: essentialResult.recomendaciones,
+          sections: {
+            categoria: essentialResult.categoria,
+            descripcion: essentialResult.descripcion,
+            riesgos: essentialResult.riesgos,
+            recomendaciones: essentialResult.recomendaciones
+          },
+          medicationName: term
+        });
+      }
     }
 
-    // PASO 2: Buscar en base de datos de medicamentos locales
-    const localResult = searchMedication(term);
-    if (localResult) {
-      console.log(`✓ Encontrado en base local: ${term}`);
-      return res.json({
-        source: 'local',
-        name: term,
-        categoria: extractFDACategory(localResult.category),
-        descripcion: localResult.description,
-        riesgos: localResult.risks,
-        recomendaciones: localResult.recommendations,
-        sections: {
-          categoria: extractFDACategory(localResult.category),
-          descripcion: localResult.description,
-          riesgos: localResult.risks,
-          recomendaciones: localResult.recommendations
+    // Consultar Gemini API para información completa
+    try {
+      const prompt = `Actúa como un experto farmacéutico especializado en farmacología del embarazo y proporciona información detallada sobre el medicamento "${term}" durante el embarazo. Responde ÚNICAMENTE en español con el siguiente formato exacto:
+
+Categoría FDA: [categoría específica]
+Descripción: [descripción detallada del medicamento y su mecanismo de acción]
+Riesgos: [lista detallada de riesgos potenciales durante el embarazo]
+Recomendaciones: [recomendaciones específicas para uso durante embarazo]
+
+Si el medicamento no existe o no reconoces el nombre, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
+
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      
+      const response = await axios.post(apiUrl, {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.3,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        }
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
         },
-        medicationName: term
+        timeout: 30000
       });
+
+      const result = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (result && !result.includes('MEDICAMENTO_NO_ENCONTRADO')) {
+        console.log(`✅ Información obtenida de Gemini para: ${term}`);
+        
+        // Parsear la respuesta estructurada
+        const lines = result.split('\n').filter(line => line.trim());
+        let categoria = 'No especificada';
+        let descripcion = 'Información no disponible';
+        let riesgos = 'Consulte con su médico';
+        let recomendaciones = 'Consulte con su médico';
+        
+        for (const line of lines) {
+          if (line.includes('Categoría FDA:')) {
+            categoria = line.replace('Categoría FDA:', '').trim();
+          } else if (line.includes('Descripción:')) {
+            descripcion = line.replace('Descripción:', '').trim();
+          } else if (line.includes('Riesgos:')) {
+            riesgos = line.replace('Riesgos:', '').trim();
+          } else if (line.includes('Recomendaciones:')) {
+            recomendaciones = line.replace('Recomendaciones:', '').trim();
+          }
+        }
+        
+        return res.json({
+          source: 'gemini',
+          name: term,
+          categoria,
+          descripcion,
+          riesgos,
+          recomendaciones,
+          sections: {
+            categoria,
+            descripcion,
+            riesgos,
+            recomendaciones
+          },
+          medicationName: term
+        });
+      }
+    } catch (error: any) {
+      console.error('Error consultando Gemini API:', error.response?.data || error.message);
     }
 
-    // PASO 2: Buscar en base de datos integral de drogas
-    const drugResult = findDrug(term);
-    if (drugResult) {
-      console.log(`✓ Encontrado en base integral: ${term}`);
-      return res.json({
-        source: 'comprehensive',
-        name: term,
-        categoria: drugResult.pregnancy_risks,
-        descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
-        riesgos: drugResult.pregnancy_risks,
-        recomendaciones: drugResult.recommendations,
-        sections: {
-          categoria: drugResult.pregnancy_risks,
-          descripcion: `${drugResult.mechanism}. Clasificación: ${drugResult.class}`,
-          riesgos: drugResult.pregnancy_risks,
-          recomendaciones: drugResult.recommendations
-        },
-        medicationName: term
-      });
-    }
-
-    // PASO 3: Buscar variaciones del nombre
+    // PASO 2: Fallback a bases locales como último recurso
+    console.log(`🔄 Usando bases locales como fallback para: ${term}`);
     const variations = generateMedicationVariations(term);
     for (const variation of variations) {
       const drugResult = findDrug(variation);
