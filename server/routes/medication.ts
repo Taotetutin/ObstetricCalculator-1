@@ -3,6 +3,7 @@ import axios from 'axios';
 import { searchMedication, getAllMedications, getMedicationsByCategory } from '../data/medications-database';
 import { findDrug, getAllDrugs, getDrugsByCategory } from '../data/comprehensive-drug-database';
 import { analyzeInteractions, getMedicationInteractions } from '../data/drug-interactions';
+import { searchEssentialMedication } from '../data/essential-medications';
 
 const router = Router();
 
@@ -96,16 +97,26 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     const userMessage = messages[messages.length - 1];
     const prompt = userMessage.content;
 
-    const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    // Usar la URL exacta de la API de Gemini
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    
+    const response = await axios.post(apiUrl, {
       contents: [{
         parts: [{
           text: prompt
         }]
-      }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
+      }
     }, {
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      timeout: 30000
     });
 
     const result = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -119,14 +130,12 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     if (stream) {
       // Para streaming, enviar la respuesta de forma similar al proyecto create
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      res.setHeader('Transfer-Encoding', 'chunked');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       
-      // Simular streaming enviando la respuesta en chunks
-      const chunks = result.split(' ');
-      for (let i = 0; i < chunks.length; i++) {
-        res.write(chunks[i] + ' ');
-        await new Promise(resolve => setTimeout(resolve, 50)); // Pequeño delay para simular streaming
-      }
+      // Enviar respuesta completa para compatibilidad
+      res.write(result);
       res.end();
     } else {
       res.json({ 
@@ -139,7 +148,22 @@ router.post('/integrations/google-gemini-1-5/', async (req, res) => {
     }
     
   } catch (error: any) {
-    console.error('Error en Gemini API:', error.message);
+    console.error('Error en Gemini API:', error.response?.data || error.message);
+    
+    if (error.response?.status === 400) {
+      return res.status(400).json({ 
+        error: 'Solicitud inválida a Gemini API',
+        details: error.response.data?.error?.message || 'Formato de solicitud incorrecto'
+      });
+    }
+    
+    if (error.response?.status === 403) {
+      return res.status(403).json({ 
+        error: 'API key de Gemini inválida o sin permisos',
+        details: 'Verificar configuración de GEMINI_API_KEY'
+      });
+    }
+    
     res.status(500).json({ 
       error: 'Error consultando Gemini API',
       details: error.message
@@ -158,7 +182,28 @@ router.post('/api/medications/gemini', async (req, res) => {
   try {
     console.log(`Buscando medicamento: ${term}`);
     
-    // PASO 1: Buscar en base de datos de medicamentos locales
+    // PASO 1: Buscar en base de datos esencial (medicamentos básicos)
+    const essentialResult = searchEssentialMedication(term);
+    if (essentialResult) {
+      console.log(`✓ Encontrado en base esencial: ${term}`);
+      return res.json({
+        source: 'essential',
+        name: term,
+        categoria: essentialResult.categoria,
+        descripcion: essentialResult.descripcion,
+        riesgos: essentialResult.riesgos,
+        recomendaciones: essentialResult.recomendaciones,
+        sections: {
+          categoria: essentialResult.categoria,
+          descripcion: essentialResult.descripcion,
+          riesgos: essentialResult.riesgos,
+          recomendaciones: essentialResult.recomendaciones
+        },
+        medicationName: term
+      });
+    }
+
+    // PASO 2: Buscar en base de datos de medicamentos locales
     const localResult = searchMedication(term);
     if (localResult) {
       console.log(`✓ Encontrado en base local: ${term}`);
