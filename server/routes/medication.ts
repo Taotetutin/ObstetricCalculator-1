@@ -211,14 +211,25 @@ router.post('/api/medications/gemini', async (req, res) => {
 
     // Consultar Gemini API para información completa
     try {
-      const prompt = `Actúa como un experto farmacéutico especializado en farmacología del embarazo y proporciona información detallada sobre el medicamento "${term}" durante el embarazo. Responde ÚNICAMENTE en español con el siguiente formato exacto:
+      const prompt = `Actúa como un experto farmacéutico especializado en farmacología del embarazo con acceso a la base de datos oficial de la FDA. Proporciona información PRECISA sobre el medicamento "${term}" durante el embarazo. 
 
-Categoría FDA: [categoría específica]
+IMPORTANTE: Usa las categorías FDA EXACTAS:
+- Categoría A: Estudios controlados en mujeres no muestran riesgo
+- Categoría B: Estudios en animales no muestran riesgo O estudios controlados en embarazadas no muestran riesgo
+- Categoría C: Estudios en animales muestran efectos adversos O no hay estudios adecuados
+- Categoría D: Evidencia de riesgo fetal humano pero beneficios pueden justificar el uso
+- Categoría X: Contraindicado - riesgo fetal supera cualquier beneficio
+
+Para furosemida específicamente, es Categoría C según FDA, NO categoría D.
+
+Responde ÚNICAMENTE en español con este formato exacto:
+
+Categoría FDA: [usar SOLO A, B, C, D, o X]
 Descripción: [descripción detallada del medicamento y su mecanismo de acción]
 Riesgos: [lista detallada de riesgos potenciales durante el embarazo]
 Recomendaciones: [recomendaciones específicas para uso durante embarazo]
 
-Si el medicamento no existe o no reconoces el nombre, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
+Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
 
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
       
@@ -635,60 +646,130 @@ const medicationMappingOld: Record<string, { terms: string[], knownCategory?: st
 
 // Endpoint para buscar medicamentos en la API oficial de OpenFDA
 router.get('/api/medications/search', async (req, res) => {
-  const { term } = req.query;
+  const { query } = req.query;
   
-  if (!term || typeof term !== 'string') {
-    return res.status(400).json({ error: 'Se requiere un término de búsqueda válido' });
+  if (!query || typeof query !== 'string') {
+    return res.status(400).json({ error: 'Se requiere un parámetro de búsqueda válido' });
   }
+
+  console.log(`Buscando medicamento en FDA: ${query}`);
 
   const OPENFDA_API_KEY = process.env.OPENFDA_API_KEY;
   if (!OPENFDA_API_KEY) {
     return res.status(500).json({ error: 'API key de OpenFDA no configurada' });
   }
+
+  // Mapeo de nombres comunes para mejorar búsquedas
+  const medicationMapping: Record<string, string[]> = {
+    'furosemida': ['furosemide', 'Lasix'],
+    'celecoxib': ['celecoxib', 'Celebrex'],
+    'ibuprofeno': ['ibuprofen', 'Advil', 'Motrin'],
+    'paracetamol': ['acetaminophen', 'Tylenol'],
+    'omeprazol': ['omeprazole', 'Prilosec'],
+    'atorvastatina': ['atorvastatin', 'Lipitor'],
+    'metformina': ['metformin', 'Glucophage'],
+    'amoxicilina': ['amoxicillin', 'Amoxil'],
+    'ciclobenzaprina': ['cyclobenzaprine', 'Flexeril'],
+    'alopurinol': ['allopurinol', 'Zyloprim']
+  };
   
   try {
-    // Usar múltiples estrategias de búsqueda para mayor cobertura
-    const searchStrategies = [
-      `openfda.generic_name:"${term}"`,
-      `openfda.brand_name:"${term}"`,
-      `openfda.substance_name:"${term}"`,
-      `openfda.generic_name:${term}`,
-      `openfda.brand_name:${term}`,
-      `openfda.substance_name:${term}`
-    ];
+    // Obtener términos de búsqueda
+    const searchTerms = [query.toLowerCase()];
+    if (medicationMapping[query.toLowerCase()]) {
+      searchTerms.push(...medicationMapping[query.toLowerCase()]);
+    }
 
-    let response = null;
+    let fdaResults: any[] = [];
     
-    for (const strategy of searchStrategies) {
-      try {
-        const searchQuery = encodeURIComponent(strategy);
-        console.log(`Probando estrategia FDA: ${strategy}`);
-        
-        const apiResponse = await axios.get(
-          `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=10`
-        );
-        
-        if (apiResponse.data.results && apiResponse.data.results.length > 0) {
-          console.log(`✓ Éxito con estrategia: ${strategy}`);
-          response = apiResponse;
-          break;
+    // Intentar búsqueda con cada término
+    for (const searchTerm of searchTerms) {
+      const searchStrategies = [
+        `openfda.generic_name:"${searchTerm}"`,
+        `openfda.brand_name:"${searchTerm}"`,
+        `openfda.substance_name:"${searchTerm}"`
+      ];
+
+      for (const strategy of searchStrategies) {
+        try {
+          const searchQuery = encodeURIComponent(strategy);
+          console.log(`Probando: ${searchTerm} con ${strategy}`);
+          
+          const apiResponse = await axios.get(
+            `https://api.fda.gov/drug/label.json?api_key=${OPENFDA_API_KEY}&search=${searchQuery}&limit=5`,
+            { timeout: 10000 }
+          );
+          
+          if (apiResponse.data.results && apiResponse.data.results.length > 0) {
+            console.log(`✓ Encontrado con: ${searchTerm}`);
+            
+            fdaResults = apiResponse.data.results.map((drug: any) => ({
+              id: drug.id || Math.random().toString(),
+              name: drug.openfda?.generic_name?.[0] || drug.openfda?.brand_name?.[0] || searchTerm,
+              brand_names: drug.openfda?.brand_name || [],
+              generic_name: drug.openfda?.generic_name || [],
+              manufacturer: drug.openfda?.manufacturer_name || [],
+              pregnancy_category: extractPregnancyCategory(drug),
+              warnings: drug.warnings || [],
+              indications: drug.indications_and_usage || [],
+              dosage: drug.dosage_and_administration || []
+            }));
+            
+            return res.json({
+              results: fdaResults,
+              total: fdaResults.length,
+              message: `${fdaResults.length} medicamentos encontrados en FDA`
+            });
+          }
+        } catch (strategyError: any) {
+          console.log(`✗ Error con ${strategy}: ${strategyError.response?.status || 'timeout'}`);
+          continue;
         }
-      } catch (strategyError: any) {
-        console.log(`✗ Estrategia ${strategy} falló: ${strategyError.response?.status}`);
-        continue;
       }
     }
 
-    if (!response || !response.data.results) {
-      throw new Error('No se encontraron resultados en OpenFDA');
-    }
+    // Si no se encontraron resultados
+    console.log('No se encontraron medicamentos en FDA');
+    return res.json({
+      results: [],
+      total: 0,
+      message: 'No se encontraron medicamentos en la base de datos FDA'
+    });
     
-    // Procesar resultados de la API oficial
-    const results = response.data.results || [];
-    console.log(`Resultados encontrados: ${results.length}`);
+  } catch (error: any) {
+    console.error('Error en búsqueda FDA:', error.message);
+    res.status(500).json({ 
+      error: 'Error consultando base de datos FDA',
+      details: error.message
+    });
+  }
+});
+
+// Función auxiliar para extraer categoría de embarazo de datos FDA
+function extractPregnancyCategory(drug: any): string {
+  try {
+    const sections = [
+      drug.pregnancy || '',
+      drug.pregnancy_or_breast_feeding || '',
+      drug.use_in_specific_populations || '',
+      drug.warnings || '',
+      drug.contraindications || ''
+    ].join(' ').toLowerCase();
     
-    // Función auxiliar para crear resúmenes concisos en español
-    const createSpanishSummary = (text: string, maxLength: number = 150): string => {
+    if (sections.includes('category a') || sections.includes('categoría a')) return 'A';
+    if (sections.includes('category b') || sections.includes('categoría b')) return 'B';
+    if (sections.includes('category c') || sections.includes('categoría c')) return 'C';
+    if (sections.includes('category d') || sections.includes('categoría d')) return 'D';
+    if (sections.includes('category x') || sections.includes('categoría x')) return 'X';
+    
+    return 'No especificada';
+  } catch {
+    return 'No especificada';
+  }
+}
+
+// Función auxiliar para crear resúmenes concisos en español
+function createSpanishSummary(text: string, maxLength: number = 150): string {
       if (!text || text.length <= maxLength) return text;
       
       const sentences = text.split(/[.!?]+/);
