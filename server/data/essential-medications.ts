@@ -256,6 +256,13 @@ export const essentialMedications = {
     descripcion: "Inhibidor selectivo de la recaptación de serotonina (ISRS). Antidepresivo considerado relativamente seguro durante el embarazo según estudios epidemiológicos.",
     riesgos: "Riesgo bajo de malformaciones congénitas. Posible síndrome de abstinencia neonatal transitorio si se usa cerca del parto.",
     recomendaciones: "ISRS de elección durante embarazo si se requiere tratamiento antidepresivo. Los beneficios generalmente superan los riesgos cuando la depresión materna es significativa."
+  },
+  "gentamicina": {
+    name: "Gentamicina",
+    categoria: "Categoría C",
+    descripcion: "Antibiótico aminoglucósido de uso parenteral para infecciones graves. Actúa inhibiendo la síntesis proteica bacteriana uniéndose a la subunidad 30S del ribosoma.",
+    riesgos: "Riesgo de ototoxicidad y nefrotoxicidad materna. Cruza la placenta pero riesgo fetal bajo con uso corto. Evitar uso prolongado.",
+    recomendaciones: "Reservar para infecciones graves cuando beneficios superen riesgos. Monitoreo de función renal y auditiva. Preferir cursos cortos."
   }
 };
 
