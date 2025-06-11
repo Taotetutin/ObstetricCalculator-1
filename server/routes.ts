@@ -190,6 +190,8 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
 
       console.log(`Buscando medicamento en FDA: ${query}`);
 
+
+
       if (!process.env.OPENFDA_API_KEY) {
         return res.status(500).json({ error: 'API key de OpenFDA no configurada' });
       }
@@ -246,7 +248,16 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
               }));
               
               return res.json({
-                results: fdaResults,
+                medications: fdaResults.map(drug => ({
+                  name: drug.name,
+                  category: drug.pregnancy_category,
+                  information: `Fabricante: ${drug.manufacturer.join(', ') || 'No especificado'}`,
+                  warnings: Array.isArray(drug.warnings) ? drug.warnings.join('. ') : drug.warnings,
+                  route: 'Vía no especificada',
+                  recommendation: 'Consulte siempre con su profesional de la salud antes de usar durante el embarazo',
+                  isLocal: false,
+                  isAlternative: false
+                })),
                 total: fdaResults.length,
                 message: `${fdaResults.length} medicamentos encontrados en FDA`
               });
@@ -260,7 +271,7 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
 
       console.log('No se encontraron medicamentos en FDA');
       return res.json({
-        results: [],
+        medications: [],
         total: 0,
         message: 'No se encontraron medicamentos en la base de datos FDA'
       });

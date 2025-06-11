@@ -48,6 +48,7 @@ function generateMedicationVariations(term: string): string[] {
     'ciprofloxacina': ['ciprofloxacin', 'cipro'],
     'clonazepam': ['clonazepam', 'klonopin'],
     'diazepam': ['diazepam', 'valium'],
+    'clorfenamina': ['chlorpheniramine', 'chlor-trimeton'],
     'fluoxetina': ['fluoxetine', 'prozac'],
     'sertralina': ['sertraline', 'zoloft'],
     'lorazepam': ['lorazepam', 'ativan'],

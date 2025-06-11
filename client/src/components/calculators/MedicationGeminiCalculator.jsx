@@ -131,7 +131,7 @@ Recomendaciones: [recomendaciones específicas]`,
     try {
       // Consultar a nuestro propio backend, que a su vez consulta a la API de OpenFDA
       console.log("Buscando medicamento en FDA:", searchTerm);
-      const response = await axios.get(`/api/medications/search?term=${encodeURIComponent(searchTerm)}`);
+      const response = await axios.get(`/api/medications/search?query=${encodeURIComponent(searchTerm)}`);
       
       if (response.data.medications && response.data.medications.length > 0) {
         console.log("Medicamentos encontrados:", response.data.medications.length);
