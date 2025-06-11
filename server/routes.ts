@@ -213,7 +213,8 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
         'ciclobenzaprina': ['cyclobenzaprine', 'Flexeril'],
         'alopurinol': ['allopurinol', 'Zyloprim'],
         'clorfenamina': ['chlorpheniramine', 'Chlor-Trimeton'],
-        'fluoxetina': ['fluoxetine', 'Prozac']
+        'fluoxetina': ['fluoxetine', 'Prozac'],
+        'clindamicina': ['clindamycin', 'Cleocin']
       };
       
       const searchTerms = [query.toLowerCase()];

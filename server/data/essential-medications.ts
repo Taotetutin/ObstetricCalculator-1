@@ -69,9 +69,9 @@ export const essentialMedications = {
   "clindamicina": {
     name: "Clindamicina",
     categoria: "Categoría B",
-    descripcion: "Antibiótico para infecciones anaerobias",
-    riesgos: "Bajos. Buena penetración en tejidos.",
-    recomendaciones: "Útil para infecciones ginecológicas y dentales."
+    descripcion: "Antibiótico lincosamida con excelente actividad contra bacterias anaerobias gram-positivas y muchas bacterias aerobias gram-positivas. Inhibe la síntesis proteica bacteriana uniéndose a la subunidad 50S del ribosoma. Tiene excelente penetración tisular, especialmente en hueso, articulaciones y abscesos.",
+    riesgos: "Estudios en animales no han mostrado efectos teratogénicos. Riesgo de colitis pseudomembranosa (Clostridium difficile) en la madre. Cruza la placenta pero no se han reportado efectos adversos fetales. Compatible con lactancia materna.",
+    recomendaciones: "Antibiótico seguro durante embarazo para infecciones por anaerobios. Útil en vaginosis bacteriana, infecciones dentales, osteomielitis y infecciones de tejidos blandos. Monitorear síntomas gastrointestinales. Preferir vía oral cuando sea posible."
   },
 
   // Analgésicos y antiinflamatorios
