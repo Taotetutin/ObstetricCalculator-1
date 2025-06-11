@@ -60,8 +60,13 @@ IMPORTANTE: Usa las categorías FDA EXACTAS:
 - Categoría D: Evidencia de riesgo fetal humano pero beneficios pueden justificar el uso
 - Categoría X: Contraindicado - riesgo fetal supera cualquier beneficio
 
-Para furosemida específicamente, es Categoría C según FDA, NO categoría D.
-Para fluoxetina específicamente, es Categoría B según FDA, NO categoría C.
+IMPORTANTE: Para medicamentos durante embarazo, usa ÚNICAMENTE categorías FDA verificadas:
+- Furosemida: Categoría C (verificada)
+- Fluoxetina: Categoría B (verificada) 
+- Gentamicina: Categoría C (verificada)
+- Clindamicina: Categoría B (verificada)
+
+Si no estás seguro de la categoría exacta, indica "Consultar fuentes oficiales FDA" en lugar de adivinar.
 
 Responde ÚNICAMENTE en español con este formato exacto:
 

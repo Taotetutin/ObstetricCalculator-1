@@ -263,6 +263,45 @@ export const essentialMedications = {
     descripcion: "Antibiótico aminoglucósido de uso parenteral para infecciones graves. Actúa inhibiendo la síntesis proteica bacteriana uniéndose a la subunidad 30S del ribosoma.",
     riesgos: "Riesgo de ototoxicidad y nefrotoxicidad materna. Cruza la placenta pero riesgo fetal bajo con uso corto. Evitar uso prolongado.",
     recomendaciones: "Reservar para infecciones graves cuando beneficios superen riesgos. Monitoreo de función renal y auditiva. Preferir cursos cortos."
+  },
+
+  // Medicamentos cardiovasculares adicionales
+  "amlodipino": {
+    name: "Amlodipino",
+    categoria: "Categoría C",
+    descripcion: "Bloqueador de canales de calcio para hipertensión arterial. Vasodilatador periférico efectivo.",
+    riesgos: "Estudios limitados en embarazo. Puede causar hipotensión materna y reducción del flujo uteroplacentario.",
+    recomendaciones: "Usar solo si otros antihipertensivos son inadecuados. Monitoreo estricto de presión arterial."
+  },
+  "losartan": {
+    name: "Losartán",
+    categoria: "Categoría D",
+    descripcion: "Antagonista de receptores de angiotensina II. Contraindicado en embarazo por riesgo fetal.",
+    riesgos: "Oligohidramnios, restricción del crecimiento fetal, hipocalvaria, muerte fetal.",
+    recomendaciones: "Suspender inmediatamente al confirmar embarazo. Cambiar a metildopa o nifedipino."
+  },
+  "lisinopril": {
+    name: "Lisinopril",
+    categoria: "Categoría D",
+    descripcion: "Inhibidor de la enzima convertidora de angiotensina (IECA). Contraindicado en embarazo.",
+    riesgos: "Oligohidramnios, defectos renales fetales, restricción del crecimiento, muerte fetal.",
+    recomendaciones: "Descontinuar antes del embarazo o inmediatamente al confirmarlo. Alternativas seguras disponibles."
+  },
+
+  // Medicamentos psiquiátricos adicionales
+  "sertralina": {
+    name: "Sertralina",
+    categoria: "Categoría C",
+    descripcion: "Inhibidor selectivo de la recaptación de serotonina (ISRS). Opción para depresión en embarazo.",
+    riesgos: "Riesgo bajo de malformaciones. Posible síndrome de abstinencia neonatal transitorio.",
+    recomendaciones: "ISRS alternativo a fluoxetina. Monitoreo del recién nacido por síntomas de abstinencia."
+  },
+  "paroxetina": {
+    name: "Paroxetina",
+    categoria: "Categoría D",
+    descripcion: "ISRS con mayor riesgo teratogénico que otros antidepresivos.",
+    riesgos: "Incremento del riesgo de defectos cardíacos congénitos, especialmente en primer trimestre.",
+    recomendaciones: "Evitar durante embarazo. Cambiar a fluoxetina o sertralina antes de concebir."
   }
 };
 
