@@ -25,6 +25,192 @@ export const comprehensiveDrugDatabase: Record<string, DrugClassification> = {
     monitoring: "Función renal, presión arterial, signos de sangrado",
     alternatives: ["paracetamol", "acetaminofén"]
   },
+
+  // Antifúngicos tópicos y sistémicos
+  "clotrimazol": {
+    name: "Clotrimazol",
+    aliases: ["canesten", "lotrimin", "mycelex"],
+    category: "Antifúngico tópico",
+    class: "Derivado imidazólico",
+    mechanism: "Inhibición de la síntesis de ergosterol en la membrana fúngica",
+    pregnancy_risks: "Categoría B - Seguro para uso tópico durante el embarazo",
+    recommendations: "Antifúngico de primera línea para candidiasis vaginal durante el embarazo. Preferir aplicación tópica.",
+    monitoring: "Irritación local, respuesta clínica",
+    alternatives: ["nistatina tópica", "miconazol tópico"]
+  },
+
+  "miconazol": {
+    name: "Miconazol",
+    aliases: ["monistat", "daktarin", "micatin"],
+    category: "Antifúngico tópico",
+    class: "Derivado imidazólico",
+    mechanism: "Inhibición de la síntesis de ergosterol",
+    pregnancy_risks: "Categoría C - Usar solo si es necesario. Seguro en aplicación tópica.",
+    recommendations: "Seguro para uso tópico. Evitar uso sistémico durante embarazo.",
+    monitoring: "Irritación local, absorción sistémica mínima",
+    alternatives: ["clotrimazol", "nistatina"]
+  },
+
+  "nistatina": {
+    name: "Nistatina",
+    aliases: ["nystatin", "mycostatin"],
+    category: "Antifúngico tópico",
+    class: "Antibiótico poliénico",
+    mechanism: "Unión al ergosterol y formación de poros en membrana fúngica",
+    pregnancy_risks: "Categoría B - Seguro durante todo el embarazo",
+    recommendations: "Antifúngico más seguro durante embarazo. Mínima absorción sistémica.",
+    monitoring: "Irritación local mínima",
+    alternatives: ["clotrimazol"]
+  },
+
+  "terbinafina": {
+    name: "Terbinafina",
+    aliases: ["lamisil", "terbisil"],
+    category: "Antifúngico sistémico",
+    class: "Alilamina",
+    mechanism: "Inhibición de la escualeno epoxidasa",
+    pregnancy_risks: "Categoría B - Datos limitados, usar solo si es esencial",
+    recommendations: "Evitar durante embarazo salvo infecciones graves. Preferir tratamiento tópico.",
+    monitoring: "Función hepática, efectos sistémicos",
+    alternatives: ["antifúngicos tópicos", "diferir tratamiento"]
+  },
+
+  "ketoconazol": {
+    name: "Ketoconazol",
+    aliases: ["nizoral", "extina"],
+    category: "Antifúngico sistémico",
+    class: "Derivado imidazólico",
+    mechanism: "Inhibición de la síntesis de ergosterol",
+    pregnancy_risks: "Categoría C - Evitar uso sistémico. Tópico con precaución.",
+    recommendations: "Contraindicado vía oral. Uso tópico solo si es necesario.",
+    monitoring: "Función hepática, interacciones medicamentosas",
+    alternatives: ["fluconazol en dosis bajas", "antifúngicos tópicos"]
+  },
+
+  // Antibióticos básicos
+  "ampicilina": {
+    name: "Ampicilina",
+    aliases: ["ampicillin", "principen"],
+    category: "Antibiótico betalactámico",
+    class: "Penicilina de amplio espectro",
+    mechanism: "Inhibición de la síntesis de pared celular bacteriana",
+    pregnancy_risks: "Categoría B - Seguro durante el embarazo",
+    recommendations: "Antibiótico de primera línea durante embarazo. Seguro en todos los trimestres.",
+    monitoring: "Reacciones alérgicas, función renal",
+    alternatives: ["amoxicilina", "cefalexina"]
+  },
+
+  "eritromicina": {
+    name: "Eritromicina",
+    aliases: ["erythromycin", "e-mycin"],
+    category: "Antibiótico macrólido",
+    class: "Macrólido",
+    mechanism: "Inhibición de la síntesis proteica bacteriana",
+    pregnancy_risks: "Categoría B - Seguro durante el embarazo",
+    recommendations: "Alternativa segura para pacientes alérgicas a penicilinas.",
+    monitoring: "Síntomas gastrointestinales, función hepática",
+    alternatives: ["azitromicina", "amoxicilina"]
+  },
+
+  "sulfametoxazol": {
+    name: "Sulfametoxazol + Trimetoprima",
+    aliases: ["bactrim", "septra", "cotrimoxazol"],
+    category: "Antibiótico",
+    class: "Sulfonamida + Inhibidor de folato",
+    mechanism: "Inhibición secuencial de la síntesis de folato",
+    pregnancy_risks: "Categoría C - Evitar en primer y tercer trimestre",
+    recommendations: "Evitar en primer trimestre (defectos del tubo neural) y tercer trimestre (kernicterus).",
+    monitoring: "Función renal, niveles de folato",
+    alternatives: ["amoxicilina", "cefalexina", "eritromicina"]
+  },
+
+  // Antiácidos y protectores gástricos
+  "ranitidina": {
+    name: "Ranitidina",
+    aliases: ["zantac", "ranitidine"],
+    category: "Antagonista H2",
+    class: "Bloqueador H2",
+    mechanism: "Inhibición de receptores H2 en células parietales",
+    pregnancy_risks: "Categoría B - Generalmente seguro",
+    recommendations: "Seguro para acidez durante embarazo. Retirado del mercado por impurezas NDMA.",
+    monitoring: "Función renal, síntomas gastrointestinales",
+    alternatives: ["omeprazol", "famotidina"]
+  },
+
+  "famotidina": {
+    name: "Famotidina",
+    aliases: ["pepcid", "famotidine"],
+    category: "Antagonista H2",
+    class: "Bloqueador H2",
+    mechanism: "Inhibición selectiva de receptores H2",
+    pregnancy_risks: "Categoría B - Seguro durante el embarazo",
+    recommendations: "Alternativa segura a ranitidina para acidez durante embarazo.",
+    monitoring: "Función renal, respuesta clínica",
+    alternatives: ["omeprazol", "antiácidos"]
+  },
+
+  "hidróxido de aluminio": {
+    name: "Hidróxido de Aluminio",
+    aliases: ["maalox", "mylanta", "antiácido"],
+    category: "Antiácido",
+    class: "Antiácido no sistémico",
+    mechanism: "Neutralización directa del ácido gástrico",
+    pregnancy_risks: "Categoría A - Seguro en dosis normales",
+    recommendations: "Antiácido seguro durante embarazo. Evitar uso excesivo prolongado.",
+    monitoring: "Estreñimiento, absorción de otros medicamentos",
+    alternatives: ["carbonato de calcio", "famotidina"]
+  },
+
+  // Vitaminas y suplementos
+  "ácido fólico": {
+    name: "Ácido Fólico",
+    aliases: ["folate", "folacin", "vitamina b9"],
+    category: "Vitamina hidrosoluble",
+    class: "Vitamina B",
+    mechanism: "Cofactor en síntesis de ADN y metabolismo",
+    pregnancy_risks: "Categoría A - Esencial durante el embarazo",
+    recommendations: "Suplemento obligatorio antes y durante embarazo. Previene defectos del tubo neural.",
+    monitoring: "Niveles séricos, desarrollo fetal",
+    alternatives: ["multivitamínicos prenatales"]
+  },
+
+  "sulfato ferroso": {
+    name: "Sulfato Ferroso",
+    aliases: ["hierro", "iron sulfate", "fer-in-sol"],
+    category: "Suplemento mineral",
+    class: "Sales de hierro",
+    mechanism: "Suplementación de hierro para síntesis de hemoglobina",
+    pregnancy_risks: "Categoría A - Seguro y necesario",
+    recommendations: "Suplemento esencial para prevenir anemia durante embarazo.",
+    monitoring: "Hemoglobina, hematocrito, síntomas gastrointestinales",
+    alternatives: ["fumarato ferroso", "hierro polimaltosado"]
+  },
+
+  "calcio": {
+    name: "Carbonato de Calcio",
+    aliases: ["calcium carbonate", "tums", "caltrate"],
+    category: "Suplemento mineral",
+    class: "Sales de calcio",
+    mechanism: "Suplementación de calcio para desarrollo óseo",
+    pregnancy_risks: "Categoría A - Seguro y beneficioso",
+    recommendations: "Importante para desarrollo óseo fetal y prevención de preeclampsia.",
+    monitoring: "Niveles séricos de calcio, función renal",
+    alternatives: ["citrato de calcio", "lácteos fortificados"]
+  },
+
+  // Analgésicos tópicos
+  "diclofenaco tópico": {
+    name: "Diclofenaco Tópico",
+    aliases: ["voltaren gel", "diclofenac gel"],
+    category: "AINE tópico",
+    class: "Derivado del ácido acético",
+    mechanism: "Inhibición local de ciclooxigenasa",
+    pregnancy_risks: "Categoría C - Uso tópico con precaución",
+    recommendations: "Minimizar absorción sistémica. Evitar en tercer trimestre.",
+    monitoring: "Irritación local, absorción sistémica",
+    alternatives: ["paracetamol", "compresas frías"]
+  },
+
   // CATEGORÍA A - SEGUROS
   'levotiroxina': {
     name: 'Levotiroxina',
