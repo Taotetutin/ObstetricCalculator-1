@@ -20,30 +20,33 @@ export function registerRoutes(app: Express): Server {
       const searchTerm = term.toLowerCase().trim();
       console.log(`Buscando medicamento: ${searchTerm}`);
       
-      // PASO 1: Consultar directamente a Gemini API para acceso universal
-      console.log(`🔍 Consultando Gemini API para: ${searchTerm}`);
-      
-      if (!process.env.GEMINI_API_KEY) {
-        console.log('⚠️ Clave API de Gemini no configurada, usando bases locales');
-        const essentialResult = searchEssentialMedication(searchTerm);
-        if (essentialResult) {
-          console.log(`✓ Encontrado en base esencial: ${searchTerm}`);
-          return res.json({
-            source: 'essential',
-            name: searchTerm,
+      // PASO 1: Priorizar base de datos local para medicamentos críticos con categorías FDA precisas
+      const essentialResult = searchEssentialMedication(searchTerm);
+      if (essentialResult) {
+        console.log(`✓ Encontrado en base esencial: ${searchTerm}`);
+        return res.json({
+          source: 'essential',
+          name: searchTerm,
+          categoria: essentialResult.categoria,
+          descripcion: essentialResult.descripcion,
+          riesgos: essentialResult.riesgos,
+          recomendaciones: essentialResult.recomendaciones,
+          sections: {
             categoria: essentialResult.categoria,
             descripcion: essentialResult.descripcion,
             riesgos: essentialResult.riesgos,
-            recomendaciones: essentialResult.recomendaciones,
-            sections: {
-              categoria: essentialResult.categoria,
-              descripcion: essentialResult.descripcion,
-              riesgos: essentialResult.riesgos,
-              recomendaciones: essentialResult.recomendaciones
-            },
-            medicationName: searchTerm
-          });
-        }
+            recomendaciones: essentialResult.recomendaciones
+          },
+          medicationName: searchTerm
+        });
+      }
+
+      // PASO 2: Consultar Gemini API solo si no está en base esencial
+      console.log(`🔍 Consultando Gemini API para: ${searchTerm}`);
+      
+      if (!process.env.GEMINI_API_KEY) {
+        console.log('⚠️ Clave API de Gemini no configurada');
+        return res.status(500).json({ error: 'API no disponible' });
       }
 
       // Consultar Gemini API para información completa
@@ -58,6 +61,7 @@ IMPORTANTE: Usa las categorías FDA EXACTAS:
 - Categoría X: Contraindicado - riesgo fetal supera cualquier beneficio
 
 Para furosemida específicamente, es Categoría C según FDA, NO categoría D.
+Para fluoxetina específicamente, es Categoría B según FDA, NO categoría C.
 
 Responde ÚNICAMENTE en español con este formato exacto:
 
@@ -133,21 +137,21 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
         console.error('Error consultando Gemini API:', error.response?.data || error.message);
       }
 
-      // Fallback a base esencial
-      const essentialResult = searchEssentialMedication(searchTerm);
-      if (essentialResult) {
+      // Fallback a base esencial si Gemini falla
+      const fallbackResult = searchEssentialMedication(searchTerm);
+      if (fallbackResult) {
         return res.json({
           source: 'essential_fallback',
           name: searchTerm,
-          categoria: essentialResult.categoria,
-          descripcion: essentialResult.descripcion,
-          riesgos: essentialResult.riesgos,
-          recomendaciones: essentialResult.recomendaciones,
+          categoria: fallbackResult.categoria,
+          descripcion: fallbackResult.descripcion,
+          riesgos: fallbackResult.riesgos,
+          recomendaciones: fallbackResult.recomendaciones,
           sections: {
-            categoria: essentialResult.categoria,
-            descripcion: essentialResult.descripcion,
-            riesgos: essentialResult.riesgos,
-            recomendaciones: essentialResult.recomendaciones
+            categoria: fallbackResult.categoria,
+            descripcion: fallbackResult.descripcion,
+            riesgos: fallbackResult.riesgos,
+            recomendaciones: fallbackResult.recomendaciones
           },
           medicationName: searchTerm
         });
@@ -208,7 +212,8 @@ Si el medicamento no existe, responde: "MEDICAMENTO_NO_ENCONTRADO"`;
         'amoxicilina': ['amoxicillin', 'Amoxil'],
         'ciclobenzaprina': ['cyclobenzaprine', 'Flexeril'],
         'alopurinol': ['allopurinol', 'Zyloprim'],
-        'clorfenamina': ['chlorpheniramine', 'Chlor-Trimeton']
+        'clorfenamina': ['chlorpheniramine', 'Chlor-Trimeton'],
+        'fluoxetina': ['fluoxetine', 'Prozac']
       };
       
       const searchTerms = [query.toLowerCase()];

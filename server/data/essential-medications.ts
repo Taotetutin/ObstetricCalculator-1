@@ -249,6 +249,13 @@ export const essentialMedications = {
     descripcion: "Bloqueador de canales de calcio para hipertensión",
     riesgos: "Generalmente seguro. Monitoreo de presión arterial necesario.",
     recomendaciones: "Alternativa a metildopa. Útil también para amenaza de parto prematuro."
+  },
+  "fluoxetina": {
+    name: "Fluoxetina",
+    categoria: "Categoría B",
+    descripcion: "Inhibidor selectivo de la recaptación de serotonina (ISRS). Antidepresivo considerado relativamente seguro durante el embarazo según estudios epidemiológicos.",
+    riesgos: "Riesgo bajo de malformaciones congénitas. Posible síndrome de abstinencia neonatal transitorio si se usa cerca del parto.",
+    recomendaciones: "ISRS de elección durante embarazo si se requiere tratamiento antidepresivo. Los beneficios generalmente superan los riesgos cuando la depresión materna es significativa."
   }
 };
 
