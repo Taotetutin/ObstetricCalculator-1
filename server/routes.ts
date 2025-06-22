@@ -74,18 +74,34 @@ export function registerRoutes(app: Express): Server {
         `openfda.substance_name:"${searchTerm}"`
       ];
 
-      let allResults = [];
+      let allResults: any[] = [];
       
-      for (const query of searchQueries) {
+      // Optimized search strategy - prioritize most reliable queries first
+      const prioritizedQueries = [
+        `openfda.generic_name:"${searchTerm}"`,
+        `openfda.brand_name:"${searchTerm}"`,
+        `generic_name:"${searchTerm}"`,
+        `brand_name:"${searchTerm}"`
+      ];
+
+      for (const query of prioritizedQueries) {
         try {
           const url = `${baseUrl}?search=${encodeURIComponent(query)}&limit=${limit}`;
-          const response = await axios.get(url, { timeout: 10000 });
+          console.log(`Consultando FDA: ${query}`);
+          const response = await axios.get(url, { 
+            timeout: 15000,
+            headers: {
+              'User-Agent': 'ObsteriXLegend/1.0'
+            }
+          });
           
-          if (response.data.results) {
+          if (response.data.results && response.data.results.length > 0) {
             allResults = allResults.concat(response.data.results);
+            console.log(`✓ ${response.data.results.length} resultados de: ${query}`);
+            break; // Exit after first successful query to avoid duplicates
           }
         } catch (error) {
-          console.log(`Query falló: ${query}`);
+          console.log(`⚠ Query sin resultados: ${query}`);
           continue;
         }
       }

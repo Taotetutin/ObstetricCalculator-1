@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { calculators } from "./calculators";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, Menu, Heart, Calculator, Newspaper } from "lucide-react";
+import { LogOut, Menu, Heart, Calculator, Newspaper, Database } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 const calculatorGroups = {
@@ -80,6 +80,22 @@ export default function Sidebar() {
               >
                 <Newspaper className="w-5 h-5 shrink-0 text-blue-600" />
                 <span>ObsteriX al día</span>
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/base-datos-fda"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer",
+                  "text-blue-800 hover:bg-blue-50 hover:text-blue-900",
+                  "transition-colors duration-200",
+                  location === "/base-datos-fda" && 
+                  "bg-blue-100 text-blue-900 font-medium"
+                )}
+              >
+                <Database className="w-5 h-5 shrink-0 text-green-600" />
+                <span>Base de Datos FDA</span>
               </Link>
             </li>
             {/* Sección de seguimiento de embarazo eliminada */}
