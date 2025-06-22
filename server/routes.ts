@@ -6,8 +6,135 @@ import { desc } from "drizzle-orm";
 import axios from 'axios';
 import { searchEssentialMedication } from './data/essential-medications';
 
+// Function to extract pregnancy category from FDA data
+function extractPregnancyCategory(result: any): string {
+  // Search for pregnancy category in multiple fields
+  const searchFields = [
+    result.pregnancy?.[0],
+    result.use_in_specific_populations?.[0], 
+    result.warnings?.[0],
+    result.contraindications?.[0],
+    result.precautions?.[0]
+  ];
+
+  for (const field of searchFields) {
+    if (!field) continue;
+    
+    const text = field.toLowerCase();
+    
+    // Look for explicit FDA pregnancy categories
+    if (text.includes('pregnancy category a') || text.includes('category a')) return 'Categoría A';
+    if (text.includes('pregnancy category b') || text.includes('category b')) return 'Categoría B';
+    if (text.includes('pregnancy category c') || text.includes('category c')) return 'Categoría C';
+    if (text.includes('pregnancy category d') || text.includes('category d')) return 'Categoría D';
+    if (text.includes('pregnancy category x') || text.includes('category x')) return 'Categoría X';
+    
+    // Look for contraindication patterns
+    if (text.includes('contraindicated in pregnancy') || 
+        text.includes('should not be used in pregnancy') ||
+        text.includes('avoid during pregnancy')) {
+      return 'Categoría D/X';
+    }
+    
+    // Look for caution patterns
+    if (text.includes('use only if potential benefit justifies') ||
+        text.includes('should be used during pregnancy only if')) {
+      return 'Categoría C';
+    }
+  }
+  
+  return 'No especificada';
+}
+
 export function registerRoutes(app: Express): Server {
   
+  // FDA Drug Search API - Acceso completo a base de datos oficial
+  app.get('/api/medications/fda-search/:term', async (req, res) => {
+    try {
+      const { term } = req.params;
+      const { limit = 10 } = req.query;
+      
+      if (!term) {
+        return res.status(400).json({ error: 'Término de búsqueda requerido' });
+      }
+
+      const searchTerm = term.toLowerCase().trim();
+      console.log(`Buscando en FDA: ${searchTerm}`);
+
+      const baseUrl = 'https://api.fda.gov/drug/label.json';
+      
+      // Búsquedas múltiples para maximizar resultados
+      const searchQueries = [
+        `generic_name:"${searchTerm}"`,
+        `brand_name:"${searchTerm}"`,
+        `active_ingredient:"${searchTerm}"`,
+        `substance_name:"${searchTerm}"`,
+        `openfda.generic_name:"${searchTerm}"`,
+        `openfda.brand_name:"${searchTerm}"`,
+        `openfda.substance_name:"${searchTerm}"`
+      ];
+
+      let allResults = [];
+      
+      for (const query of searchQueries) {
+        try {
+          const url = `${baseUrl}?search=${encodeURIComponent(query)}&limit=${limit}`;
+          const response = await axios.get(url, { timeout: 10000 });
+          
+          if (response.data.results) {
+            allResults = allResults.concat(response.data.results);
+          }
+        } catch (error) {
+          console.log(`Query falló: ${query}`);
+          continue;
+        }
+      }
+
+      // Eliminar duplicados y procesar resultados
+      const uniqueResults = [];
+      const seenIds = new Set();
+      
+      for (const result of allResults) {
+        const id = result.id || `${result.openfda?.brand_name?.[0] || ''}-${result.openfda?.generic_name?.[0] || ''}`;
+        if (!seenIds.has(id)) {
+          seenIds.add(id);
+          
+          // Extraer categoría de embarazo
+          const pregnancyCategory = extractPregnancyCategory(result);
+          
+          uniqueResults.push({
+            id: result.id,
+            generic_name: result.openfda?.generic_name?.[0] || 'No disponible',
+            brand_name: result.openfda?.brand_name?.[0] || 'No disponible',
+            manufacturer: result.openfda?.manufacturer_name?.[0] || 'No disponible',
+            dosage_form: result.openfda?.dosage_form?.[0] || 'No disponible',
+            route: result.openfda?.route?.[0] || 'No disponible',
+            pregnancy_category: pregnancyCategory,
+            warnings: result.warnings?.[0] || 'No disponible',
+            contraindications: result.contraindications?.[0] || 'No disponible',
+            adverse_reactions: result.adverse_reactions?.[0] || 'No disponible',
+            pregnancy_info: result.pregnancy?.[0] || result.use_in_specific_populations?.[0] || 'No disponible'
+          });
+        }
+      }
+
+      return res.json({
+        medications: uniqueResults,
+        total: uniqueResults.length,
+        search_term: searchTerm,
+        source: 'FDA Official Database'
+      });
+
+    } catch (error) {
+      console.error('Error buscando en FDA:', error);
+      return res.status(500).json({ 
+        error: 'Error consultando base de datos FDA',
+        medications: [],
+        total: 0
+      });
+    }
+  });
+
   // Rutas de medicamentos integradas directamente
   app.post('/api/medications/gemini', async (req, res) => {
     try {
@@ -20,7 +147,40 @@ export function registerRoutes(app: Express): Server {
       const searchTerm = term.toLowerCase().trim();
       console.log(`Buscando medicamento: ${searchTerm}`);
       
-      // PASO 1: Priorizar base de datos local para medicamentos críticos con categorías FDA precisas
+      // PASO 1: Consultar FDA oficial primero
+      try {
+        const fdaUrl = `http://localhost:5000/api/medications/fda-search/${encodeURIComponent(searchTerm)}?limit=5`;
+        const fdaResponse = await axios.get(fdaUrl, { timeout: 15000 });
+        
+        if (fdaResponse.data.medications && fdaResponse.data.medications.length > 0) {
+          const fdaMed = fdaResponse.data.medications[0];
+          console.log(`✓ Encontrado en FDA oficial: ${searchTerm}`);
+          
+          return res.json({
+            source: 'FDA',
+            name: fdaMed.generic_name,
+            categoria: fdaMed.pregnancy_category || 'Consultar fuentes oficiales',
+            descripcion: `${fdaMed.generic_name} (${fdaMed.brand_name}) - ${fdaMed.dosage_form}`,
+            riesgos: fdaMed.pregnancy_info,
+            recomendaciones: fdaMed.warnings,
+            contraindications: fdaMed.contraindications,
+            adverse_reactions: fdaMed.adverse_reactions,
+            manufacturer: fdaMed.manufacturer,
+            route: fdaMed.route,
+            sections: {
+              categoria: fdaMed.pregnancy_category || 'Consultar fuentes oficiales',
+              descripcion: `${fdaMed.generic_name} (${fdaMed.brand_name}) - ${fdaMed.dosage_form}`,
+              riesgos: fdaMed.pregnancy_info,
+              recomendaciones: fdaMed.warnings
+            },
+            medicationName: searchTerm
+          });
+        }
+      } catch (error) {
+        console.log('FDA no disponible, continuando con otras fuentes');
+      }
+      
+      // PASO 2: Base de datos local para medicamentos críticos
       const essentialResult = searchEssentialMedication(searchTerm);
       if (essentialResult) {
         console.log(`✓ Encontrado en base esencial: ${searchTerm}`);
