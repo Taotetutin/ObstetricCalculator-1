@@ -5,6 +5,7 @@ import { insertCalculationSchema, insertPatientSchema, calculatorTypes } from "@
 import { desc } from "drizzle-orm";
 import axios from 'axios';
 import { searchEssentialMedication } from './data/essential-medications';
+import { createFDASearchQueries, getEnglishNames } from './data/medication-translations';
 
 // Function to extract pregnancy category from FDA data
 function extractPregnancyCategory(result: any): string {
@@ -76,13 +77,11 @@ export function registerRoutes(app: Express): Server {
 
       let allResults: any[] = [];
       
-      // Optimized search strategy - prioritize most reliable queries first
-      const prioritizedQueries = [
-        `openfda.generic_name:"${searchTerm}"`,
-        `openfda.brand_name:"${searchTerm}"`,
-        `generic_name:"${searchTerm}"`,
-        `brand_name:"${searchTerm}"`
-      ];
+      // Use translation mapping for better FDA search results
+      const fdaQueries = createFDASearchQueries(searchTerm);
+      console.log(`Búsquedas FDA generadas: ${fdaQueries.length} consultas`);
+      
+      const prioritizedQueries = fdaQueries.slice(0, 6); // Limit to first 6 most relevant
 
       for (const query of prioritizedQueries) {
         try {
@@ -163,37 +162,52 @@ export function registerRoutes(app: Express): Server {
       const searchTerm = term.toLowerCase().trim();
       console.log(`Buscando medicamento: ${searchTerm}`);
       
-      // PASO 1: Consultar FDA oficial primero
+      // PASO 1: Consultar FDA oficial primero con traducción mejorada
       try {
-        const fdaUrl = `http://localhost:5000/api/medications/fda-search/${encodeURIComponent(searchTerm)}?limit=5`;
-        const fdaResponse = await axios.get(fdaUrl, { timeout: 15000 });
+        const englishNames = getEnglishNames(searchTerm);
+        console.log(`🔍 Buscando en FDA: ${searchTerm} → [${englishNames.join(', ')}]`);
         
-        if (fdaResponse.data.medications && fdaResponse.data.medications.length > 0) {
-          const fdaMed = fdaResponse.data.medications[0];
-          console.log(`✓ Encontrado en FDA oficial: ${searchTerm}`);
-          
+        let fdaMed = null;
+        
+        // Probar con cada nombre en inglés
+        for (const englishName of englishNames) {
+          try {
+            const fdaUrl = `http://localhost:5000/api/medications/fda-search/${encodeURIComponent(englishName)}?limit=3`;
+            const fdaResponse = await axios.get(fdaUrl, { timeout: 10000 });
+            
+            if (fdaResponse.data.medications && fdaResponse.data.medications.length > 0) {
+              fdaMed = fdaResponse.data.medications[0];
+              console.log(`✓ Encontrado en FDA: ${englishName}`);
+              break;
+            }
+          } catch (err) {
+            continue;
+          }
+        }
+        
+        if (fdaMed) {
           return res.json({
             source: 'FDA',
-            name: fdaMed.generic_name,
-            categoria: fdaMed.pregnancy_category || 'Consultar fuentes oficiales',
+            name: searchTerm, // Mantener nombre original en español
+            categoria: fdaMed.pregnancy_category || 'No especificada',
             descripcion: `${fdaMed.generic_name} (${fdaMed.brand_name}) - ${fdaMed.dosage_form}`,
-            riesgos: fdaMed.pregnancy_info,
-            recomendaciones: fdaMed.warnings,
+            riesgos: fdaMed.pregnancy_info || 'Información no disponible',
+            recomendaciones: fdaMed.warnings || 'Consultar información completa',
             contraindications: fdaMed.contraindications,
             adverse_reactions: fdaMed.adverse_reactions,
             manufacturer: fdaMed.manufacturer,
             route: fdaMed.route,
             sections: {
-              categoria: fdaMed.pregnancy_category || 'Consultar fuentes oficiales',
-              descripcion: `${fdaMed.generic_name} (${fdaMed.brand_name}) - ${fdaMed.dosage_form}`,
-              riesgos: fdaMed.pregnancy_info,
-              recomendaciones: fdaMed.warnings
+              categoria: fdaMed.pregnancy_category || 'No especificada',
+              descripcion: `${fdaMed.generic_name} (${fdaMed.brand_name})`,
+              riesgos: fdaMed.pregnancy_info || 'Información no disponible',
+              recomendaciones: fdaMed.warnings || 'Consultar información completa'
             },
             medicationName: searchTerm
           });
         }
       } catch (error) {
-        console.log('FDA no disponible, continuando con otras fuentes');
+        console.log('⚠ FDA no disponible, continuando con otras fuentes');
       }
       
       // PASO 2: Base de datos local para medicamentos críticos
