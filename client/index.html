@@ -2,10 +2,76 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#0072F5" />
+    
+    <!-- Mobile-First Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ObsteriX" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- SEO and App Description -->
+    <meta name="description" content="Aplicación médica completa para obstetricia, calculadoras de embarazo y análisis de medicamentos con base de datos FDA" />
+    <meta name="keywords" content="obstetricia, embarazo, calculadora médica, FDA, medicamentos, MEFI, gestacional" />
+    <meta name="author" content="MiMaternoFetal" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- iOS App Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/generated-icon.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/generated-icon.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/generated-icon.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/generated-icon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/generated-icon.png" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://api.fda.gov" />
+    
+    <!-- iOS Status Bar -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Prevent iOS Bounce -->
+    <style>
+      body {
+        position: fixed;
+        overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: manipulation;
+      }
+      
+      #root {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Prevent zoom on input focus */
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+      
+      /* iOS safe area */
+      @supports (padding: max(0px)) {
+        .safe-top {
+          padding-top: max(20px, env(safe-area-inset-top));
+        }
+        .safe-bottom {
+          padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+      }
+    </style>
+    
     <title>ObsteriX Legend - Calculadora Obstétrica</title>
     <link rel="stylesheet" href="/src/index.css" />
   </head>

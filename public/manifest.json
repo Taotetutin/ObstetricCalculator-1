@@ -1,0 +1,83 @@
+{
+  "name": "ObsteriX Legend",
+  "short_name": "ObsteriX",
+  "description": "Aplicación médica completa para obstetricia y embarazo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "categories": ["medical", "health", "productivity"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/generated-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/generated-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/generated-icon.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculadora Gestacional",
+      "short_name": "Gestacional",
+      "description": "Calcular fecha probable de parto",
+      "url": "/calculadora/calculadora-gestacional-compleja",
+      "icons": [
+        {
+          "src": "/generated-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Medicamentos",
+      "short_name": "Fármacos",
+      "description": "Consultar seguridad de medicamentos",
+      "url": "/calculadora/medicamentos-embarazo",
+      "icons": [
+        {
+          "src": "/generated-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "MEFI",
+      "short_name": "MEFI",
+      "description": "Análisis de monitoreo fetal",
+      "url": "/calculadora/mefi",
+      "icons": [
+        {
+          "src": "/generated-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "scope": "/",
+  "id": "/",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
