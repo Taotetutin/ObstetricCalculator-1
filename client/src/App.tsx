@@ -13,6 +13,7 @@ import NewsPage from "@/pages/NewsPage";
 import Sidebar from "@/components/Sidebar";
 import LoadingScreen from "@/components/LoadingScreen";
 import { MobileNavigation } from "@/components/MobileNavigation";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { Button } from "@/components/ui/button";
 import { Home as HomeIcon } from "lucide-react";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
@@ -89,6 +90,9 @@ function Router() {
           )}
         </div>
       </div>
+      
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 }
